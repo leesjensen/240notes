@@ -56,6 +56,11 @@ public class Node implements ITrie.INode {
     public FindResult find(int i, String word) {
         FindResult result = null;
         char findChar = word.charAt(i);
+
+        if (count > 0) {
+
+        }
+
         if (findChar == value) {
             if (i == word.length() - 1) {
                 if (count > 0) {
