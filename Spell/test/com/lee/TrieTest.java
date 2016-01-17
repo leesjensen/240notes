@@ -21,7 +21,6 @@ public class TrieTest {
 
     @Test
     public void add() throws Exception {
-        assertNull(simpleTrie.find("abd"));
         int previousWordCount = simpleTrie.getWordCount();
         int previousNodeCount = simpleTrie.getNodeCount();
         simpleTrie.add("abd");
@@ -65,12 +64,57 @@ public class TrieTest {
     }
 
     @Test
-    public void spell() throws Exception {
+    public void spellDelete() throws Exception {
         Trie trie = new Trie();
         trie.add("abd");
+        trie.add("abcd");
         SpellCorrector corrector = new SpellCorrector();
         corrector.useDictionary(trie);
 
         assertEquals("abd", corrector.suggestSimilarWord("ad"));
+    }
+
+    @Test
+    public void spellDifferent() throws Exception {
+        Trie trie = new Trie();
+        trie.add("lee");
+        trie.add("leland");
+        trie.add("leeward");
+        SpellCorrector corrector = new SpellCorrector();
+        corrector.useDictionary(trie);
+
+        assertEquals("leland", corrector.suggestSimilarWord("leeland"));
+    }
+
+    @Test
+    public void spellExact() throws Exception {
+        Trie trie = new Trie();
+        trie.add("a");
+        trie.add("ab");
+        trie.add("abc");
+        trie.add("abcd");
+        trie.add("aacd");
+        SpellCorrector corrector = new SpellCorrector();
+        corrector.useDictionary(trie);
+
+        assertEquals("abcd", corrector.suggestSimilarWord("abcd"));
+    }
+
+    @Test
+    public void spellNotFound() throws Exception {
+        Trie trie = new Trie();
+        trie.add("a");
+        trie.add("ab");
+        trie.add("abc");
+        trie.add("abcd");
+        trie.add("aacd");
+        SpellCorrector corrector = new SpellCorrector();
+        corrector.useDictionary(trie);
+
+        try {
+            corrector.suggestSimilarWord("abfff");
+            assertFalse(true, "Word found when should not have");
+        } catch (ISpellCorrector.NoSimilarWordFoundException ex) {
+        }
     }
 }

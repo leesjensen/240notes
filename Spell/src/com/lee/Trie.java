@@ -35,18 +35,19 @@ public class Trie extends Node implements ITrie {
     }
 
     @Override
-    public INode find(String word) {
+    public INode find(String compareWord) {
+        EditDistanceCalculator distanceCalculator = new EditDistanceCalculator();
         FindResult bestResult = null;
         for (Node child : children) {
             if (child != null) {
-                FindResult result = child.find(0, word);
+                FindResult result = child.find(distanceCalculator, compareWord);
                 if (result != null && (bestResult == null || result.distance < bestResult.distance || (result.distance == bestResult.distance && result.node.count > bestResult.node.count))) {
                     bestResult = result;
                 }
             }
         }
 
-        if (bestResult != null) {
+        if (bestResult != null && bestResult.distance <= 2) {
             return bestResult.node;
         } else {
             return null;

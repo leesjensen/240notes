@@ -53,35 +53,21 @@ public class Node implements ITrie.INode {
         return child;
     }
 
-    public FindResult find(int i, String word) {
-        FindResult result = null;
-        char findChar = word.charAt(i);
-
+    public FindResult find(EditDistanceCalculator distanceCalculator, String compareWord) {
+        FindResult bestResult = null;
         if (count > 0) {
-
+            bestResult = new FindResult(this, distanceCalculator.distance(word, compareWord));
         }
-
-        if (findChar == value) {
-            if (i == word.length() - 1) {
-                if (count > 0) {
-                    result = new FindResult(this, 0);
-                }
-            } else {
-                for (Node child : children) {
-                    if (child != null) {
-                        result = child.find(i + 1, word);
-                        if (result != null) {
-                            break;
-                        }
-                    }
+        for (Node child : children) {
+            if (child != null) {
+                FindResult result = child.find(distanceCalculator, compareWord);
+                if (result != null && (bestResult == null || result.distance < bestResult.distance || (result.distance == bestResult.distance && result.node.count > bestResult.node.count))) {
+                    bestResult = result;
                 }
             }
         }
 
-        return result;
+        return bestResult;
     }
 
-    private static int deleteDistance(String word1, String word2) {
-        return 0;
-    }
 }
