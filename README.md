@@ -1,6 +1,8 @@
 # Course links
 
 - [Chess](https://github.com/BYUCS240TA/Chess)
+  - [Example projects](https://github.com/BYUCS240TA/Chess/tree/main/example-chess-projects)
+  - [Specification](https://github.com/BYUCS240TA/Chess/tree/main/specifications)
 
 # All things Java
 
@@ -32,6 +34,14 @@
 
 Install the [zip file](https://adoptium.net/) and add it to your path. Adoptium is considered the best place to go.
 
+I actually installed by installing IntelliJ and then having it install the JDK for me.
+
+I then added the following to my `.zshrc` so that I could launch from the console.
+
+```sh
+alias idea='open -na "IntelliJ IDEA CE.app" --args '
+```
+
 ## Versions
 
 - **8**:
@@ -55,3 +65,12 @@ Install the [zip file](https://adoptium.net/) and add it to your path. Adoptium 
 - **13**: Unicode 12.1 support, new switch syntax, multiline string with `"""` syntax
 - **14**: Records
 - **18**: UTF-8 is default. jwebserver HTTP server
+
+## Configure IntelliJ
+
+- Added `Reformat code` action on Save in the Tools settings
+
+## Notes of things to fix.
+
+- `Installing Java` video references Android Studio for IDE.
+- `JavaDoc` references API 16. 17 was the last LTS, 20 is latest
