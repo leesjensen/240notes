@@ -1,3 +1,7 @@
+# Course links
+
+- [Chess](https://github.com/BYUCS240TA/Chess)
+
 # All things Java
 
 ## History
