@@ -7,7 +7,7 @@ public class Node implements INode {
 
     private final Node[] children;
     private int value;
-    private boolean isWord;
+    private int wordCount;
 
     public Node(int value) {
         this.value = value;
@@ -15,10 +15,10 @@ public class Node implements INode {
     }
 
     public Node find(String word) {
-        if (word.length() == 1 && isWord) {
+        if (word.length() == 0 && wordCount > 0) {
             return this;
-        } else if (word.length() > 1) {
-            var currentValue = word.charAt(1) - 'a';
+        } else if (word.length() > 0) {
+            var currentValue = word.charAt(0) - 'a';
             if (children[currentValue] != null) {
                 return children[currentValue].find(word.substring(1));
             }
@@ -38,13 +38,13 @@ public class Node implements INode {
 
             nodeCount = nodeCount + children[nextValue].add(word.substring(1));
         } else {
-            isWord = true;
+            wordCount++;
         }
         return nodeCount;
     }
 
     public int getWordCount() {
-        var count = isWord ? 1 : 0;
+        var count = (wordCount > 0) ? 1 : 0;
         for (var child : children) {
             if (child != null) {
                 count += child.getWordCount();
@@ -86,7 +86,7 @@ public class Node implements INode {
         if (value != -1) {
             word = parentWord + (char) ('a' + value);
 
-            if (isWord) {
+            if (wordCount > 0) {
                 sb.append(String.format("%s%n", word));
             }
         }
@@ -109,13 +109,29 @@ public class Node implements INode {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        return value == node.value && isWord == node.isWord && Arrays.equals(children, node.children);
+        if (value == node.value && wordCount == node.wordCount && children.length == node.children.length) {
+            for (var i = 0; i < children.length; i++) {
+                if (children[i] == null) {
+                    if (node.children[i] != null) {
+                        return false;
+                    }
+                } else if (!children[i].equals(node.children[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(value, isWord);
-        result = 31 * result + Arrays.hashCode(children);
+        int result = 31 * (value + 1) * (wordCount + 1);
+        for (var child : children) {
+            if (child != null) {
+                result += child.hashCode();
+            }
+        }
         return result;
     }
 }

@@ -57,7 +57,7 @@ public class Trie implements ITrie {
 
     @Override
     public int hashCode() {
-        return Objects.hash(root);
+        return root.hashCode();
     }
 
     /**
@@ -73,7 +73,7 @@ public class Trie implements ITrie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trie trie = (Trie) o;
-        return Objects.equals(root, trie.root);
+        return root.equals(trie.root);
     }
 
 }

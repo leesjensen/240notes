@@ -14,7 +14,6 @@ public class SpellCorrector implements ISpellCorrector {
 
         while (scanner.hasNext()) {
             String n = scanner.next();
-            System.out.println(n);
             sb.append(n);
         }
     }
