@@ -1,42 +1,36 @@
 package spell;
 
+import java.util.Objects;
+
 public class Trie implements ITrie {
-    private int wordCount = 0;
-    private int nodeCount = 1;
-    private Node root;
+    private final Node root;
 
     public Trie() {
-        root = new Node(0);
+        root = new Node(-1);
     }
 
     @Override
     public void add(String word) {
-        wordCount++;
-        nodeCount = nodeCount + root.add(word);
+        root.add(word);
     }
 
     @Override
     public INode find(String word) {
-        var cur = (INode) root;
-        for (char c : word.toCharArray()) {
-            int pos = c - 'a';
-            cur = cur.getChildren()[pos];
-            if (cur == null) {
-                return null;
-            }
+        if (!word.isEmpty()) {
+            return root.find(word);
         }
-
-        return cur;
+        return null;
     }
+
 
     @Override
     public int getWordCount() {
-        return wordCount;
+        return root.getWordCount();
     }
 
     @Override
     public int getNodeCount() {
-        return nodeCount;
+        return root.getNodeCount();
     }
 
 
@@ -48,7 +42,10 @@ public class Trie implements ITrie {
      */
     @Override
     public String toString() {
-        return super.toString();
+        var sb = new StringBuilder();
+
+        root.toString("", sb);
+        return sb.toString();
     }
 
     /**
@@ -57,9 +54,10 @@ public class Trie implements ITrie {
      *
      * @return a uniform, deterministic identifier for this trie.
      */
+
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(root);
     }
 
     /**
@@ -72,6 +70,10 @@ public class Trie implements ITrie {
      */
     @Override
     public boolean equals(Object o) {
-        return super.equals(o);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trie trie = (Trie) o;
+        return Objects.equals(root, trie.root);
     }
+
 }
