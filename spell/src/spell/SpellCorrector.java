@@ -2,9 +2,8 @@ package spell;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Scanner;
 
 public class SpellCorrector implements ISpellCorrector {
@@ -28,19 +27,17 @@ public class SpellCorrector implements ISpellCorrector {
     public String suggestSimilarWord(String inputWord) {
         inputWord = inputWord.toLowerCase();
 
-        var result = trie.find(inputWord);
-        if (result != null) {
+        if (trie.find(inputWord) != null) {
             return inputWord;
         } else {
             var editOne = new HashSet<String>();
-            generateInsertion(inputWord, editOne);
-            generateDeletion(inputWord, editOne);
-            generateTransposition(inputWord, editOne);
-            generateAlteration(inputWord, editOne);
-            for (var e1 : editOne) {
-                result = trie.find(e1);
+            var result = editDistanceOne(inputWord, editOne);
+            if (result != null) {
+                return result;
+            } else {
+                result = editDistanceTwo(editOne);
                 if (result != null) {
-                    return e1;
+                    return result;
                 }
             }
         }
@@ -48,7 +45,56 @@ public class SpellCorrector implements ISpellCorrector {
 
     }
 
-    private final char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+    private String evaluateCandidates(HashMap<String, INode> candidates) {
+        String winner = null;
+        int winnerValue = 0;
+        for (var candidate : candidates.entrySet()) {
+            if (candidate.getValue().getValue() > winnerValue) {
+                winner = candidate.getKey();
+                winnerValue = candidate.getValue().getValue();
+            }
+        }
+
+        return winner;
+    }
+
+    private String editDistanceOne(String inputWord, HashSet<String> editOne) {
+        var candidates = new HashMap<String, INode>();
+
+        generateInsertion(inputWord, editOne);
+        generateDeletion(inputWord, editOne);
+        generateTransposition(inputWord, editOne);
+        generateAlteration(inputWord, editOne);
+        for (var e1 : editOne) {
+            var node = trie.find(e1);
+            if (node != null) {
+                candidates.put(e1, node);
+            }
+        }
+        return evaluateCandidates(candidates);
+    }
+
+    private String editDistanceTwo(HashSet<String> editOne) {
+        var candidates = new HashMap<String, INode>();
+        for (var editOneWord : editOne) {
+            var editTwo = new HashSet<String>();
+            generateInsertion(editOneWord, editTwo);
+            generateDeletion(editOneWord, editTwo);
+            generateTransposition(editOneWord, editTwo);
+            generateAlteration(editOneWord, editTwo);
+
+            for (var e2 : editTwo) {
+                var node = trie.find(e2);
+                if (node != null) {
+                    candidates.put(e2, node);
+                }
+            }
+        }
+        return evaluateCandidates(candidates);
+    }
+
+
+    private static final char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
 
     /**
@@ -121,15 +167,13 @@ public class SpellCorrector implements ISpellCorrector {
      * dictionary may contain 0 to n of the strings one alteration distance from t.
      */
     private void generateAlteration(String inputWord, HashSet<String> values) {
-        System.out.println("Original: " + inputWord);
-        for (var i = 0; i < inputWord.length() - 1; i++) {
+        for (var i = 0; i < inputWord.length(); i++) {
             var currentC = inputWord.charAt(i);
             var p = inputWord.substring(0, i);
             var s = inputWord.substring(i + 1);
             for (var c : alphabet) {
                 if (c != currentC) {
-                    System.out.println(String.format("%s%c%s", p, c, s));
-//                values.add(String.format("%s%c%s", p, c, s));
+                    values.add(String.format("%s%c%s", p, c, s));
                 }
             }
         }

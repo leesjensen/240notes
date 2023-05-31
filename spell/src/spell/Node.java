@@ -1,16 +1,13 @@
 package spell;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 public class Node implements INode {
 
     private final Node[] children;
-    private int value;
+    private int charVal;
     private int wordCount;
 
-    public Node(int value) {
-        this.value = value;
+    public Node(int charVal) {
+        this.charVal = charVal;
         this.children = new Node[26];
     }
 
@@ -65,15 +62,14 @@ public class Node implements INode {
         return count;
     }
 
-
     @Override
     public int getValue() {
-        return value;
+        return wordCount;
     }
 
     @Override
     public void incrementValue() {
-        value++;
+        wordCount++;
     }
 
     @Override
@@ -83,8 +79,8 @@ public class Node implements INode {
 
     public void toString(String parentWord, StringBuilder sb) {
         String word = parentWord;
-        if (value != -1) {
-            word = parentWord + (char) ('a' + value);
+        if (charVal != -1) {
+            word = parentWord + (char) ('a' + charVal);
 
             if (wordCount > 0) {
                 sb.append(String.format("%s%n", word));
@@ -109,7 +105,7 @@ public class Node implements INode {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        if (value == node.value && wordCount == node.wordCount && children.length == node.children.length) {
+        if (charVal == node.charVal && wordCount == node.wordCount && children.length == node.children.length) {
             for (var i = 0; i < children.length; i++) {
                 if (children[i] == null) {
                     if (node.children[i] != null) {
@@ -126,7 +122,7 @@ public class Node implements INode {
 
     @Override
     public int hashCode() {
-        int result = 31 * (value + 1) * (wordCount + 1);
+        int result = 31 * (charVal + 1) * (wordCount + 1);
         for (var child : children) {
             if (child != null) {
                 result += child.hashCode();
