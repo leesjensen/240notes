@@ -5,6 +5,14 @@ import java.io.IOException;
 /**
  * A simple main class for running the spelling corrector. This class is not
  * used by the passoff program.
+ * <p>
+ * <p>
+ * To run from the console use:
+ * java -classpath out/production/spell spell.Main notsobig.txt cow
+ * <p>
+ * To build a jar file from the output use:
+ * <p>
+ * java -classpath spell.jar spell.Main notsobig.txt cow
  */
 public class Main {
 
@@ -20,7 +28,7 @@ public class Main {
         //
         //Create an instance of your corrector here
         //
-        ISpellCorrector corrector = null;
+        ISpellCorrector corrector = new SpellCorrector();
 
         corrector.useDictionary(dictionaryFileName);
         String suggestion = corrector.suggestSimilarWord(inputWord);

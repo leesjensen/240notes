@@ -74,3 +74,17 @@ alias idea='open -na "IntelliJ IDEA CE.app" --args '
 
 - `Installing Java` video references Android Studio for IDE.
 - `JavaDoc` references API 16. 17 was the last LTS, 20 is latest
+
+## Building
+
+To run from the console use:
+
+```sh
+java -classpath out/production/spell spell.Main notsobig.txt cow
+```
+
+To build a jar file from the output use:
+
+```sh
+java -classpath spell.jar spell.Main notsobig.txt cow
+```
