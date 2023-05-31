@@ -2,13 +2,20 @@ package spell;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
 public class SpellCorrector implements ISpellCorrector {
 
     private ITrie trie;
+
+    private record Candidate(String word, int count) {
+        @Override
+        public String toString() {
+            return String.format("%s:%d", word, count);
+        }
+    }
 
     @Override
     public void useDictionary(String dictionaryFileName) throws IOException {
@@ -30,7 +37,7 @@ public class SpellCorrector implements ISpellCorrector {
         if (trie.find(inputWord) != null) {
             return inputWord;
         } else {
-            var editOne = new HashSet<String>();
+            var editOne = new ArrayList<String>();
             var result = editDistanceOne(inputWord, editOne);
             if (result != null) {
                 return result;
@@ -45,21 +52,21 @@ public class SpellCorrector implements ISpellCorrector {
 
     }
 
-    private String evaluateCandidates(HashMap<String, INode> candidates) {
-        String winner = null;
-        int winnerValue = 0;
-        for (var candidate : candidates.entrySet()) {
-            if (candidate.getValue().getValue() > winnerValue) {
-                winner = candidate.getKey();
-                winnerValue = candidate.getValue().getValue();
+
+    private String evaluateCandidates(ArrayList<Candidate> candidates) {
+        Candidate winner = new Candidate(null, 0);
+        for (var candidate : candidates) {
+            if (candidate.count > winner.count) {
+                winner = candidate;
             }
         }
 
-        return winner;
+        return winner.word;
     }
 
-    private String editDistanceOne(String inputWord, HashSet<String> editOne) {
-        var candidates = new HashMap<String, INode>();
+
+    private String editDistanceOne(String inputWord, ArrayList<String> editOne) {
+        var candidates = new ArrayList<Candidate>();
 
         generateInsertion(inputWord, editOne);
         generateDeletion(inputWord, editOne);
@@ -68,16 +75,16 @@ public class SpellCorrector implements ISpellCorrector {
         for (var e1 : editOne) {
             var node = trie.find(e1);
             if (node != null) {
-                candidates.put(e1, node);
+                candidates.add(new Candidate(e1, node.getValue()));
             }
         }
         return evaluateCandidates(candidates);
     }
 
-    private String editDistanceTwo(HashSet<String> editOne) {
-        var candidates = new HashMap<String, INode>();
+    private String editDistanceTwo(ArrayList<String> editOne) {
+        var candidates = new ArrayList<Candidate>();
         for (var editOneWord : editOne) {
-            var editTwo = new HashSet<String>();
+            var editTwo = new ArrayList<String>();
             generateInsertion(editOneWord, editTwo);
             generateDeletion(editOneWord, editTwo);
             generateTransposition(editOneWord, editTwo);
@@ -86,7 +93,7 @@ public class SpellCorrector implements ISpellCorrector {
             for (var e2 : editTwo) {
                 var node = trie.find(e2);
                 if (node != null) {
-                    candidates.put(e2, node);
+                    candidates.add(new Candidate(e2, node.getValue()));
                 }
             }
         }
@@ -105,7 +112,7 @@ public class SpellCorrector implements ISpellCorrector {
      * string t then |s| = |t|+1. Also, there are exactly 26* (|t| + 1) strings that are an insertion distance
      * of 1 from t. The dictionary may contain 0 to n of the strings one insertion distance from t.
      */
-    private void generateInsertion(String inputWord, HashSet<String> values) {
+    private void generateInsertion(String inputWord, ArrayList<String> values) {
         var chars = inputWord.toCharArray();
         for (var i = 0; i <= chars.length; i++) {
             var prefix = new StringBuilder();
@@ -132,7 +139,7 @@ public class SpellCorrector implements ISpellCorrector {
      * |s| = |t| -1. Also, there are exactly |t| strings that are a deletion distance of 1 from t. The dictionary
      * may contain 0 to n of the strings one deletion distance from t.
      */
-    private void generateDeletion(String inputWord, HashSet<String> values) {
+    private void generateDeletion(String inputWord, ArrayList<String> values) {
         for (var i = 0; i < inputWord.length(); i++) {
             var p = inputWord.substring(0, i);
             var s = inputWord.substring(i + 1);
@@ -148,7 +155,7 @@ public class SpellCorrector implements ISpellCorrector {
      * of 1 from another string t then |s| = |t|. Also, there are exactly |t| - 1 strings that are a transposition
      * distance of 1 from t. The dictionary may contain 0 to n of the strings one transposition distance from t.
      */
-    private void generateTransposition(String inputWord, HashSet<String> values) {
+    private void generateTransposition(String inputWord, ArrayList<String> values) {
         for (var i = 0; i < inputWord.length() - 1; i++) {
             var c1 = inputWord.charAt(i);
             var c2 = inputWord.charAt(i + 1);
@@ -166,7 +173,7 @@ public class SpellCorrector implements ISpellCorrector {
      * t then |s| = |t|. Also, there are exactly 25* |t| strings that are an alteration distance of 1 from t. The
      * dictionary may contain 0 to n of the strings one alteration distance from t.
      */
-    private void generateAlteration(String inputWord, HashSet<String> values) {
+    private void generateAlteration(String inputWord, ArrayList<String> values) {
         for (var i = 0; i < inputWord.length(); i++) {
             var currentC = inputWord.charAt(i);
             var p = inputWord.substring(0, i);
