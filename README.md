@@ -88,3 +88,38 @@ To build a jar file from the output use:
 ```sh
 java -classpath spell.jar spell.Main notsobig.txt cow
 ```
+
+# Implementing SpellChecker
+
+1. Download the two zip files
+1. Create a project named SpellCorrector
+1. Move the source code into `src/spell`
+1. Move the tests into `src/passoff`
+1. Move the jar files into `jar`
+1. Add the jar files to the `project structure` > `project settings` > `module` > `dependencies`
+1. Create Trie, SpellCorrector, and Node classes and implement the stub of their interfaces.
+1. Implement Node
+   1. Add child array and value properties
+   1. Implement `INode` methods
+1. Implement Trie
+   1. Add `root` Node
+1. Add default Trie `toString`, `hashCode`, and `equals` methods.
+   1. `toString` must return a new line separated list of words.
+   1. `hashCode` must not use any of the automatic hashing functions.
+   1. `equals` must not use hashCode or toString
+1. Add `SpellCorrector` to main class
+
+## Similarity definition
+
+The following rules define how a word is determined to be most similar:
+
+1. It has the “closest” edit distance from the input string
+1. If multiple words have the same edit distance, the most similar word is the one with the closest edit distance that is found the most times in the dictionary
+1. If multiple words are the same edit distance and have the same count/frequency, the most similar word is the one that is first alphabetically
+
+## Edit distance
+
+1. Deletion Distance: A string s has a deletion distance 1 from another string t if and only if t is equal to s with one character removed. The only strings that are a deletion distance of 1 from “bird” are “ird”, “brd”, “bid”, and “bir”. Note that if a string s has a deletion distance of 1 from another string t then |s| = |t| -1. Also, there are exactly |t| strings that are a deletion distance of 1 from t. The dictionary may contain 0 to n of the strings one deletion distance from t.
+1. Transposition Distance: A string s has a transposition distance 1 from another string t if and only if t is equal to s with two adjacent characters transposed. The only strings that are a transposition Distance of 1 from “house” are “ohuse”, “huose”, “hosue” and “houes”. Note that if a string s has a transposition distance of 1 from another string t then |s| = |t|. Also, there are exactly |t| - 1 strings that are a transposition distance of 1 from t. The dictionary may contain 0 to n of the strings one transposition distance from t.
+1. Alteration Distance: A string s has an alteration distance 1 from another string t if and only if t is equal to s with exactly one character in s replaced by a lowercase letter that is not equal to the original letter. The only strings that are an alternation distance of 1 from “top” are “aop”, “bop”, …, “zop”, “tap”, “tbp”, …, “tzp”, “toa”, “tob”, …, and “toz”. Note that if a string s has an alteration distance of 1 from another string t then |s| = |t|. Also, there are exactly 25\* |t| strings that are an alteration distance of 1 from t. The dictionary may contain 0 to n of the strings one alteration distance from t.
+1. Insertion Distance: A string s has an insertion distance 1 from another string t if and only if t has a deletion distance of 1 from s. The only strings that are an insertion distance of 1 from “ask” are “aask”, “bask”, “cask”, … “zask”, “aask”, “absk”, “acsk”, … “azsk”, “asak”, “asbk”, “asck”, … “aszk”, “aska”, “askb”, “askc”, … “askz”. Note that if a string s has an insertion distance of 1 from another string t then |s| = |t|+1. Also, there are exactly 26\* (|t| + 1) strings that are an insertion distance of 1 from t. The dictionary may contain 0 to n of the strings one insertion distance from t.
