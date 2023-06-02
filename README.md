@@ -140,6 +140,8 @@ java -classpath spell.jar spell.Main notsobig.txt cow
      }
    }
    ```
+1. Collect the matching results and return the one that has the highest value.
+1. If nothing matches then run it again with the list from edit distance 1.
 
 ## Similarity definition
 
