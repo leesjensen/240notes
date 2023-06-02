@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/spell.iml" filepath="$PROJECT_DIR$/spell.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpellingCorrector.iml" filepath="$PROJECT_DIR$/SpellingCorrector.iml" />
     </modules>
   </component>
 </project>
