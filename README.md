@@ -126,6 +126,20 @@ java -classpath spell.jar spell.Main notsobig.txt cow
       }
       ```
 1. Make sure you lowercase the words passed to `suggestSimilarWord`.
+1. All of the edit functions take a form of two substrings being combined in some way.
+   ```java
+     private void calculateAlteration(String inputWord, ArrayList<String> words) {
+     for (var i = 0; i < inputWord.length(); i++) {
+         for (var c : Trie.alphabet) {
+             if (inputWord.charAt(i) != c) {
+                 var p = inputWord.substring(0, i);
+                 var s = inputWord.substring(i + 1);
+                 words.add(String.format("%s%c%s", p, c, s));
+             }
+         }
+     }
+   }
+   ```
 
 ## Similarity definition
 
