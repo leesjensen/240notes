@@ -91,6 +91,7 @@ java -classpath spell.jar spell.Main notsobig.txt cow
 
 # Implementing SpellChecker
 
+1. You have four hours to complete the exam. There are three tries with decreasing max value (100, 80, 60). Save 30 minutes to upload your artifacts.
 1. Download the two zip files
 1. Create a project named SpellCorrector
 1. Move the source code into `src/spell`
@@ -125,6 +126,7 @@ java -classpath spell.jar spell.Main notsobig.txt cow
           }
       }
       ```
+1. Just remember `File` and `Scanner` and that it users `hasNext` and `next` to iterate.
 1. Make sure you lowercase the words passed to `suggestSimilarWord`.
 1. All of the edit functions take a form of two substrings being combined in some way.
    ```java
@@ -157,3 +159,22 @@ The following rules define how a word is determined to be most similar:
 1. Transposition Distance: A string s has a transposition distance 1 from another string t if and only if t is equal to s with two adjacent characters transposed. The only strings that are a transposition Distance of 1 from “house” are “ohuse”, “huose”, “hosue” and “houes”. Note that if a string s has a transposition distance of 1 from another string t then |s| = |t|. Also, there are exactly |t| - 1 strings that are a transposition distance of 1 from t. The dictionary may contain 0 to n of the strings one transposition distance from t.
 1. Alteration Distance: A string s has an alteration distance 1 from another string t if and only if t is equal to s with exactly one character in s replaced by a lowercase letter that is not equal to the original letter. The only strings that are an alternation distance of 1 from “top” are “aop”, “bop”, …, “zop”, “tap”, “tbp”, …, “tzp”, “toa”, “tob”, …, and “toz”. Note that if a string s has an alteration distance of 1 from another string t then |s| = |t|. Also, there are exactly 25\* |t| strings that are an alteration distance of 1 from t. The dictionary may contain 0 to n of the strings one alteration distance from t.
 1. Insertion Distance: A string s has an insertion distance 1 from another string t if and only if t has a deletion distance of 1 from s. The only strings that are an insertion distance of 1 from “ask” are “aask”, “bask”, “cask”, … “zask”, “aask”, “absk”, “acsk”, … “azsk”, “asak”, “asbk”, “asck”, … “aszk”, “aska”, “askb”, “askc”, … “askz”. Note that if a string s has an insertion distance of 1 from another string t then |s| = |t|+1. Also, there are exactly 26\* (|t| + 1) strings that are an insertion distance of 1 from t. The dictionary may contain 0 to n of the strings one insertion distance from t.
+
+## Results
+
+1. I implemented this three times. Once to figure it out. A second time to see if I could do it again. This time I took careful notes (above). A third time to time myself. Each time I created a totally different solution.
+1. On the third time, without using my notes, I was able to complete this in 1:45 minutes.
+1. I find this very nerve racking. It forces me to go as fast as possible without thinking if the architecture is good.
+1. The tests are vital. Just let them guide your efforts.
+1. The basic outline is:
+   1. Create an empty project and copy in the interfaces, tests, jars, and test files.
+   1. Implement main, and the stubbed classes. Set up the project to reference the jars.
+   1. Implement reading spell checker file and simply returning the given word.
+   1. Run the trie tests
+   1. Implement Trie and Node find and add ability.
+   1. Implement toString
+   1. Implement hashCode and equals
+   1. Run Spell tests
+   1. Implement a class to track the candidate words, the generated words, the best current match, and to generate candidates using insertion, deletion, alteration, and transposition.
+   1. Use the class for edit distance one, with the input word as the candidate.
+   1. Use the class for edit distance two, with edit distance one's generated words and the candidates.
