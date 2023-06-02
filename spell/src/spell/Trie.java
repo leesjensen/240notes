@@ -1,73 +1,41 @@
 package spell;
 
-import java.util.Objects;
-
 public class Trie implements ITrie {
-    private final Node root;
-
-    public Trie() {
-        root = new Node(-1);
-    }
+    private final INode root = new Node();
 
     @Override
     public void add(String word) {
-        root.add(word);
+        INode node = root;
+        for (var c : word.toCharArray()) {
+            node = getNode(node, c);
+        }
+        node.incrementValue();
     }
 
     @Override
     public INode find(String word) {
-        if (!word.isEmpty()) {
-            return root.find(word);
+        INode node = root;
+        for (var c : word.toCharArray()) {
+            node = node.getChildren()[c - 'a'];
+            if (node == null) {
+                return null;
+            }
         }
-        return null;
+        return node.getValue() > 0 ? node : null;
     }
-
 
     @Override
     public int getWordCount() {
-        return root.getWordCount();
+        return getWordCount(root);
     }
+
 
     @Override
     public int getNodeCount() {
-        return root.getNodeCount();
+        return getNodeCount(root);
     }
 
 
-    /**
-     * The toString specification is as follows:
-     * For each word, in alphabetical order:
-     * <word>\n
-     * MUST BE RECURSIVE.
-     */
-    @Override
-    public String toString() {
-        var sb = new StringBuilder();
-
-        root.toString("", sb);
-        return sb.toString();
-    }
-
-    /**
-     * Returns the hashcode of this trie.
-     * MUST be constant time.
-     *
-     * @return a uniform, deterministic identifier for this trie.
-     */
-
-    @Override
-    public int hashCode() {
-        return root.hashCode();
-    }
-
-    /**
-     * Checks if an object is equal to this trie.
-     * MUST be recursive.
-     *
-     * @param o Object to be compared against this trie
-     * @return true if o is a spell.Trie with same structure and node count for each node
-     * false otherwise
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,4 +44,45 @@ public class Trie implements ITrie {
         return root.equals(trie.root);
     }
 
+    @Override
+    public String toString() {
+        return "Trie{" +
+                "root=" + root +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return root.hashCode();
+    }
+
+
+    private INode getNode(INode node, char c) {
+        var children = node.getChildren();
+        if (children[c - 'a'] == null) {
+            children[c - 'a'] = new Node();
+        }
+
+        return children[c - 'a'];
+    }
+
+    private int getWordCount(INode node) {
+        var count = node.getValue() > 0 ? 1 : 0;
+        for (var child : node.getChildren()) {
+            if (child != null) {
+                count += getWordCount(child);
+            }
+        }
+        return count;
+    }
+
+    private int getNodeCount(INode node) {
+        var count = 1;
+        for (var child : node.getChildren()) {
+            if (child != null) {
+                count += getNodeCount(child);
+            }
+        }
+        return count;
+    }
 }

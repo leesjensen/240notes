@@ -2,7 +2,7 @@ package spell;
 
 /**
  * DO NOT MODIFY THIS FILE!
- * Your trie node class should implement the spell.INode interface.
+ * Your trie node class should implement the INode interface.
  */
 public interface INode {
 

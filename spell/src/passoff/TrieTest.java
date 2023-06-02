@@ -1,8 +1,10 @@
-package spell;
+package passoff;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import spell.ITrie;
+import spell.Trie;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,6 +14,8 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrieTest {
+
+
     private static final String trieString = "baboon\ncar\ncares\ncaress";
     private static final String wrongTrieString = "baboon\ncar\ncar\ncares\ncaress";
     private static final String FILENAME = "notsobig.txt";
@@ -19,19 +23,20 @@ public class TrieTest {
     private ITrie studentTrie2;
 
     @BeforeEach
-    @DisplayName("Set Up spell.Trie Objects")
-    public void setup() {
-        try {
+    @DisplayName("Set Up Trie Objects")
+    public void setup(){
+        try{
             studentTrie = new Trie();
             studentTrie2 = new Trie();
-        } catch (Throwable t) {
-            fail(t.getClass() + ". Make sure class name is spell.spell.Trie.");
+        }
+        catch(Throwable t){
+            fail(t.getClass() + ". Make sure class name is spell.Trie.");
         }
     }
 
     @Test
     @DisplayName("Single Word Testing")
-    public void testSingleWord() {
+    public void testSingleWord(){
         assertEquals(studentTrie.getWordCount(), 0, "Incorrect word count on empty trie");
         add("cares");
         assertNotNull(studentTrie.find("cares"), "First word added wasn't found (\"cares\")");
@@ -41,7 +46,7 @@ public class TrieTest {
 
     @Test
     @DisplayName("Two Word Testing")
-    public void testTwoWords() {
+    public void testTwoWords(){
         add("cares");
         add("caress");
         assertNotNull(studentTrie.find("caress"), "Second word added wasn't found (\"caress\")");
@@ -51,7 +56,7 @@ public class TrieTest {
 
     @Test
     @DisplayName("New Path Testing")
-    public void testNewPath() {
+    public void testNewPath(){
         add("cares");
         add("caress");
         add("baboon");
@@ -62,7 +67,7 @@ public class TrieTest {
 
     @Test
     @DisplayName("Prefix Testing")
-    public void testPrefix() {
+    public void testPrefix(){
         add("cares");
         add("caress");
         add("baboon");
@@ -74,32 +79,32 @@ public class TrieTest {
 
     @Test
     @DisplayName("Equals Testing")
-    public void testEquals() {
+    public void testEquals(){
         add("cares");
         add("caress");
         add("baboon");
         studentTrie.add("car");
-        assertEquals(studentTrie, studentTrie, "spell.Trie found not equal to itself");
-        assertNotEquals(null, studentTrie, "spell.Trie equal to null");
-        assertNotEquals("String", studentTrie, "spell.Trie equal to a String object");
-        assertNotEquals(studentTrie2, studentTrie, "Unequal spell.Trie objects found equal (student trie has word \"car\", where other trie doesn't)");
+        assertEquals(studentTrie, studentTrie, "Trie found not equal to itself");
+        assertNotEquals(null, studentTrie, "Trie equal to null");
+        assertNotEquals("String", studentTrie, "Trie equal to a String object");
+        assertNotEquals(studentTrie2, studentTrie, "Unequal Trie objects found equal (student trie has word \"car\", where other trie doesn't)");
         studentTrie2.add("car");
-        assertEquals(studentTrie2, studentTrie, "Equal spell.Trie objects found unequal");
-        assertEquals(studentTrie2.equals(studentTrie), studentTrie.equals(studentTrie2), "spell.Trie's equals() method is not commutative");
+        assertEquals(studentTrie2, studentTrie, "Equal Trie objects found unequal");
+        assertEquals(studentTrie2.equals(studentTrie), studentTrie.equals(studentTrie2), "Trie's equals() method is not commutative");
         studentTrie2.add("car");
-        assertNotEquals(studentTrie2, studentTrie, "Unequal spell.Trie objects found equal (both have word \"car\", but word frequency is different)");
+        assertNotEquals(studentTrie2, studentTrie, "Unequal Trie objects found equal (both have word \"car\", but word frequency is different)");
     }
 
     @Test
     @DisplayName("More Equals Testing")
-    public void testMoreEquals() {
+    public void testMoreEquals(){
         assertEquals(studentTrie2, studentTrie, "Two empty tries not found equal.");
-        for (char c = 'a'; c <= 'z'; c++) {
+        for(char c = 'a'; c <= 'z'; c++){
             studentTrie.add(Character.toString(c));
         }
         assertNotEquals(studentTrie, studentTrie2, "One empty trie found equal to un-empty trie.");
         assertNotEquals(studentTrie2, studentTrie, "One empty trie found equal to un-empty trie.");
-        for (char c = 'a'; c <= 'z'; c++) {
+        for(char c = 'a'; c <= 'z'; c++){
             studentTrie2.add(Character.toString(c));
         }
         assertEquals(studentTrie2, studentTrie, "Tries with a-z on root found unequal.");
@@ -124,7 +129,7 @@ public class TrieTest {
 
     @Test
     @DisplayName("Duplicate Nodes Testing")
-    public void testDuplicateNodes() {
+    public void testDuplicateNodes(){
         add("cares");
         add("caress");
         add("baboon");
@@ -136,7 +141,7 @@ public class TrieTest {
 
     @Test
     @DisplayName("Find Testing")
-    public void testFind() {
+    public void testFind(){
         add("cares");
         add("caress");
         add("baboon");
@@ -156,20 +161,20 @@ public class TrieTest {
 
     @Test
     @DisplayName("Hash Code Testing")
-    public void testHashCode() {
+    public void testHashCode(){
         add("cares");
         add("caress");
         add("baboon");
         add("car");
         add("car");
-        assertEquals(studentTrie.hashCode(), studentTrie.hashCode(), "Same spell.Trie does not return the same hashCode");
-        assertEquals(studentTrie2.hashCode(), studentTrie.hashCode(), "Equal spell.Trie objects return unequal hashCodes");
+        assertEquals(studentTrie.hashCode(), studentTrie.hashCode(), "Same Trie does not return the same hashCode");
+        assertEquals(studentTrie2.hashCode(), studentTrie.hashCode(), "Equal Trie objects return unequal hashCodes");
         assertNotEquals(System.identityHashCode(studentTrie), studentTrie.hashCode(), "The hashCode() method was not overwritten");
     }
 
     @Test
     @DisplayName("More Hash Code Testing")
-    public void testMoreHashCode() {
+    public void testMoreHashCode(){
         studentTrie.add("dat"); //word: 1 node: 4
         studentTrie2.add("far"); //word: 1 node: 4
         assertNotEquals(studentTrie2.hashCode(), studentTrie.hashCode(), "The hashCode is too simple. Different Tries return same hashCode");
@@ -189,22 +194,22 @@ public class TrieTest {
 
     @Test
     @DisplayName("To String Testing")
-    public void testToString() {
+    public void testToString(){
         add("cares");
         add("caress");
         add("baboon");
         add("car");
         add("car");
-        assertFalse(studentTrie.toString().equalsIgnoreCase(wrongTrieString) || studentTrie.toString().equalsIgnoreCase(wrongTrieString + "\n"),
-                "spell.Trie toString() method has wrong count for (\"car\")");
-        assertTrue(studentTrie.toString().equalsIgnoreCase(trieString) || studentTrie.toString().equalsIgnoreCase(trieString + "\n"),
-                "spell.Trie toString() method returns incorrect String\n\n");
-        assertTrue(studentTrie.toString().equalsIgnoreCase(studentTrie2.toString()), "Equal spell.Trie objects' toString() methods return different Strings");
+        assertFalse(studentTrie.toString().equalsIgnoreCase(wrongTrieString) || studentTrie.toString().equalsIgnoreCase(wrongTrieString+"\n"),
+                "Trie toString() method has wrong count for (\"car\")");
+        assertTrue(studentTrie.toString().equalsIgnoreCase(trieString) || studentTrie.toString().equalsIgnoreCase(trieString+"\n"),
+                "Trie toString() method returns incorrect String\n\n");
+        assertTrue(studentTrie.toString().equalsIgnoreCase(studentTrie2.toString()), "Equal Trie objects' toString() methods return different Strings");
     }
 
     @Test
-    @DisplayName("Large spell.Trie Testing")
-    public void testLargeTrie() {
+    @DisplayName("Large Trie Testing")
+    public void testLargeTrie(){
         add("cares");
         add("caress");
         add("baboon");
@@ -231,11 +236,11 @@ public class TrieTest {
         assertEquals(78891, studentTrie.getNodeCount(),
                 "Incorrect node count after million+ word add (including many duplicates)");
         assertEquals(studentTrie2, studentTrie,
-                "Equal spell.Trie objects found unequal during million+ word add (including duplicates)");
+                "Equal Trie objects found unequal during million+ word add (including duplicates)");
         assertEquals(29157, studentTrie.getWordCount(), "Incorrect word count after many adds");
     }
 
-    private void add(String word) {
+    private void add(String word){
         studentTrie.add(word);
         studentTrie2.add(word);
     }
