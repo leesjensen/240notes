@@ -113,6 +113,19 @@ java -classpath spell.jar spell.Main notsobig.txt cow
    1. I started with the generated functions for `toString`, `hashCode`, and `equals` and then tweaked them to work.
    1. I did implement `equals` on Node and then just compared the root nodes of Trie.
 1. Run `SpellTest` and fix until they all pass
+   1. Implement the `SpellCorrector.useDictionary` method using `File` and `Scanner`.
+      ```java
+      public void useDictionary(String dictionaryFileName) throws IOException {
+          var trie = new Trie();
+          try (Scanner scanner = new Scanner(new File(dictionaryFileName))) {
+              while (scanner.hasNext()) {
+                  String n = scanner.next();
+                  trie.add(n.toLowerCase());
+              }
+          }
+      }
+      ```
+1. Make sure you lowercase the words passed to `suggestSimilarWord`.
 
 ## Similarity definition
 
