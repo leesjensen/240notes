@@ -27,8 +27,11 @@ public class Node implements INode {
         if (node.value == this.value) {
             for (var i = 0; i < children.length; i++) {
                 if (children[i] == null && node.children[i] == null) {
-                } else if (children[i] != null && node.children[i] != null && !children[i].equals(node.children[i])) {
-                    return false;
+                } else if (children[i] != null && node.children[i] != null) {
+                    if (!children[i].equals(node.children[i])) {
+                        System.out.printf("%s != %s\n", toString(), node.toString());
+                        return false;
+                    }
                 } else {
                     return false;
                 }
@@ -47,5 +50,14 @@ public class Node implements INode {
             }
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        var buf = new StringBuilder();
+        for (var i = 1; i < children.length; i++) {
+            buf.append(children[i] == null ? ' ' : Trie.alphabet[i]);
+        }
+        return String.format("{value='%d', children='%s'}", value, buf.toString());
     }
 }

@@ -3,6 +3,9 @@ package spell;
 public class Trie implements ITrie {
     private final INode root = new Node();
 
+    public static final char[] alphabet = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+
     @Override
     public void add(String word) {
         INode node = root;
@@ -46,14 +49,39 @@ public class Trie implements ITrie {
 
     @Override
     public String toString() {
-        return "Trie{" +
-                "root=" + root +
-                '}';
+        var result = new StringBuilder();
+        getWords(root, "", result);
+        return result.toString();
     }
+
+
+    private void getWords(INode node, String word, StringBuilder result) {
+        if (node.getValue() > 0) {
+            result.append(String.format("%s%n", word));
+        }
+        var children = node.getChildren();
+        for (var i = 0; i < children.length; i++) {
+            if (children[i] != null) {
+                getWords(children[i], word + alphabet[i], result);
+            }
+        }
+    }
+
 
     @Override
     public int hashCode() {
-        return root.hashCode();
+        return hashCode(root);
+    }
+
+    private int hashCode(INode node) {
+        int code = 31 * node.getValue() == 0 ? 1 : 2;
+        var children = node.getChildren();
+        for (var i = 0; i < children.length; i++) {
+            if (children[i] != null) {
+                code *= alphabet[i] * hashCode(children[i]);
+            }
+        }
+        return code;
     }
 
 
