@@ -108,6 +108,11 @@ java -classpath spell.jar spell.Main notsobig.txt cow
    1. `hashCode` must not use any of the automatic hashing functions.
    1. `equals` must not use hashCode or toString
 1. Add `SpellCorrector` to main class
+1. Run `TrieTest` and fix until they all pass
+   1. Most of the code is in Trie. These are just recursive functions for manipulating INode.
+   1. I started with the generated functions for `toString`, `hashCode`, and `equals` and then tweaked them to work.
+   1. I did implement `equals` on Node and then just compared the root nodes of Trie.
+1. Run `SpellTest` and fix until they all pass
 
 ## Similarity definition
 
