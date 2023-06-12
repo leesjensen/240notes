@@ -178,3 +178,34 @@ The following rules define how a word is determined to be most similar:
    1. Implement a class to track the candidate words, the generated words, the best current match, and to generate candidates using insertion, deletion, alteration, and transposition.
    1. Use the class for edit distance one, with the input word as the candidate.
    1. Use the class for edit distance two, with edit distance one's generated words and the candidates.
+
+# Chess
+
+`git clone https://github.com/BYUCS240TA/Chess.git`
+
+The chess project is divided into 6 different projects.
+
+1. Make sure the moves are valid
+1. Design the server
+1. Create the web api
+1. Hook it up to the database
+1. pre-game?
+1. game play
+
+I don't know if they ever build the client. Perhaps that is given to them.
+
+## Database
+
+It looks like the backend database is expected to be mysql and it is hard coded to look for it on the same server as the code is running on.
+
+`localhost:3306/chess`
+
+## Directories
+
+- Example Chess Projects - I think these are the Old versions of the working code
+- example-chess-projects - These are the current version of the code
+- Specs - Old
+- specifications - Current
+- proguard-7.3.2 - No idea
+
+##
