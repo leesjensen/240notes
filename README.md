@@ -4,6 +4,31 @@
   - [Example projects](https://github.com/BYUCS240TA/Chess/tree/main/example-chess-projects)
   - [Specification](https://github.com/BYUCS240TA/Chess/tree/main/specifications)
 
+# Instruction
+
+## IntelliJ
+
+- Turn on format on save in Settings>Tools>Actions on Save
+- Select multiple lines with cursors: `Option-Option-down/up arrow`
+- Select same text multiple cursors: `Ctrl-G`
+
+## Curl
+
+Allocated time: 20 minutes
+https://docs.google.com/presentation/d/1pM_tUVD7c6kWpHkEwuRpbWmoBFss3GuK
+
+## Git/GitHub
+
+Allocated time: 70 minutes
+
+## MySQL
+
+Allocated time: 45 minutes
+
+## WebSocket
+
+Allocated time: 70 minutes
+
 # All things Java
 
 ## History
@@ -181,18 +206,28 @@ The following rules define how a word is determined to be most similar:
 
 # Chess
 
+## Codebase
+
 `git clone https://github.com/BYUCS240TA/Chess.git`
+
+### Top level
+
+1. example-chess-projects - Project solutions
+1. specifications - Specifications. This is what is given to the students
+1. Example Chess Projects - Old stuff, maybe we can kill this now?
+1. Specs - Old stuff, maybe we can kill this now?
+1. proguard-7.3.2 - Used to obfuscate the test driver code
+
+### Project level (specifications)
 
 The chess project is divided into 6 different projects.
 
-1. Make sure the moves are valid
-1. Design the server
-1. Create the web api
-1. Hook it up to the database
-1. pre-game?
-1. game play
-
-I don't know if they ever build the client. Perhaps that is given to them.
+1. 1-chess-game - Basic board setup and moves. When the tests all pass the student is done.
+1. 2-server-design - Stubbed implementation of service endpoints. Produce the JavaDocs to pass off this deliverable. It isn't clear to me from the documentation what endpoints or code structure is required. There is an API_Calls.txt file in the root that details the endpoints. Are we going to give them that information? The diagram seems to indicate that there is a required structure to the code (Server, Handlers, Services, Data Access, Models), but I'm not sure that is enough to actually produce what you are hoping for. Honestly, I'm not sure what I am supposed to produce for this.
+1. 3-web-api - Actually implement the service. Lots of detail here about what is to be built. When the tests all pass the student is done.
+1. 4-database - Implement the database. When the tests all pass the student is done.
+1. 5-pre-game - Implement the client. When the tests all pass the student is done.
+1. 6-game-play - Implement the game using WebSocket for communication. When the tests all pass the student is done.
 
 ## Database
 
@@ -200,12 +235,36 @@ It looks like the backend database is expected to be mysql and it is hard coded 
 
 `localhost:3306/chess`
 
-## Directories
+```mysql
+CREATE DATABASE IF NOT EXISTS chess;
+SHOW databases;
+```
 
-- Example Chess Projects - I think these are the Old versions of the working code
-- example-chess-projects - These are the current version of the code
-- Specs - Old
-- specifications - Current
-- proguard-7.3.2 - No idea
+We need to change the root user and password found in `Database.java`.
 
-##
+    private static final String DB_USERNAME = "chessadmin";
+    private static final String DB_PASSWORD = "monkeypie";
+
+### Users
+
+```mysql
+SELECT user FROM mysql.user;
+CREATE USER IF NOT EXISTS chessadmin IDENTIFIED BY 'monkeypie';
+GRANT CREATE, SELECT, INSERT ON chess.* TO chessadmin;
+```
+
+## Building it for myself
+
+### 1-chess-game
+
+I followed the instructions `GettingStarted-ChessGame.docx` in order to get the project set up.
+
+1. Create project
+1. Create `main`, `starter`, and `test` under `src` dir. Mark `main` and `stater` as "Sources root", mark `test` as "Test root".
+1. Copy over `chess` and `passoffTeests` folders from the `specification` provided code.
+1. Added `org.junit.jupiter:junit-jupiter:5.9.2` as a dependency from Maven.
+1. Reviewed `ChessGame.docx`. This basically tells the class structure and how to setup the tests. The rules of chess are also covered.
+
+I then created a stub for the required interfaces (board, game, move, piece, and position) in a `chess` package.
+
+Next, Starting with `BishopMoveTest`, I kept writing code until all the tests passed.
