@@ -116,4 +116,32 @@ public class BishopMoveTests {
         var actualMoves = game.validMoves(position);
         assertEquals(validMoves, actualMoves);
     }
+
+
+    @Test
+    public void pinned() {
+
+        /*
+        | | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| |r| | | |B| |K|
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+         */
+
+        var bishop = getNewPiece(WHITE, BISHOP);
+        var bishopPosition = getNewPosition(5, 6);
+        board.addPiece(bishopPosition, bishop);
+
+        //Enemy Rook causing pin (white bishop can't move out of line)
+        board.addPiece(getNewPosition(5, 2), getNewPiece(BLACK, ROOK));
+        board.addPiece(getNewPosition(5, 8), getNewPiece(WHITE, KING));
+
+        //check
+        game.setBoard(board);
+        assertEquals(validMoves, game.validMoves(bishopPosition));
+    }
 }
