@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.util.Collection;
 
 public class Bishop extends Piece {
+    public Bishop(ChessGame.TeamColor pieceColor) {
+        super(pieceColor, PieceType.BISHOP);
+    }
+
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition pos) {
         var moves = new HashSet<ChessMove>();
@@ -19,17 +23,16 @@ public class Bishop extends Piece {
         int col = pos.getColumn() + colInc;
         while (row > 0 && col > 0 && row < 9 && col < 9) {
             var newPos = new Position(row, col);
-            moves.add(new Move(pos, newPos, null));
-            row += rowInc;
-            col += colInc;
+            var pieceAt = board.getPiece(newPos);
+            if (pieceAt == null || pieceAt.getTeamColor() != pieceColor) {
+                moves.add(new Move(pos, newPos, null));
+                row += rowInc;
+                col += colInc;
+            }
 
-            if (board.getPiece(newPos) != null) {
+            if (pieceAt != null) {
                 break;
             }
         }
-    }
-
-    public Bishop(ChessGame.TeamColor pieceColor) {
-        super(pieceColor, PieceType.BISHOP);
     }
 }

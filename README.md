@@ -267,4 +267,4 @@ I followed the instructions `GettingStarted-ChessGame.docx` in order to get the 
 
 I then created a stub for the required interfaces (board, game, move, piece, and position) in a `chess` package.
 
-Next, Starting with `BishopMoveTest`, I kept writing code until all the tests passed.
+I then starting with `BishopMoveTest`. After a bunch of boilerplate code and hashCode and equals functionality I finally got the tests to pass. You must make sure you check the color of the pieces.
