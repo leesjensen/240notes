@@ -1,10 +1,11 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Game implements ChessGame {
 
-    private ChessBoard board;
+    private Board board;
 
     @Override
     public TeamColor getTeamTurn() {
@@ -25,7 +26,7 @@ public class Game implements ChessGame {
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
-
+        throw new InvalidMoveException();
     }
 
     @Override
@@ -45,11 +46,33 @@ public class Game implements ChessGame {
 
     @Override
     public void setBoard(ChessBoard board) {
-        this.board = board;
+        this.board = (Board) board;
     }
 
     @Override
     public ChessBoard getBoard() {
         return null;
     }
+
+    private Collection<ChessPosition> isUnderAttack(ChessPosition targetPos) {
+        var attackers = new ArrayList<ChessPosition>();
+        var targetPiece = board.getPiece(targetPos);
+
+        var iter = board.iterator();
+        while (iter.hasNext()) {
+            var attackerPos = iter.next();
+            var attackerPiece = board.getPiece(attackerPos);
+            if (attackerPiece.getTeamColor() != targetPiece.getTeamColor()) {
+                var moves = attackerPiece.pieceMoves(board, attackerPos);
+                for (var move : moves) {
+                    if (move.getEndPosition().equals(targetPos)) {
+                        attackers.add(attackerPos);
+                        break;
+                    }
+                }
+            }
+        }
+        return attackers;
+    }
+
 }
