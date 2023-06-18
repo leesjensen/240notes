@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static passoffTests.TestFactory.*;
 import static chess.ChessGame.TeamColor.BLACK;
 import static chess.ChessGame.TeamColor.WHITE;
 import static chess.ChessPiece.PieceType.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static passoffTests.TestFactory.*;
 
 public class RookMoveTests {
     private ChessBoard board;
@@ -21,7 +21,7 @@ public class RookMoveTests {
     private Set<ChessMove> moves;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         board = getNewBoard();
         game = getNewGame();
         moves = new HashSet<>();
@@ -42,30 +42,30 @@ public class RookMoveTests {
          */
 
         rook = getNewPiece(WHITE, ROOK);
-        rookPosition = getNewPosition(2,3);
+        rookPosition = getNewPosition(2, 3);
         board.addPiece(rookPosition, rook);
 
         //up
-        moves.add(getNewMove(rookPosition, getNewPosition(2,4), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(2,5), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(2,6), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(2,7), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(2,8), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(2, 4), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(2, 5), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(2, 6), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(2, 7), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(2, 8), null));
 
         //down
-        moves.add(getNewMove(rookPosition, getNewPosition(2,2), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(2,1), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(2, 2), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(2, 1), null));
 
         //left
-        moves.add(getNewMove(rookPosition, getNewPosition(1,3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(1, 3), null));
 
         //right
-        moves.add(getNewMove(rookPosition, getNewPosition(3,3), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(4,3), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(5,3), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(6,3), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(7,3), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(8,3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(3, 3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(4, 3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(5, 3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(6, 3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(7, 3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(8, 3), null));
 
         //check
         game.setBoard(board);
@@ -73,7 +73,7 @@ public class RookMoveTests {
     }
 
     @Test
-    public void piecesInWay(){
+    public void piecesInWay() {
 
         /*
         | | | | | | | | |
@@ -87,27 +87,27 @@ public class RookMoveTests {
          */
 
         rook = getNewPiece(BLACK, ROOK);
-        rookPosition = getNewPosition(4,1);
+        rookPosition = getNewPosition(4, 1);
         board.addPiece(rookPosition, rook);
 
         //pieces in way
-        board.addPiece(getNewPosition(2,1), getNewPiece(BLACK, QUEEN));
-        board.addPiece(getNewPosition(4,6), getNewPiece(WHITE, BISHOP));
-        board.addPiece(getNewPosition(5,1), getNewPiece(BLACK, KNIGHT));
+        board.addPiece(getNewPosition(2, 1), getNewPiece(BLACK, QUEEN));
+        board.addPiece(getNewPosition(4, 6), getNewPiece(WHITE, BISHOP));
+        board.addPiece(getNewPosition(5, 1), getNewPiece(BLACK, KNIGHT));
 
         //extra decoy pieces
-        board.addPiece(getNewPosition(5,2), getNewPiece(WHITE, QUEEN));
-        board.addPiece(getNewPosition(2,3), getNewPiece(BLACK, KING));
+        board.addPiece(getNewPosition(5, 2), getNewPiece(WHITE, QUEEN));
+        board.addPiece(getNewPosition(2, 3), getNewPiece(BLACK, KING));
 
         //left
-        moves.add(getNewMove(rookPosition, getNewPosition(3,1), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(3, 1), null));
 
         //up
-        moves.add(getNewMove(rookPosition, getNewPosition(4,2), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(4,3), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(4,4), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(4,5), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(4,6), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(4, 2), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(4, 3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(4, 4), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(4, 5), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(4, 6), null));
 
 
         //check
@@ -116,7 +116,7 @@ public class RookMoveTests {
     }
 
     @Test
-    public void xrayCheck(){
+    public void pinCheck() {
 
         /*
         | | | | | | | | |
@@ -130,18 +130,18 @@ public class RookMoveTests {
          */
 
         rook = getNewPiece(WHITE, ROOK);
-        rookPosition = getNewPosition(5,6);
+        rookPosition = getNewPosition(5, 6);
         board.addPiece(rookPosition, rook);
 
-        //Enemy Rook causing -xray check (white rook can't move out of line)
-        board.addPiece(getNewPosition(5,2), getNewPiece(BLACK, ROOK));
-        board.addPiece( getNewPosition(5,8), getNewPiece(WHITE, KING));
+        //Enemy Rook causing pin (white rook can't move out of line)
+        board.addPiece(getNewPosition(5, 2), getNewPiece(BLACK, ROOK));
+        board.addPiece(getNewPosition(5, 8), getNewPiece(WHITE, KING));
 
-        moves.add(getNewMove(rookPosition, getNewPosition(5,7), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(5,5), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(5,4), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(5,3), null));
-        moves.add(getNewMove(rookPosition, getNewPosition(5,2), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(5, 7), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(5, 5), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(5, 4), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(5, 3), null));
+        moves.add(getNewMove(rookPosition, getNewPosition(5, 2), null));
 
 
         //check

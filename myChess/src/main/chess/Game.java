@@ -1,7 +1,7 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class Game implements ChessGame {
 
@@ -20,7 +20,21 @@ public class Game implements ChessGame {
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         var piece = board.getPiece(startPosition);
-        return piece.pieceMoves(board, startPosition);
+        var possibleMoves = piece.pieceMoves(board, startPosition);
+
+        var validMoves = new HashSet<ChessMove>();
+
+        // Make sure none of the possible moves are illegal.
+        for (var move : possibleMoves) {
+            var newBoard = new Board(board);
+            newBoard.movePiece(move);
+            var king = newBoard.getPiece(piece.getTeamColor(), ChessPiece.PieceType.KING);
+            if (king == null || newBoard.isUnderAttack(king.getPos()).size() == 0) {
+                validMoves.add(move);
+            }
+        }
+
+        return validMoves;
     }
 
 
@@ -31,7 +45,13 @@ public class Game implements ChessGame {
 
     @Override
     public Boolean isInCheck(TeamColor teamColor) {
-        return null;
+        var king = board.getPiece(teamColor, ChessPiece.PieceType.KING);
+
+        // king under attack.
+        // can't kill. If more than 1 then the answer is automatic no.
+        // can't move. Got to check every move the king can make by creating new board and checking if under attack.
+
+        return board.isUnderAttack(king.getPos()).size() > 0;
     }
 
     @Override
@@ -54,25 +74,5 @@ public class Game implements ChessGame {
         return null;
     }
 
-    private Collection<ChessPosition> isUnderAttack(ChessPosition targetPos) {
-        var attackers = new ArrayList<ChessPosition>();
-        var targetPiece = board.getPiece(targetPos);
-
-        var iter = board.iterator();
-        while (iter.hasNext()) {
-            var attackerPos = iter.next();
-            var attackerPiece = board.getPiece(attackerPos);
-            if (attackerPiece.getTeamColor() != targetPiece.getTeamColor()) {
-                var moves = attackerPiece.pieceMoves(board, attackerPos);
-                for (var move : moves) {
-                    if (move.getEndPosition().equals(targetPos)) {
-                        attackers.add(attackerPos);
-                        break;
-                    }
-                }
-            }
-        }
-        return attackers;
-    }
 
 }

@@ -1,7 +1,5 @@
 package chess;
 
-import java.util.Objects;
-
 public class Move implements ChessMove {
 
     ChessPosition start;
@@ -42,12 +40,13 @@ public class Move implements ChessMove {
 
     @Override
     public int hashCode() {
-        return 31 * start.hashCode() * end.hashCode();
+        return (1000 * start.hashCode()) + end.hashCode();
     }
 
 
     @Override
     public String toString() {
-        return String.format("%s:%s", start.toString(), end.toString());
+        var p = (promotionPiece == null ? "" : ":" + promotionPiece);
+        return String.format("%s:%s%s", start.toString(), end.toString(), p);
     }
 }

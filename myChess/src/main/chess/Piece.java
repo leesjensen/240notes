@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 public class Piece implements ChessPiece {
 
@@ -37,6 +38,26 @@ public class Piece implements ChessPiece {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return Collections.<ChessMove>emptyList();
+        return Collections.emptyList();
     }
+
+
+    void calculateMoves(ChessBoard board, ChessPosition pos, int rowInc, int colInc, HashSet<ChessMove> moves) {
+        int row = pos.getRow() + rowInc;
+        int col = pos.getColumn() + colInc;
+        while (row > 0 && col > 0 && row < 9 && col < 9) {
+            var newPos = new Position(row, col);
+            var pieceAt = board.getPiece(newPos);
+            if (pieceAt == null || pieceAt.getTeamColor() != pieceColor) {
+                moves.add(new Move(pos, newPos, null));
+                row += rowInc;
+                col += colInc;
+            }
+
+            if (pieceAt != null) {
+                break;
+            }
+        }
+    }
+
 }

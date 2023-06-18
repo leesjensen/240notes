@@ -2,7 +2,7 @@ package chess;
 
 public class Position implements ChessPosition {
 
-    private Integer row, column;
+    final private Integer row, column;
 
     public Position(Integer row, Integer column) {
         this.row = row;
@@ -25,12 +25,12 @@ public class Position implements ChessPosition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var position = (Position) o;
-        return (row == position.row && column == position.column);
+        return (row.equals(position.row) && column.equals(position.column));
     }
 
     @Override
     public int hashCode() {
-        return 31 * row * column;
+        return ((10 * row) + column);
     }
 
 
