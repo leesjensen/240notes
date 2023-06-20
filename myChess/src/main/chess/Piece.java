@@ -42,7 +42,7 @@ public class Piece implements ChessPiece {
     }
 
 
-    void calculateMoves(ChessBoard board, ChessPosition pos, int rowInc, int colInc, HashSet<ChessMove> moves) {
+    void calculateMoves(ChessBoard board, ChessPosition pos, int rowInc, int colInc, HashSet<ChessMove> moves, boolean allowDistance) {
         int row = pos.getRow() + rowInc;
         int col = pos.getColumn() + colInc;
         while (row > 0 && col > 0 && row < 9 && col < 9) {
@@ -54,7 +54,7 @@ public class Piece implements ChessPiece {
                 col += colInc;
             }
 
-            if (pieceAt != null) {
+            if (!allowDistance || pieceAt != null) {
                 break;
             }
         }

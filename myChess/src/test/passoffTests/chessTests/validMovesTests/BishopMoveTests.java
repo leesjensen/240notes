@@ -119,7 +119,7 @@ public class BishopMoveTests {
 
 
     @Test
-    public void pinned() {
+    public void pinCheck() {
 
         /*
         | | | | | | | | |

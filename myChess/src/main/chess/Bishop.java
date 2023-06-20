@@ -11,10 +11,10 @@ public class Bishop extends Piece {
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition pos) {
         var moves = new HashSet<ChessMove>();
-        calculateMoves(board, pos, -1, -1, moves);
-        calculateMoves(board, pos, 1, -1, moves);
-        calculateMoves(board, pos, -1, 1, moves);
-        calculateMoves(board, pos, 1, 1, moves);
+        calculateMoves(board, pos, -1, -1, moves, true);
+        calculateMoves(board, pos, 1, -1, moves, true);
+        calculateMoves(board, pos, -1, 1, moves, true);
+        calculateMoves(board, pos, 1, 1, moves, true);
         return moves;
     }
 }
