@@ -38,7 +38,22 @@ public class Board implements ChessBoard {
 
     @Override
     public void resetBoard() {
-
+        var pieces = new ChessPiece.PieceType[]{
+                ChessPiece.PieceType.ROOK,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.KING,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.ROOK
+        };
+        for (var i = 0; i < 8; i++) {
+            board[0][i] = new Piece(ChessGame.TeamColor.WHITE, pieces[i]);
+            board[1][i] = new Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            board[6][i] = new Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            board[7][i] = new Piece(ChessGame.TeamColor.BLACK, pieces[i]);
+        }
     }
 
     public PiecePlacement getPiece(ChessGame.TeamColor color, ChessPiece.PieceType type) {
