@@ -6,8 +6,8 @@ import java.util.HashSet;
 
 public class Piece implements ChessPiece {
 
-    ChessGame.TeamColor pieceColor;
-    ChessPiece.PieceType type;
+    protected ChessGame.TeamColor pieceColor;
+    protected ChessPiece.PieceType type;
 
 
     public static ChessPiece Create(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -41,8 +41,14 @@ public class Piece implements ChessPiece {
         return Collections.emptyList();
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s:%s", type, pieceColor);
 
-    void calculateMoves(ChessBoard board, ChessPosition pos, int rowInc, int colInc, HashSet<ChessMove> moves, boolean allowDistance) {
+    }
+
+
+    protected void calculateMoves(ChessBoard board, ChessPosition pos, int rowInc, int colInc, HashSet<ChessMove> moves, boolean allowDistance) {
         int row = pos.getRow() + rowInc;
         int col = pos.getColumn() + colInc;
         while (row > 0 && col > 0 && row < 9 && col < 9) {

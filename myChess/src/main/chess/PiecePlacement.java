@@ -1,15 +1,15 @@
 package chess;
 
 public class PiecePlacement {
-    Piece piece;
-    Position pos;
+    private final ChessPiece piece;
+    private final Position pos;
 
-    public PiecePlacement(Piece piece, Position pos) {
+    public PiecePlacement(ChessPiece piece, Position pos) {
         this.piece = piece;
         this.pos = pos;
     }
 
-    public Piece getPiece() {
+    public ChessPiece getPiece() {
         return piece;
     }
 
@@ -17,4 +17,8 @@ public class PiecePlacement {
         return pos;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s:%s:%s", pos.toString(), piece.getPieceType(), piece.getTeamColor());
+    }
 }

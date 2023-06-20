@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public class Board implements ChessBoard {
 
-    final private Piece[][] board = new Piece[8][8];
+    final private ChessPiece[][] board = new ChessPiece[8][8];
 
     public Board() {
     }
@@ -49,10 +49,10 @@ public class Board implements ChessBoard {
                 ChessPiece.PieceType.ROOK
         };
         for (var i = 0; i < 8; i++) {
-            board[0][i] = new Piece(ChessGame.TeamColor.WHITE, pieces[i]);
-            board[1][i] = new Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-            board[6][i] = new Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-            board[7][i] = new Piece(ChessGame.TeamColor.BLACK, pieces[i]);
+            board[0][i] = Piece.Create(ChessGame.TeamColor.WHITE, pieces[i]);
+            board[1][i] = Piece.Create(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            board[6][i] = Piece.Create(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            board[7][i] = Piece.Create(ChessGame.TeamColor.BLACK, pieces[i]);
         }
     }
 
@@ -65,22 +65,40 @@ public class Board implements ChessBoard {
         return null;
     }
 
-    public Collection<ChessPosition> isUnderAttack(ChessPosition targetPos) {
+    /**
+     * @param targetPos for attackers.
+     * @return the pieces of the opposite color that are attacking the given square.
+     */
+    public Collection<ChessPosition> getAttackers(ChessPosition targetPos) {
         var attackers = new ArrayList<ChessPosition>();
         var targetPiece = getPiece(targetPos);
 
-        for (var placement : collection()) {
-            if (placement.getPiece().getTeamColor() != targetPiece.getTeamColor()) {
-                var moves = placement.getPiece().pieceMoves(this, placement.getPos());
+        for (var candidateAttacker : collection()) {
+            if (candidateAttacker.getPiece().getTeamColor() != targetPiece.getTeamColor()) {
+                var moves = candidateAttacker.getPiece().pieceMoves(this, candidateAttacker.getPos());
                 for (var move : moves) {
-                    if (move.getEndPosition().equals(targetPos)) {
-                        attackers.add(placement.getPos());
+                    if (move.getEndPosition().equals(targetPos) && isMoveLegal(move)) {
+                        attackers.add(candidateAttacker.getPos());
                         break;
                     }
                 }
             }
         }
         return attackers;
+    }
+
+    /**
+     * @return true if the move is legal
+     */
+    public boolean isMoveLegal(ChessMove move) {
+        var piece = getPiece(move.getStartPosition());
+        var newBoard = new Board(this);
+        newBoard.movePiece(move);
+        var king = newBoard.getPiece(piece.getTeamColor(), ChessPiece.PieceType.KING);
+        if (king == null || newBoard.getAttackers(king.getPos()).size() == 0) {
+            return true;
+        }
+        return false;
     }
 
     static public boolean isSquareEmpty(ChessBoard board, Integer row, Integer col) {
