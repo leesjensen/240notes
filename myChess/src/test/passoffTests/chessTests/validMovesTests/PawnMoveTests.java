@@ -23,26 +23,26 @@ public class PawnMoveTests {
     private final ChessPosition d4Position = getNewPosition(4, 4);
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         //empty board
         chessBoard = getNewBoard();
         chessGame = getNewGame();
 
 
         //generic starting spot. Can modify from here as needed
-        validMovesFromD4White.add(getNewMove(d4Position, getNewPosition(5,4), null));
+        validMovesFromD4White.add(getNewMove(d4Position, getNewPosition(5, 4), null));
 
-        validMovesFromD4Black.add(getNewMove(d4Position, getNewPosition(3,4), null));
+        validMovesFromD4Black.add(getNewMove(d4Position, getNewPosition(3, 4), null));
     }
 
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         validMovesFromD4White.clear();
         validMovesFromD4Black.clear();
     }
 
     @Test
-    public void emptyBoardWhite(){
+    public void emptyBoardWhite() {
 
         /*
         | | | | | | | | |
@@ -63,7 +63,7 @@ public class PawnMoveTests {
     }
 
     @Test
-    public void emptyBoardBlack(){
+    public void emptyBoardBlack() {
 
         /*
         | | | | | | | | |
@@ -84,7 +84,7 @@ public class PawnMoveTests {
 
     //A pawn's first move (from the starting position) they can move 2 spaces instead of just 1
     @Test
-    public void doubleMoveWhite(){
+    public void doubleMoveWhite() {
 
         /*
         | | | | | | | | |
@@ -98,17 +98,17 @@ public class PawnMoveTests {
          */
 
         ChessPiece pawn = getNewPiece(WHITE, PAWN);
-        ChessPosition startPosition = getNewPosition(2,5);
+        ChessPosition startPosition = getNewPosition(2, 5);
 
         chessBoard.addPiece(startPosition, pawn);
-        ChessMove doubleMove = getNewMove(startPosition, getNewPosition(4,5), null);
+        ChessMove doubleMove = getNewMove(startPosition, getNewPosition(4, 5), null);
         chessGame.setBoard(chessBoard);
 
         assertTrue(chessGame.validMoves(startPosition).contains(doubleMove));
     }
 
     @Test
-    public void doubleMoveBlack(){
+    public void doubleMoveBlack() {
 
         /*
         | | | | | | | | |
@@ -122,17 +122,17 @@ public class PawnMoveTests {
          */
 
         ChessPiece pawn = getNewPiece(BLACK, PAWN);
-        ChessPosition startPosition = getNewPosition(7,3);
+        ChessPosition startPosition = getNewPosition(7, 3);
 
         chessBoard.addPiece(startPosition, pawn);
-        ChessMove doubleMove = getNewMove(startPosition, getNewPosition(5,3), null);
+        ChessMove doubleMove = getNewMove(startPosition, getNewPosition(5, 3), null);
         chessGame.setBoard(chessBoard);
 
         assertTrue(chessGame.validMoves(startPosition).contains(doubleMove));
     }
 
     @Test
-    public void edgePromotionWhite(){
+    public void edgePromotionWhite() {
 
         /*
         | | | | | | | | |
@@ -146,8 +146,8 @@ public class PawnMoveTests {
          */
 
         Set<ChessMove> validMoves = new HashSet<>();
-        ChessPosition start = getNewPosition(7,3);
-        ChessPosition end = getNewPosition(8,3);
+        ChessPosition start = getNewPosition(7, 3);
+        ChessPosition end = getNewPosition(8, 3);
 
         //add all promotions
         validMoves.add(getNewMove(start, end, QUEEN));
@@ -163,7 +163,7 @@ public class PawnMoveTests {
     }
 
     @Test
-    public void edgePromotionBlack(){
+    public void edgePromotionBlack() {
 
         /*
         | | | | | | | | |
@@ -178,7 +178,7 @@ public class PawnMoveTests {
 
         Set<ChessMove> validMoves = new HashSet<>();
         ChessPosition start = getNewPosition(2, 3);
-        ChessPosition end = getNewPosition(1,3);
+        ChessPosition end = getNewPosition(1, 3);
 
         //add all promotions
         validMoves.add(getNewMove(start, end, QUEEN));
@@ -193,8 +193,50 @@ public class PawnMoveTests {
         assertEquals(validMoves, chessGame.validMoves(start));
     }
 
+
     @Test
-    public void piecesInWayWhite(){
+    public void attackPromotionBlack() {
+
+        /*
+        | | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | |p| | | | | |
+		| | | |k| | | | |
+         */
+
+        Set<ChessMove> validMoves = new HashSet<>();
+        ChessPosition start = getNewPosition(2, 3);
+        ChessPosition end = getNewPosition(1, 3);
+
+        //add all promotions
+        validMoves.add(getNewMove(start, end, QUEEN));
+        validMoves.add(getNewMove(start, end, BISHOP));
+        validMoves.add(getNewMove(start, end, ROOK));
+        validMoves.add(getNewMove(start, end, KNIGHT));
+
+        end = getNewPosition(1, 4);
+
+        //add all promotions with attack
+        validMoves.add(getNewMove(start, end, QUEEN));
+        validMoves.add(getNewMove(start, end, BISHOP));
+        validMoves.add(getNewMove(start, end, ROOK));
+        validMoves.add(getNewMove(start, end, KNIGHT));
+
+        //check
+        ChessPiece pawn = getNewPiece(BLACK, PAWN);
+        chessBoard.addPiece(start, pawn);
+        ChessPiece knight = getNewPiece(WHITE, KNIGHT);
+        chessBoard.addPiece(end, knight);
+        chessGame.setBoard(chessBoard);
+        assertEquals(validMoves, chessGame.validMoves(start));
+    }
+
+    @Test
+    public void piecesInWayWhite() {
 
         /*
         | | | | | | | | |
@@ -217,7 +259,7 @@ public class PawnMoveTests {
     }
 
     @Test
-    public void piecesInWayBlack(){
+    public void piecesInWayBlack() {
 
         /*
         | | | | | | | | |
@@ -234,14 +276,14 @@ public class PawnMoveTests {
 
         //same team obstacle
         chessBoard.addPiece(d4Position, pawn);
-        chessBoard.addPiece(getNewPosition(3,4), getNewPiece(BLACK, KING));
+        chessBoard.addPiece(getNewPosition(3, 4), getNewPiece(BLACK, KING));
         chessGame.setBoard(chessBoard);
         assertTrue(chessGame.validMoves(d4Position).isEmpty());
 
     }
 
     @Test
-    public void doubleMoveBlocked(){
+    public void doubleMoveBlocked() {
 
         /*
         | | | | | | | | |
@@ -255,24 +297,24 @@ public class PawnMoveTests {
          */
 
         ChessPiece whitePawn = getNewPiece(WHITE, PAWN);
-        ChessPosition whitePosition = getNewPosition(2,7);
+        ChessPosition whitePosition = getNewPosition(2, 7);
         chessBoard.addPiece(whitePosition, whitePawn);
 
-        ChessPiece blackPawn   = getNewPiece(BLACK, PAWN);
-        ChessPosition blackPosition = getNewPosition(7,3);
+        ChessPiece blackPawn = getNewPiece(BLACK, PAWN);
+        ChessPosition blackPosition = getNewPosition(7, 3);
         chessBoard.addPiece(blackPosition, blackPawn);
 
         //white second space blocked
-        chessBoard.addPiece(getNewPosition(4,7), blackPawn);
+        chessBoard.addPiece(getNewPosition(4, 7), blackPawn);
 
         //black first space blocked
-        chessBoard.addPiece(getNewPosition(6,3), blackPawn);
+        chessBoard.addPiece(getNewPosition(6, 3), blackPawn);
 
         chessGame.setBoard(chessBoard);
 
         //test white
         Set<ChessMove> whiteMoves = new HashSet<>();
-        whiteMoves.add(getNewMove(whitePosition, getNewPosition(3,7), null));
+        whiteMoves.add(getNewMove(whitePosition, getNewPosition(3, 7), null));
         assertEquals(whiteMoves, chessGame.validMoves(whitePosition));
 
         //test black
@@ -280,7 +322,7 @@ public class PawnMoveTests {
     }
 
     @Test
-    public void capturingByWhite(){
+    public void capturingByWhite() {
 
         /*
         | | | | | | | | |
@@ -297,13 +339,13 @@ public class PawnMoveTests {
         chessBoard.addPiece(d4Position, pawn);
 
         //same team no capture
-        chessBoard.addPiece(getNewPosition(5,5), getNewPiece(WHITE, KNIGHT));
+        chessBoard.addPiece(getNewPosition(5, 5), getNewPiece(WHITE, KNIGHT));
 
         // enemy can capture left
-        chessBoard.addPiece(getNewPosition(5,3), getNewPiece(BLACK, ROOK));
+        chessBoard.addPiece(getNewPosition(5, 3), getNewPiece(BLACK, ROOK));
 
         //expected moves
-        validMovesFromD4White.add(getNewMove(d4Position, getNewPosition(5,3), null));
+        validMovesFromD4White.add(getNewMove(d4Position, getNewPosition(5, 3), null));
 
         //check
         chessGame.setBoard(chessBoard);
@@ -311,7 +353,7 @@ public class PawnMoveTests {
     }
 
     @Test
-    public void capturingByBlack(){
+    public void capturingByBlack() {
 
         /*
         | | | | | | | | |
@@ -328,14 +370,14 @@ public class PawnMoveTests {
         chessBoard.addPiece(d4Position, pawn);
 
         //piece blocking forward
-        chessBoard.addPiece(getNewPosition(3,4), getNewPiece(BLACK, KNIGHT));
+        chessBoard.addPiece(getNewPosition(3, 4), getNewPiece(BLACK, KNIGHT));
 
         // can capture right
-        chessBoard.addPiece(getNewPosition(3,5), getNewPiece(WHITE, ROOK));
+        chessBoard.addPiece(getNewPosition(3, 5), getNewPiece(WHITE, ROOK));
 
         //expected moves
         Set<ChessMove> moves = new HashSet<>();
-        moves.add(getNewMove(d4Position, getNewPosition(3,5), null));
+        moves.add(getNewMove(d4Position, getNewPosition(3, 5), null));
 
         //check
         chessGame.setBoard(chessBoard);

@@ -68,6 +68,11 @@ public class Board implements ChessBoard {
         return attackers;
     }
 
+    static public boolean isSquareEmpty(ChessBoard board, Integer row, Integer col) {
+        var pieceAt = board.getPiece(new Position(row, col));
+        return pieceAt == null;
+    }
+
     public Collection<PiecePlacement> collection() {
         var result = new ArrayList<PiecePlacement>();
 
