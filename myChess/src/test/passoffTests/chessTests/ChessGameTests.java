@@ -287,6 +287,39 @@ public class ChessGameTests {
 
     }
 
+
+    @Test
+    public void notCheckmateBlockAttack() {
+
+        /*
+        |k| | | | | | |r|
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | |R| |
+		| | | | | |q| | |
+		| | | | | | | |K|
+         */
+
+        ChessBoard board = TestFactory.getNewBoard();
+        //black
+        board.addPiece(TestFactory.getNewPosition(8, 1), TestFactory.getNewPiece(BLACK, KING));
+        board.addPiece(TestFactory.getNewPosition(2, 6), TestFactory.getNewPiece(BLACK, QUEEN));
+        board.addPiece(TestFactory.getNewPosition(8, 8), TestFactory.getNewPiece(BLACK, ROOK));
+
+        //white
+        board.addPiece(TestFactory.getNewPosition(1, 8), TestFactory.getNewPiece(WHITE, KING));
+        board.addPiece(TestFactory.getNewPosition(3, 7), TestFactory.getNewPiece(WHITE, ROOK));
+
+        //set up game
+        ChessGame game = TestFactory.getNewGame();
+        game.setBoard(board);
+
+        assertFalse(game.isInCheckmate(WHITE));
+    }
+
+
     @Test
     public void stalemate() {
 
