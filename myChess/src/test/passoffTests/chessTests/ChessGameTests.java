@@ -325,6 +325,44 @@ public class ChessGameTests {
     }
 
     @Test
+    public void notStalemate() {
+
+        /*
+        |k| | | | | | | |
+		| | | |P| | |r| |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		| | | | | | | | |
+		|r| | | | | | | |
+		| | | | | | | |K|
+         */
+
+        ChessBoard board = TestFactory.getNewBoard();
+
+        //white king
+        board.addPiece(TestFactory.getNewPosition(1, 8), TestFactory.getNewPiece(WHITE, KING));
+
+        //black king
+        board.addPiece(TestFactory.getNewPosition(8, 1), TestFactory.getNewPiece(BLACK, KING));
+
+        //pieces pinning king
+        board.addPiece(TestFactory.getNewPosition(2, 1), TestFactory.getNewPiece(BLACK, ROOK));
+        board.addPiece(TestFactory.getNewPosition(8, 7), TestFactory.getNewPiece(BLACK, ROOK));
+
+        // Escape piece
+        board.addPiece(TestFactory.getNewPosition(7, 4), TestFactory.getNewPiece(WHITE, PAWN));
+
+
+        //set up game
+        ChessGame game = TestFactory.getNewGame();
+        game.setBoard(board);
+        game.setTeamTurn(WHITE);
+
+        assertFalse(game.isInStalemate(WHITE));
+    }
+
+    @Test
     public void scholarsMate() throws InvalidMoveException {
         assertFalse(game.isInCheckmate(ChessGame.TeamColor.BLACK));
 
