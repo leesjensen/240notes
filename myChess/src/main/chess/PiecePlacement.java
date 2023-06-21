@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Collection;
+
 public class PiecePlacement {
     private final ChessPiece piece;
     private final Position pos;
@@ -15,6 +17,10 @@ public class PiecePlacement {
 
     public Position getPos() {
         return pos;
+    }
+
+    public Collection<ChessMove> pieceMoves(ChessBoard board) {
+        return piece.pieceMoves(board, pos);
     }
 
     @Override

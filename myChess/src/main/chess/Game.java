@@ -68,24 +68,24 @@ public class Game implements ChessGame {
 
         // Is the king being attacked?
         var attackers = board.getAttackers(king.getPos());
-        if (attackers.size() > 0) {
-            // Can the king move away?
-            var kingMoves = validMoves(king.getPos());
-            if (kingMoves.size() == 0) {
-                // Is the king being attacked by more than one person?
-                if (attackers.size() > 1) {
-                    return true;
-                }
+        if (attackers.size() == 0) {
+            return false;
+        }
 
-                // Can the single attacker be killed or blocked?
-                var attacker = attackers.iterator().next();
-                var attackerAttackers = board.getAttackers(attacker);
-                if (attackerAttackers.size() == 0) {
-                    return true;
+        // Try every move on the board and see if it gets us out of this.
+        for (var placement : board.collection()) {
+            if (placement.getPiece().getTeamColor() == teamColor) {
+                for (var move : placement.pieceMoves(board)) {
+                    var newBoard = new Board(board);
+                    newBoard.movePiece(move);
+                    var kingPlacement = newBoard.getPiece(teamColor, ChessPiece.PieceType.KING);
+                    if (newBoard.getAttackers(kingPlacement.getPos()).size() == 0) {
+                        return false;
+                    }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class Game implements ChessGame {
         if (attackers.size() > 0) {
             return false;
         }
-        // Do I have any valid moves?
+        // Does the player have any valid moves?
         for (var placement : board.collection()) {
             if (placement.getPiece().getTeamColor() == teamColor) {
                 if (validMoves(placement.getPos()).size() > 0) {
