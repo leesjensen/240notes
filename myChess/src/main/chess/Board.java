@@ -28,7 +28,7 @@ public class Board implements ChessBoard {
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        board[position.getRow() - 1][position.getColumn() - 1] = (Piece) piece;
+        board[position.getRow() - 1][position.getColumn() - 1] = piece;
     }
 
     @Override
@@ -88,6 +88,9 @@ public class Board implements ChessBoard {
     }
 
     /**
+     * isMoveLegal makes the move on a new board and checks to see if the
+     * king is in check after the move.
+     *
      * @return true if the move is legal
      */
     public boolean isMoveLegal(ChessMove move) {
@@ -95,10 +98,8 @@ public class Board implements ChessBoard {
         var newBoard = new Board(this);
         newBoard.movePiece(move);
         var king = newBoard.getPiece(piece.getTeamColor(), ChessPiece.PieceType.KING);
-        if (king == null || newBoard.getAttackers(king.getPos()).size() == 0) {
-            return true;
-        }
-        return false;
+        
+        return king == null || newBoard.getAttackers(king.getPos()).size() == 0;
     }
 
     static public boolean isSquareEmpty(ChessBoard board, Integer row, Integer col) {

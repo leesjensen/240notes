@@ -109,7 +109,9 @@ public class Game implements ChessGame {
 
     @Override
     public void setBoard(ChessBoard board) {
-        this.board = (Board) board;
+        if (board instanceof Board) {
+            this.board = new Board((Board) board);
+        }
     }
 
     @Override
