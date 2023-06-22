@@ -75,9 +75,9 @@ public class Board implements ChessBoard {
 
         for (var candidateAttacker : collection()) {
             if (candidateAttacker.getPiece().getTeamColor() != targetPiece.getTeamColor()) {
-                var moves = candidateAttacker.getPiece().pieceMoves(this, candidateAttacker.getPos());
+                var moves = candidateAttacker.pieceMoves(this);
                 for (var move : moves) {
-                    if (move.getEndPosition().equals(targetPos) && isMoveLegal(move)) {
+                    if (move.getEndPosition().equals(targetPos)) {
                         attackers.add(candidateAttacker.getPos());
                         break;
                     }
