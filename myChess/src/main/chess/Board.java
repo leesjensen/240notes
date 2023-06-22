@@ -2,10 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class Board implements ChessBoard {
 
     final private ChessPiece[][] board = new ChessPiece[8][8];
+
+    private HashSet<Board> history = new HashSet<>();
 
     public Board() {
     }
@@ -20,9 +23,11 @@ public class Board implements ChessBoard {
         var piece = getPiece(move.getStartPosition());
         removePiece(move.getStartPosition());
         addPiece(move.getEndPosition(), piece);
+
+        history.add(new Board(this));
     }
 
-    public void removePiece(ChessPosition position) {
+    private void removePiece(ChessPosition position) {
         board[position.getRow() - 1][position.getColumn() - 1] = null;
     }
 
@@ -54,6 +59,8 @@ public class Board implements ChessBoard {
             board[6][i] = Piece.Create(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
             board[7][i] = Piece.Create(ChessGame.TeamColor.BLACK, pieces[i]);
         }
+
+        history.clear();
     }
 
     public PiecePlacement getPiece(ChessGame.TeamColor color, ChessPiece.PieceType type) {
@@ -98,7 +105,7 @@ public class Board implements ChessBoard {
         var newBoard = new Board(this);
         newBoard.movePiece(move);
         var king = newBoard.getPiece(piece.getTeamColor(), ChessPiece.PieceType.KING);
-        
+
         return king == null || newBoard.getAttackers(king.getPos()).size() == 0;
     }
 
