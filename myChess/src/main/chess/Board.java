@@ -8,7 +8,7 @@ public class Board implements ChessBoard {
 
     final private ChessPiece[][] board = new ChessPiece[8][8];
 
-    private HashSet<Board> history = new HashSet<>();
+    final private HashSet<Board> history = new HashSet<>();
 
     public Board() {
     }
