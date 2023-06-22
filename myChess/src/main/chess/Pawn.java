@@ -29,7 +29,7 @@ public class Pawn extends Piece {
 
 
     @Override
-    void calculateMoves(ChessBoard board, ChessPosition pos, int rowInc, int colInc, HashSet<ChessMove> moves, boolean attack) {
+    protected void calculateMoves(ChessBoard board, ChessPosition pos, int rowInc, int colInc, HashSet<ChessMove> moves, boolean attack) {
         int row = pos.getRow() + rowInc;
         int col = pos.getColumn() + colInc;
         if (row > 0 && col > 0 && row < 9 && col < 9) {
