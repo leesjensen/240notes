@@ -31,14 +31,15 @@ public class King extends Piece {
         var teamRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
         if (board instanceof Board) {
             var b = (Board) board;
-            if (b.isPieceInSquare(teamRow, 5, king)) {
-                var rook = Piece.create(color, PieceType.ROOK);
-                if (b.isPieceInSquare(teamRow, 8, rook) &&
+
+            var kingPos = new Position(teamRow, 5);
+            if (king.equals(b.getPiece(kingPos)) && !b.hasPieceEverMoved(kingPos)) {
+                if (!b.hasPieceEverMoved(new Position(teamRow, 8)) &&
                         Board.isSquareEmpty(b, teamRow, 6) &&
                         Board.isSquareEmpty(b, teamRow, 7)) {
                     moves.add(new Move(pos, new Position(teamRow, 7), null));
                 }
-                if (b.isPieceInSquare(teamRow, 1, rook) &&
+                if (!b.hasPieceEverMoved(new Position(teamRow, 1)) &&
                         Board.isSquareEmpty(b, teamRow, 2) &&
                         Board.isSquareEmpty(b, teamRow, 3) &&
                         Board.isSquareEmpty(b, teamRow, 4)) {

@@ -140,49 +140,35 @@ public class Board implements ChessBoard {
 
     boolean isCastleValid(ChessPiece king, ChessMove move) {
         var color = king.getTeamColor();
-        var requiredRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
-        if (king.getPieceType() == ChessPiece.PieceType.KING && posNotAttacked(requiredRow, 5, color)) {
-            // Go through the history and make sure nothing moved.
+        var teamRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
+        // Make sure king not being attacked.
+        if (posNotAttacked(teamRow, 5, color)) {
             var castleLeft = move.getEndPosition().getColumn() == 3;
-            var rookPos = new Position(requiredRow, (castleLeft ? 1 : 8));
-            var kingPos = new Position(requiredRow, 5);
-            for (var bh : getHistory()) {
-                if (bh.getStartPosition().equals(kingPos)) {
-                    return false;
-                }
-                if (bh.getStartPosition().equals(rookPos)) {
-                    return false;
-                }
-            }
-
-            // Make sure nothing is attacking the king squares and that they are empty.
             if (castleLeft) {
-                if (!Board.isSquareEmpty(this, requiredRow, 2) || posAttackedOrNotEmpty(requiredRow, 3, color) || posAttackedOrNotEmpty(requiredRow, 4, color)) {
-                    return false;
+                if (posNotAttacked(teamRow, 3, color) && posNotAttacked(teamRow, 4, color)) {
+                    return true;
                 }
             } else {
-                if (posAttackedOrNotEmpty(requiredRow, 6, color) || posAttackedOrNotEmpty(requiredRow, 7, color)) {
-                    return false;
+                if (posNotAttacked(teamRow, 6, color) && posNotAttacked(teamRow, 7, color)) {
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
+    }
+
+    boolean hasPieceEverMoved(ChessPosition pos) {
+        for (var bh : getHistory()) {
+            if (bh.getStartPosition().equals(pos)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     boolean posNotAttacked(int row, int col, ChessGame.TeamColor color) {
         var pos = new Position(row, col);
         return !isAttacked(pos, color);
-    }
-
-    boolean posAttackedOrNotEmpty(int row, int col, ChessGame.TeamColor color) {
-        var pos = new Position(row, col);
-        return isAttacked(pos, color) || getPiece(pos) != null;
-    }
-
-
-    public boolean isPieceInSquare(int row, int col, ChessPiece piece) {
-        var pieceAt = getPiece(new Position(row, col));
-        return piece.equals(pieceAt);
     }
 
     static public boolean isSquareEmpty(ChessBoard board, int row, int col) {
