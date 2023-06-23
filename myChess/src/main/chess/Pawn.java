@@ -52,4 +52,12 @@ public class Pawn extends Piece {
             moves.add(new Move(pos, newPos, null));
         }
     }
+
+
+    void addEnPassantMoves(ChessBoard cBoard, ChessPosition pos, HashSet<ChessMove> moves) {
+        if (cBoard instanceof Board) {
+            var board = (Board) cBoard;
+//            board.getLastMove();
+        }
+    }
 }
