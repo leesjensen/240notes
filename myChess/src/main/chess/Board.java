@@ -27,7 +27,7 @@ public class Board implements ChessBoard {
         removePiece(move.getStartPosition());
         addPiece(move.getEndPosition(), piece);
 
-        history.add(0, move);
+        history.add(move);
     }
 
     public List<ChessMove> getHistory() {
@@ -164,6 +164,11 @@ public class Board implements ChessBoard {
             }
         }
         return false;
+    }
+
+
+    ChessMove getLastMove() {
+        return history.get(history.size() - 1);
     }
 
     boolean posNotAttacked(int row, int col, ChessGame.TeamColor color) {

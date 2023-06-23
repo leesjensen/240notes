@@ -25,24 +25,25 @@ public class King extends Piece {
         return moves;
     }
 
-    void addCastleMoves(ChessBoard board, ChessPosition pos, HashSet<ChessMove> moves) {
-        var king = board.getPiece(pos);
-        var color = king.getTeamColor();
-        var teamRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
-        if (board instanceof Board) {
-            var b = (Board) board;
+    void addCastleMoves(ChessBoard cBoard, ChessPosition pos, HashSet<ChessMove> moves) {
+        if (cBoard instanceof Board) {
+            var board = (Board) cBoard;
+
+            var king = board.getPiece(pos);
+            var color = king.getTeamColor();
+            var teamRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
 
             var kingPos = new Position(teamRow, 5);
-            if (king.equals(b.getPiece(kingPos)) && !b.hasPieceEverMoved(kingPos)) {
-                if (!b.hasPieceEverMoved(new Position(teamRow, 8)) &&
-                        Board.isSquareEmpty(b, teamRow, 6) &&
-                        Board.isSquareEmpty(b, teamRow, 7)) {
+            if (king.equals(board.getPiece(kingPos)) && !board.hasPieceEverMoved(kingPos)) {
+                if (!board.hasPieceEverMoved(new Position(teamRow, 8)) &&
+                        Board.isSquareEmpty(board, teamRow, 6) &&
+                        Board.isSquareEmpty(board, teamRow, 7)) {
                     moves.add(new Move(pos, new Position(teamRow, 7), null));
                 }
-                if (!b.hasPieceEverMoved(new Position(teamRow, 1)) &&
-                        Board.isSquareEmpty(b, teamRow, 2) &&
-                        Board.isSquareEmpty(b, teamRow, 3) &&
-                        Board.isSquareEmpty(b, teamRow, 4)) {
+                if (!board.hasPieceEverMoved(new Position(teamRow, 1)) &&
+                        Board.isSquareEmpty(board, teamRow, 2) &&
+                        Board.isSquareEmpty(board, teamRow, 3) &&
+                        Board.isSquareEmpty(board, teamRow, 4)) {
                     moves.add(new Move(pos, new Position(teamRow, 3), null));
                 }
             }
