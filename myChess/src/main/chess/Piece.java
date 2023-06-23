@@ -9,8 +9,7 @@ public class Piece implements ChessPiece {
     protected ChessGame.TeamColor pieceColor;
     protected ChessPiece.PieceType type;
 
-
-    public static ChessPiece Create(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    public static ChessPiece create(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         return switch (type) {
             case KING -> new King(pieceColor);
             case QUEEN -> new Queen(pieceColor);
@@ -45,6 +44,19 @@ public class Piece implements ChessPiece {
     public String toString() {
         return String.format("%s:%s", type, pieceColor);
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Piece piece = (Piece) o;
+        return pieceColor == piece.pieceColor && type == piece.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return (1000 * pieceColor.ordinal()) + type.ordinal();
     }
 
 

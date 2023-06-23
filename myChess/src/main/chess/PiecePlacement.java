@@ -23,6 +23,10 @@ public class PiecePlacement {
         return piece.pieceMoves(board, pos);
     }
 
+    public boolean isAttacked(Board board) {
+        return board.isAttacked(pos, piece.getTeamColor());
+    }
+
     @Override
     public String toString() {
         return String.format("%s:%s:%s", pos.toString(), piece.getPieceType(), piece.getTeamColor());

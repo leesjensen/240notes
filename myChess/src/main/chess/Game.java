@@ -59,7 +59,7 @@ public class Game implements ChessGame {
     public Boolean isInCheck(TeamColor teamColor) {
         var king = board.getPiece(teamColor, ChessPiece.PieceType.KING);
 
-        return board.getAttackers(king.getPos()).size() > 0;
+        return king.isAttacked(board);
     }
 
     @Override
@@ -67,8 +67,7 @@ public class Game implements ChessGame {
         var king = board.getPiece(teamColor, ChessPiece.PieceType.KING);
 
         // Is the king being attacked?
-        var attackers = board.getAttackers(king.getPos());
-        if (attackers.size() == 0) {
+        if (king.isAttacked(board)) {
             return false;
         }
 
@@ -79,7 +78,7 @@ public class Game implements ChessGame {
                     var newBoard = new Board(board);
                     newBoard.movePiece(move);
                     var kingPlacement = newBoard.getPiece(teamColor, ChessPiece.PieceType.KING);
-                    if (newBoard.getAttackers(kingPlacement.getPos()).size() == 0) {
+                    if (kingPlacement.isAttacked(newBoard)) {
                         return false;
                     }
                 }
@@ -92,8 +91,7 @@ public class Game implements ChessGame {
     public Boolean isInStalemate(TeamColor teamColor) {
         // Is the king being attacked?
         var king = board.getPiece(teamColor, ChessPiece.PieceType.KING);
-        var attackers = board.getAttackers(king.getPos());
-        if (attackers.size() > 0) {
+        if (king.isAttacked(board)) {
             return false;
         }
         // Does the player have any valid moves?
@@ -109,9 +107,7 @@ public class Game implements ChessGame {
 
     @Override
     public void setBoard(ChessBoard board) {
-        if (board instanceof Board) {
-            this.board = new Board((Board) board);
-        }
+        this.board = new Board(board);
     }
 
     @Override

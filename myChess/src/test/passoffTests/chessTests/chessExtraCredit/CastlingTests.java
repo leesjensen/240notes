@@ -29,13 +29,13 @@ public class CastlingTests {
     Set<ChessMove> moves;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         board = TestFactory.getNewBoard();
         moves = new HashSet<>();
     }
 
     @Test
-    public void canCastleWhite(){
+    public void canCastleWhite() {
 
         /*
         | | | | | | | | |
@@ -50,26 +50,27 @@ public class CastlingTests {
 
         //set up king
         king = TestFactory.getNewPiece(WHITE, ChessPiece.PieceType.KING);
-        position = TestFactory.getNewPosition(1,5);
+        position = TestFactory.getNewPosition(1, 5);
         board.addPiece(position, king);
 
         //add both rooks
-        board.addPiece(TestFactory.getNewPosition(1,1), TestFactory.getNewPiece(WHITE, ROOK));
-        board.addPiece(TestFactory.getNewPosition(1,8), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(1, 1), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(1, 8), TestFactory.getNewPiece(WHITE, ROOK));
 
         //set up game
         ChessGame game = TestFactory.getNewGame();
         game.setBoard(board);
 
         //check that with nothing in way, king can castle
-        assertTrue(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(1,5), TestFactory.getNewPosition(1,3), null)));
-        assertTrue(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(1,5), TestFactory.getNewPosition(1,7), null)));
+        var actualMoves = game.validMoves(position);
+        assertTrue(actualMoves.contains(TestFactory.getNewMove(
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 3), null)));
+        assertTrue(actualMoves.contains(TestFactory.getNewMove(
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 7), null)));
     }
 
     @Test
-    public void canCastleBlack(){
+    public void canCastleBlack() {
 
         /*
         |r| | | |k| | |r|
@@ -84,17 +85,17 @@ public class CastlingTests {
 
         //set up king
         king = TestFactory.getNewPiece(BLACK, ChessPiece.PieceType.KING);
-        position = TestFactory.getNewPosition(8,5);
+        position = TestFactory.getNewPosition(8, 5);
         board.addPiece(position, king);
 
         //set up rooks
-        board.addPiece(TestFactory.getNewPosition(8,1), TestFactory.getNewPiece(BLACK, ROOK));
-        board.addPiece(TestFactory.getNewPosition(8,8), TestFactory.getNewPiece(BLACK, ROOK));
+        board.addPiece(TestFactory.getNewPosition(8, 1), TestFactory.getNewPiece(BLACK, ROOK));
+        board.addPiece(TestFactory.getNewPosition(8, 8), TestFactory.getNewPiece(BLACK, ROOK));
 
         //extra decoy pieces
-        board.addPiece(TestFactory.getNewPosition(7,2), TestFactory.getNewPiece(BLACK, PAWN));
-        board.addPiece(TestFactory.getNewPosition(1,1), TestFactory.getNewPiece(WHITE, ROOK));
-        board.addPiece(TestFactory.getNewPosition(7,8), TestFactory.getNewPiece(BLACK, QUEEN));
+        board.addPiece(TestFactory.getNewPosition(7, 2), TestFactory.getNewPiece(BLACK, PAWN));
+        board.addPiece(TestFactory.getNewPosition(1, 1), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(7, 8), TestFactory.getNewPiece(BLACK, QUEEN));
 
         //set up game
         ChessGame game = TestFactory.getNewGame();
@@ -102,13 +103,13 @@ public class CastlingTests {
 
         //check that with nothing in way, king can castle
         assertTrue(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(8,5), TestFactory.getNewPosition(8,3), null)));
+                TestFactory.getNewPosition(8, 5), TestFactory.getNewPosition(8, 3), null)));
         assertTrue(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(8,5), TestFactory.getNewPosition(8,7), null)));
+                TestFactory.getNewPosition(8, 5), TestFactory.getNewPosition(8, 7), null)));
     }
 
     @Test
-    public void castlingBlockedByTeam(){
+    public void castlingBlockedByTeam() {
         /*
         | | | | | | | | |
 		| | | | | | | | |
@@ -122,16 +123,16 @@ public class CastlingTests {
 
         //set up king
         king = TestFactory.getNewPiece(WHITE, KING);
-        position = TestFactory.getNewPosition(1,5);
+        position = TestFactory.getNewPosition(1, 5);
         board.addPiece(position, king);
 
         //set up rooks
-        board.addPiece(TestFactory.getNewPosition(1,1), TestFactory.getNewPiece(WHITE, ROOK));
-        board.addPiece(TestFactory.getNewPosition(1,8), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(1, 1), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(1, 8), TestFactory.getNewPiece(WHITE, ROOK));
 
         //own team pieces in way
-        board.addPiece(TestFactory.getNewPosition(1,3), TestFactory.getNewPiece(WHITE, BISHOP));
-        board.addPiece(TestFactory.getNewPosition(1,7), TestFactory.getNewPiece(WHITE, QUEEN));
+        board.addPiece(TestFactory.getNewPosition(1, 3), TestFactory.getNewPiece(WHITE, BISHOP));
+        board.addPiece(TestFactory.getNewPosition(1, 7), TestFactory.getNewPiece(WHITE, QUEEN));
 
         //set up game
         ChessGame game = TestFactory.getNewGame();
@@ -139,13 +140,13 @@ public class CastlingTests {
 
         //make sure king cannot castle
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-            TestFactory.getNewPosition(1,5),  TestFactory.getNewPosition(1,3), null)));
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 3), null)));
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(1,5), TestFactory.getNewPosition(1,7), null)));
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 7), null)));
     }
 
     @Test
-    public void castlingBlockedByEnemy(){
+    public void castlingBlockedByEnemy() {
 
         /*
         |r| | |B|k| | |r|
@@ -160,21 +161,21 @@ public class CastlingTests {
 
         //set up king
         king = TestFactory.getNewPiece(BLACK, ChessPiece.PieceType.KING);
-        position = TestFactory.getNewPosition(8,5);
+        position = TestFactory.getNewPosition(8, 5);
         board.addPiece(position, king);
 
         //set up rooks
-        board.addPiece(TestFactory.getNewPosition(8,1), TestFactory.getNewPiece(BLACK, ROOK));
-        board.addPiece(TestFactory.getNewPosition(8,8), TestFactory.getNewPiece(BLACK, ROOK));
+        board.addPiece(TestFactory.getNewPosition(8, 1), TestFactory.getNewPiece(BLACK, ROOK));
+        board.addPiece(TestFactory.getNewPosition(8, 8), TestFactory.getNewPiece(BLACK, ROOK));
 
         //enemy piece in way
-        board.addPiece(TestFactory.getNewPosition(8,4), TestFactory.getNewPiece(WHITE, BISHOP));
+        board.addPiece(TestFactory.getNewPosition(8, 4), TestFactory.getNewPiece(WHITE, BISHOP));
 
         //enemy threatening in between position
-        board.addPiece(TestFactory.getNewPosition(6,6), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(6, 6), TestFactory.getNewPiece(WHITE, ROOK));
 
         //decoy enemy king
-        board.addPiece(TestFactory.getNewPosition(3,2), TestFactory.getNewPiece(WHITE, KING));
+        board.addPiece(TestFactory.getNewPosition(3, 2), TestFactory.getNewPiece(WHITE, KING));
 
         //set up game
         ChessGame game = TestFactory.getNewGame();
@@ -182,9 +183,9 @@ public class CastlingTests {
 
         //make sure king cannot castle on either side
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(8,5), TestFactory.getNewPosition(8,3), null)));
+                TestFactory.getNewPosition(8, 5), TestFactory.getNewPosition(8, 3), null)));
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(8,5), TestFactory.getNewPosition(8,7), null)));
+                TestFactory.getNewPosition(8, 5), TestFactory.getNewPosition(8, 7), null)));
     }
 
     @Test
@@ -203,15 +204,15 @@ public class CastlingTests {
 
         //set up king
         king = TestFactory.getNewPiece(WHITE, ChessPiece.PieceType.KING);
-        position = TestFactory.getNewPosition(1,5);
+        position = TestFactory.getNewPosition(1, 5);
         board.addPiece(position, king);
 
         //add both rooks
-        board.addPiece(TestFactory.getNewPosition(1,1), TestFactory.getNewPiece(WHITE, ROOK));
-        board.addPiece(TestFactory.getNewPosition(1,8), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(1, 1), TestFactory.getNewPiece(WHITE, ROOK));
+        board.addPiece(TestFactory.getNewPosition(1, 8), TestFactory.getNewPiece(WHITE, ROOK));
 
         //enemy pawn for filler moves
-        board.addPiece(TestFactory.getNewPosition(7,1), TestFactory.getNewPiece(BLACK, PAWN));
+        board.addPiece(TestFactory.getNewPosition(7, 1), TestFactory.getNewPiece(BLACK, PAWN));
 
         //set up game
         ChessGame game = TestFactory.getNewGame();
@@ -219,10 +220,10 @@ public class CastlingTests {
         game.setTeamTurn(WHITE);
 
         //move left rook
-        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(1,1),
-                TestFactory.getNewPosition(1,4), null));
-        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(7,1),
-                TestFactory.getNewPosition(6,1), null));
+        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(1, 1),
+                TestFactory.getNewPosition(1, 4), null));
+        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(7, 1),
+                TestFactory.getNewPosition(6, 1), null));
         /*
         | | | | | | | | |
 		| | | | | | | | |
@@ -235,8 +236,8 @@ public class CastlingTests {
          */
 
         //move rook back to starting spot
-        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(1,4),
-                TestFactory.getNewPosition(1,1), null));
+        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(1, 4),
+                TestFactory.getNewPosition(1, 1), null));
         /*
         | | | | | | | | |
 		| | | | | | | | |
@@ -250,16 +251,16 @@ public class CastlingTests {
 
         //make sure king can't castle towards moved rook, but still can to unmoved rook
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(1,5), TestFactory.getNewPosition(1,3),
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 3),
                 null)));
         assertTrue(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(1,5), TestFactory.getNewPosition(1,7),
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 7),
                 null)));
 
         //move king
-        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(6,1),
-                TestFactory.getNewPosition(5,1), null));
-        game.makeMove(TestFactory.getNewMove(position, TestFactory.getNewPosition(1,6),
+        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(6, 1),
+                TestFactory.getNewPosition(5, 1), null));
+        game.makeMove(TestFactory.getNewMove(position, TestFactory.getNewPosition(1, 6),
                 null));
         /*
         | | | | | | | | |
@@ -273,9 +274,9 @@ public class CastlingTests {
          */
 
         //move king back to starting position
-        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(5,1),
-                TestFactory.getNewPosition(4,1), null));
-        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(1,6),
+        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(5, 1),
+                TestFactory.getNewPosition(4, 1), null));
+        game.makeMove(TestFactory.getNewMove(TestFactory.getNewPosition(1, 6),
                 position, null));
         /*
         | | | | | | | | |
@@ -290,10 +291,10 @@ public class CastlingTests {
 
         //make sure king can't castle anymore
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(1,5), TestFactory.getNewPosition(1,3),
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 3),
                 null)));
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-                TestFactory.getNewPosition(1,5), TestFactory.getNewPosition(1,7),
+                TestFactory.getNewPosition(1, 5), TestFactory.getNewPosition(1, 7),
                 null)));
     }
 }
