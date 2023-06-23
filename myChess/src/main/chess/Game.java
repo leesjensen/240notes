@@ -67,7 +67,7 @@ public class Game implements ChessGame {
         var king = board.getPiece(teamColor, ChessPiece.PieceType.KING);
 
         // Is the king being attacked?
-        if (king.isAttacked(board)) {
+        if (!king.isAttacked(board)) {
             return false;
         }
 
@@ -78,7 +78,7 @@ public class Game implements ChessGame {
                     var newBoard = new Board(board);
                     newBoard.movePiece(move);
                     var kingPlacement = newBoard.getPiece(teamColor, ChessPiece.PieceType.KING);
-                    if (kingPlacement.isAttacked(newBoard)) {
+                    if (!kingPlacement.isAttacked(newBoard)) {
                         return false;
                     }
                 }

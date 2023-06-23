@@ -1,14 +1,14 @@
 package chess;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 public class Board implements ChessBoard {
 
     final private ChessPiece[][] board = new ChessPiece[8][8];
 
-    final private HashSet<Board> history = new HashSet<>();
+    final private ArrayList<ChessMove> history = new ArrayList<>();
 
     public Board() {
     }
@@ -19,8 +19,6 @@ public class Board implements ChessBoard {
             for (var i = 0; i < 8; i++) {
                 System.arraycopy(c.board[i], 0, board[i], 0, 8);
             }
-
-            addHistory();
         }
     }
 
@@ -29,18 +27,10 @@ public class Board implements ChessBoard {
         removePiece(move.getStartPosition());
         addPiece(move.getEndPosition(), piece);
 
-        addHistory();
+        history.add(0, move);
     }
 
-    private void addHistory() {
-        var bh = new Board();
-        for (var i = 0; i < 8; i++) {
-            System.arraycopy(board[i], 0, bh.board[i], 0, 8);
-        }
-        history.add(bh);
-    }
-
-    public Collection<Board> getHistory() {
+    public List<ChessMove> getHistory() {
         return history;
     }
 
@@ -78,8 +68,6 @@ public class Board implements ChessBoard {
             board[6][i] = Piece.create(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
             board[7][i] = Piece.create(ChessGame.TeamColor.BLACK, pieces[i]);
         }
-
-        history.add(new Board(this));
     }
 
     public PiecePlacement getPiece(ChessGame.TeamColor color, ChessPiece.PieceType type) {
@@ -156,12 +144,13 @@ public class Board implements ChessBoard {
         if (king.getPieceType() == ChessPiece.PieceType.KING && posNotAttacked(requiredRow, 5, color)) {
             // Go through the history and make sure nothing moved.
             var castleLeft = move.getEndPosition().getColumn() == 3;
+            var rookPos = new Position(requiredRow, (castleLeft ? 1 : 8));
+            var kingPos = new Position(requiredRow, 5);
             for (var bh : getHistory()) {
-                if (!bh.isPieceInSquare(requiredRow, 5, king)) {
+                if (bh.getStartPosition().equals(kingPos)) {
                     return false;
                 }
-                var rook = bh.getPiece(new Position(requiredRow, (castleLeft ? 1 : 8)));
-                if (rook == null || rook.getPieceType() != ChessPiece.PieceType.ROOK) {
+                if (bh.getStartPosition().equals(rookPos)) {
                     return false;
                 }
             }
