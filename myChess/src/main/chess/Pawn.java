@@ -56,9 +56,7 @@ public class Pawn extends Piece {
 
 
     void addEnPassantMoves(ChessBoard cBoard, ChessPosition pos, HashSet<ChessMove> moves) {
-        if (cBoard instanceof Board) {
-            var board = (Board) cBoard;
-
+        if (cBoard instanceof Board board) {
             var pawn = cBoard.getPiece(pos);
             var color = pawn.getTeamColor();
             var passantRow = color == ChessGame.TeamColor.BLACK ? 4 : 5;

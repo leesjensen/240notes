@@ -14,8 +14,7 @@ public class Board implements ChessBoard {
     }
 
     public Board(ChessBoard copy) {
-        if (copy instanceof Board) {
-            var c = (Board) copy;
+        if (copy instanceof Board c) {
             for (var i = 0; i < 8; i++) {
                 System.arraycopy(c.board[i], 0, board[i], 0, 8);
             }
@@ -130,9 +129,7 @@ public class Board implements ChessBoard {
 
     boolean isMoveCastle(ChessPiece piece, ChessMove move) {
         if (piece.getPieceType() == ChessPiece.PieceType.KING) {
-            if (Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) == 2) {
-                return true;
-            }
+            return Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) == 2;
         }
         return false;
     }
@@ -145,13 +142,9 @@ public class Board implements ChessBoard {
         if (posNotAttacked(teamRow, 5, color)) {
             var castleLeft = move.getEndPosition().getColumn() == 3;
             if (castleLeft) {
-                if (posNotAttacked(teamRow, 3, color) && posNotAttacked(teamRow, 4, color)) {
-                    return true;
-                }
+                return posNotAttacked(teamRow, 3, color) && posNotAttacked(teamRow, 4, color);
             } else {
-                if (posNotAttacked(teamRow, 6, color) && posNotAttacked(teamRow, 7, color)) {
-                    return true;
-                }
+                return posNotAttacked(teamRow, 6, color) && posNotAttacked(teamRow, 7, color);
             }
         }
         return false;
