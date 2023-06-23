@@ -268,3 +268,7 @@ I followed the instructions `GettingStarted-ChessGame.docx` in order to get the 
 I then created a stub for the required interfaces (board, game, move, piece, and position) in a `chess` package.
 
 I then starting with `BishopMoveTest`. After a bunch of boilerplate code and hashCode and equals functionality I finally got the tests to pass. You must make sure you check the color of the pieces.
+
+I continued working through the different pieces. I had to add a history of moves to `board` in order to get castle and en passant to work. Java is coming back to me. I am not quite sure the interfaces are correct. I have to cast the implementations in several cases (especially with `board`) in order to provide the operations I need. I could use static methods, but it seems like operations like `isSquareEmpty` or `isOriginalPosition` make sense for the board interface. Perhaps this should all be on `game`. That actually makes more sense, but we only pass around board. I suppose I could add static methods to `game` that do my helper calculations. Some are very specific though, such as when I calculate en passant I need to access the history of moves.
+
+I got all the tests to pass after about 7 days (~15 hours) with 25 commits.
