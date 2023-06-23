@@ -26,21 +26,19 @@ public class King extends Piece {
     }
 
     void addCastleMoves(ChessBoard cBoard, ChessPosition pos, HashSet<ChessMove> moves) {
-        if (cBoard instanceof Board) {
-            var board = (Board) cBoard;
-
+        if (cBoard instanceof Board board) {
             var king = board.getPiece(pos);
             var color = king.getTeamColor();
             var teamRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
 
             var kingPos = new Position(teamRow, 5);
-            if (king.equals(board.getPiece(kingPos)) && !board.hasPieceEverMoved(kingPos)) {
-                if (!board.hasPieceEverMoved(new Position(teamRow, 8)) &&
+            if (king.equals(board.getPiece(kingPos)) && board.isOriginalPosition(kingPos)) {
+                if (board.isOriginalPosition(new Position(teamRow, 8)) &&
                         Board.isSquareEmpty(board, teamRow, 6) &&
                         Board.isSquareEmpty(board, teamRow, 7)) {
                     moves.add(new Move(pos, new Position(teamRow, 7), null));
                 }
-                if (!board.hasPieceEverMoved(new Position(teamRow, 1)) &&
+                if (board.isOriginalPosition(new Position(teamRow, 1)) &&
                         Board.isSquareEmpty(board, teamRow, 2) &&
                         Board.isSquareEmpty(board, teamRow, 3) &&
                         Board.isSquareEmpty(board, teamRow, 4)) {

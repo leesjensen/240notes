@@ -150,13 +150,13 @@ public class Board implements ChessBoard {
         return false;
     }
 
-    boolean hasPieceEverMoved(ChessPosition pos) {
+    boolean isOriginalPosition(ChessPosition pos) {
         for (var bh : getHistory()) {
             if (bh.getStartPosition().equals(pos)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 
