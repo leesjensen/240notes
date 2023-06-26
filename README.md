@@ -272,3 +272,37 @@ I then starting with `BishopMoveTest`. After a bunch of boilerplate code and has
 I continued working through the different pieces. I had to add a history of moves to `board` in order to get castle and en passant to work. Java is coming back to me. I am not quite sure the interfaces are correct. I have to cast the implementations in several cases (especially with `board`) in order to provide the operations I need. I could use static methods, but it seems like operations like `isSquareEmpty` or `isOriginalPosition` make sense for the board interface. Perhaps this should all be on `game`. That actually makes more sense, but we only pass around board. I suppose I could add static methods to `game` that do my helper calculations. Some are very specific though, such as when I calculate en passant I need to access the history of moves.
 
 I got all the tests to pass after about 7 days (~15 hours) with 25 commits.
+
+### 2-server-design
+
+It seems to me that 2 and 3 modules are backward. At least there has to be a high level design that isn't discussed. It should start from the user's perspective and work its way down to the database. With the user's actions defined, you can talk about objects, with objects you can talk about endpoints, and finally what you are going to store in the database.
+
+I followed the instructions `GettingStarted-ServerDesign.docx` and copied over the single exception class file. I then reviewed `ServerDesign.docx`. This basically says make classes for the `services`, `request`, `response`, `DOA`, and `model` classes.
+
+We use the term `service` when I think we really mean endpoint. A service usually refers to a collection of endpoints that `serve` a particular function.
+
+The next step is to diagram out my service. I'm afraid I won't design it the way the example does. However, here are the pieces I will create:
+
+- Model for user, game, auth.
+- DAO for each of the model objects.
+- Service class
+- Endpoint class for
+  - Clear - this is a weird one because it doesn't require auth
+  - Register
+  - Login
+  - Logout
+  - List games
+  - Create game
+  - Join game (as player or observer)
+  - (not in spec) Leave game
+  - (not in spec) Get board
+  - (not in spec) Make move (maybe is this over websocket?)
+  - (not in spec) notify of move (maybe is this over websocket?)
+- Request class for each endpoint that converts JSON to parameters.
+- Response class for each endpoint to converts parameters to JSON.
+
+### 3-web-api
+
+- Shouldn't `clear` be a `DELETE` instead of a `POST`.
+- How do you observe?
+- How do you actually play the game?
