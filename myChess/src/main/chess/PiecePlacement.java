@@ -2,6 +2,9 @@ package chess;
 
 import java.util.Collection;
 
+/**
+ * Represents both the piece and its location on the board.
+ */
 public class PiecePlacement {
     private final ChessPiece piece;
     private final Position pos;

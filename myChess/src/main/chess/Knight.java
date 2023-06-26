@@ -4,6 +4,9 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * The knight piece and rules for movement.
+ */
 public class Knight extends Piece {
     public Knight(ChessGame.TeamColor pieceColor) {
         super(pieceColor, PieceType.KNIGHT);

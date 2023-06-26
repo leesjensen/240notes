@@ -3,6 +3,9 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * The bishop piece and rules for movement.
+ */
 public class Bishop extends Piece {
     public Bishop(ChessGame.TeamColor pieceColor) {
         super(pieceColor, PieceType.BISHOP);

@@ -1,5 +1,8 @@
 package chess;
 
+/**
+ * Board position. This is an 8 by 8 array with a one based index. Row always goes first.
+ */
 public class Position implements ChessPosition {
 
     final private Integer row, column;

@@ -3,6 +3,9 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * The king piece and rules for movement.
+ */
 public class King extends Piece {
     public King(ChessGame.TeamColor pieceColor) {
         super(pieceColor, PieceType.KING);

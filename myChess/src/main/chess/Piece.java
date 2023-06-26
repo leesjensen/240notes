@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
+/**
+ * Base class for all chess pieces. This class also provides a factory method for creating pieces.
+ */
 public class Piece implements ChessPiece {
 
     protected ChessGame.TeamColor pieceColor;

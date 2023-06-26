@@ -3,6 +3,9 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * The pawn piece and rules for movement.
+ */
 public class Pawn extends Piece {
     public Pawn(ChessGame.TeamColor pieceColor) {
         super(pieceColor, PieceType.PAWN);

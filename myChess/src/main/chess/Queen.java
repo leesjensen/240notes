@@ -3,6 +3,9 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * The queen piece and rules for movement.
+ */
 public class Queen extends Piece {
     public Queen(ChessGame.TeamColor pieceColor) {
         super(pieceColor, PieceType.QUEEN);

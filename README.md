@@ -253,9 +253,9 @@ CREATE USER IF NOT EXISTS chessadmin IDENTIFIED BY 'monkeypie';
 GRANT CREATE, SELECT, INSERT ON chess.* TO chessadmin;
 ```
 
-## Building it for myself
+# Building it for myself
 
-### 1-chess-game
+## 1-chess-game
 
 I followed the instructions `GettingStarted-ChessGame.docx` in order to get the project set up.
 
@@ -273,13 +273,19 @@ I continued working through the different pieces. I had to add a history of move
 
 I got all the tests to pass after about 7 days (~15 hours) with 25 commits.
 
-### 2-server-design
+## 2-server-design
+
+This module took me about 4 hours to do. The trick is defining what is "good" design. This is a very opinionated subject. It is probably worth some time talking to the class about this. What is "right", "wrong", "fad", and "fantasy".
 
 It seems to me that 2 and 3 modules are backward. At least there has to be a high level design that isn't discussed. It should start from the user's perspective and work its way down to the database. With the user's actions defined, you can talk about objects, with objects you can talk about endpoints, and finally what you are going to store in the database.
 
 I followed the instructions `GettingStarted-ServerDesign.docx` and copied over the single exception class file. I then reviewed `ServerDesign.docx`. This basically says make classes for the `services`, `request`, `response`, `DOA`, and `model` classes.
 
+![Server Design](ServerDesignArchitecture.png)
+
 We use the term `service` when I think we really mean endpoint. A service usually refers to a collection of endpoints that `serve` a particular function.
+
+It feels a bit clumsy to have a `Game` in both the `chess` and `model` packages. If the `model` package represents the persistent data objects then why is there an embedded property that contains the `Game`. Do those properties get stored in the database? If not then how to you persist the actual moves of a game?
 
 The next step is to diagram out my service. I'm afraid I won't design it the way the example does. However, here are the pieces I will create:
 
@@ -301,8 +307,96 @@ The next step is to diagram out my service. I'm afraid I won't design it the way
 - Request class for each endpoint that converts JSON to parameters.
 - Response class for each endpoint to converts parameters to JSON.
 
-### 3-web-api
+**https://mermaid.live/**
+
+```yaml
+classDiagram
+    class Service {
+        databaseClear(req, res)
+        userRegister(req, res)
+        userLogin(req, res)
+        userLogout(req, res)
+        gameList(req, res)
+        gameCreate(req, res)
+        gameJoin(req, res)
+    }
+
+    class Database {
+        authRegister() Auth
+        authLogin() Auth
+        authLogout()
+        userCreate() User
+        userGet() User
+        gameCreate() Game
+        gameUpdate()
+        gameList() Game[]
+    }
+
+    Service --> Database
+    Service --> Request
+    Service --> Response
+    Database --> User
+    Database --> Game
+    Database --> Auth
+
+    class User {
+        name : string
+        id : id
+    }
+
+    class Game {
+        name : string
+        id : id
+        black : id
+        while : id
+        turn: id
+        board: char[][]
+        observers : id[]
+    }
+
+    class Auth {
+        token : string
+    }
+
+    class Request {
+        body: JSON
+    }
+
+    class Response {
+        send(status:int, body:JSON)
+    }
+```
+
+I created a package for `service`, `dataAccess`, and `model`. I then populated the packages with a single class for `Database`, a `Request` and `Response` class, a single `Service` class that provides all of the endpoints, and model classes for `User`, `GamePlay` (to differentiate it from the `chess.Game` class), and `Auth`.
+
+### JavaDocs
+
+Trying to get rid of all the warnings that the JavaDoc compiler outputs reminded me of all the reasons I don't write comments. Uncle Bob does a good just specifying why. This article echos his points:
+
+http://asolntsev.blogspot.com/2010/05/why-devil-invented-javadoc.html
+
+I prefer to use:
+
+- Properly named functions
+- Short functions that do one thing
+- Tests
+- Code navigation that you can step through to really see what it does
+- Comments when the business logic is complex or not clear from the code
+- Comments for public endpoints where the tests can code cannot be referenced
+
+## 3-web-api
 
 - Shouldn't `clear` be a `DELETE` instead of a `POST`.
 - How do you observe?
 - How do you actually play the game?
+
+| Endpoint       | Purpose                             | Description                                                                                                                                                                                                                                                                                                                                                                               |
+| -------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| /user/login    | Log in a user                       | A request body must be supply the username and password. If login succeeds, an authorization authToken is returned. Use the authToken on other API calls that require authorization. The returned JSON object contains "Authorization" (the authorization authToken) and "username" (the username that was just logged in). No authorization authToken is required to call this endpoint. |
+| /user/register | Register a user                     | Returns the same JSON object as log in, including an authorization authToken. You may use the authToken with future requests that require authorization. No authorization authToken is required to call this endpoint.                                                                                                                                                                    |
+| /user/logout   | Logs out an authenticated user      | Returns JSON result with success status, or if failed error message describing reason. An authToken is required to call this endpoint.                                                                                                                                                                                                                                                    |
+| /games/list    | Lists all the games in the database | This API does not take a request body. The response JSON lists all the games, including the board. An authToken is required to call this endpoint.                                                                                                                                                                                                                                        |
+| /games/create  | Create a new Chess Game             | The request body must contain a name for the game. The response JSON contains the ID of created game, a success status and, if failed, an error message describing the reason. An authToken is required to call this endpoint.                                                                                                                                                            |
+| /games/join    | Join a Chess Game                   | The request body must contain the game ID, as well as what color the user wants to claim. The response JSON contains a success status and, if failed, an error message describing the reason. An authToken is required to call this endpoint.                                                                                                                                             |
+| /games/watch   | Watch a game                        | The request body must contain the game ID. The response JSON contains a success status and, if failed, an error message describing the reason. An authToken is required to call this endpoint.                                                                                                                                                                                            |
+| /clear         | Clear ALL data from the database    | This includes users and all game data. No authorization authToken is required.                                                                                                                                                                                                                                                                                                            |
