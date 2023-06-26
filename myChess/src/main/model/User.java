@@ -9,28 +9,32 @@ public class User {
     /**
      * Non-unique textual name of the user.
      */
-    private String name;
+    private String username;
+    private String password;
+    private String email;
 
     /**
      * ID associated with the user.
      */
-    private final String id;
+    private final int userID;
 
-    public User(String name) {
-        this.name = name;
-        this.id = UUID.randomUUID().toString();
+    public User(String name, String username, String password, String email) {
+        this.username = name;
+        this.password = password;
+        this.email = email;
+        this.userID = UUID.randomUUID().hashCode();
     }
 
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getId() {
-        return id;
+    public int getUserID() {
+        return userID;
     }
 }

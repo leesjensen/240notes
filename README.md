@@ -386,6 +386,10 @@ I prefer to use:
 
 ## 3-web-api
 
+This one looks pretty big. Hook up the server, write the endpoints, store data in memory, and write tests.
+
+I read the `WebAPI` document and there are some pretty details requirements about how to structure the code. It might be good if some of that was given in the design section.
+
 - Shouldn't `clear` be a `DELETE` instead of a `POST`.
 - How do you observe?
 - How do you actually play the game?
@@ -400,3 +404,11 @@ I prefer to use:
 | /games/join    | Join a Chess Game                   | The request body must contain the game ID, as well as what color the user wants to claim. The response JSON contains a success status and, if failed, an error message describing the reason. An authToken is required to call this endpoint.                                                                                                                                             |
 | /games/watch   | Watch a game                        | The request body must contain the game ID. The response JSON contains a success status and, if failed, an error message describing the reason. An authToken is required to call this endpoint.                                                                                                                                                                                            |
 | /clear         | Clear ALL data from the database    | This includes users and all game data. No authorization authToken is required.                                                                                                                                                                                                                                                                                                            |
+
+### Web
+
+I rewrote the web interface to be a little more modern, while still being vanilla JavaScript.
+
+### Starter Code
+
+Followed the directions for copying over the libs, serverTests, and web. Installed the required libs. Note that gson is included both in the libs and the requested maven dependencies.

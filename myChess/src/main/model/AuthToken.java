@@ -10,22 +10,22 @@ public class AuthToken {
     /**
      * Unique token representing the authorization.
      */
-    private final String token;
+    private final String authToken;
 
     /**
      * User ID associated with the token.
      */
-    private final String userId;
+    private final int userID;
 
     /**
      * Creates an immutable authorization token.
      *
-     * @param token  to associate with User
-     * @param userId to associate with token
+     * @param authToken to associate with User
+     * @param userID    to associate with token
      */
-    public AuthToken(String token, String userId) {
-        this.token = token;
-        this.userId = userId;
+    public AuthToken(String authToken, int userID) {
+        this.authToken = authToken;
+        this.userID = userID;
     }
 
     /**
@@ -33,8 +33,8 @@ public class AuthToken {
      *
      * @return the token
      */
-    public String getToken() {
-        return token;
+    public String getAuthToken() {
+        return authToken;
     }
 
     /**
@@ -42,8 +42,8 @@ public class AuthToken {
      *
      * @return the user ID
      */
-    public String getUserId() {
-        return userId;
+    public int getUserID() {
+        return userID;
     }
 
     @Override
@@ -51,6 +51,6 @@ public class AuthToken {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AuthToken token = (AuthToken) o;
-        return Objects.equals(getToken(), token.getToken()) && Objects.equals(getUserId(), token.getUserId());
+        return Objects.equals(getAuthToken(), token.getAuthToken()) && Objects.equals(getUserID(), token.getUserID());
     }
 }

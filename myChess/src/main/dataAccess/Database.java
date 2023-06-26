@@ -66,7 +66,7 @@ public class Database {
      * @param game
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    void writeGame(GamePlay game) throws DataAccessException {
+    void writeGame(Game game) throws DataAccessException {
         throw new UnsupportedOperationException("todo");
     }
 
@@ -77,7 +77,7 @@ public class Database {
      * @return The requested Game.
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    GamePlay readGame(String gameId) throws DataAccessException {
+    Game readGame(String gameId) throws DataAccessException {
         throw new UnsupportedOperationException("todo");
     }
 
@@ -87,7 +87,7 @@ public class Database {
      * @return the list of games
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    Collection<GamePlay> listGames() throws DataAccessException {
+    Collection<Game> listGames() throws DataAccessException {
         throw new UnsupportedOperationException("todo");
     }
 }

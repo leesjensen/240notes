@@ -54,7 +54,7 @@ public class Service {
      * Create a game.
      */
     void gameCreate(Request req, Response res) {
-        var game = req.getBody(GamePlay.class);
+        var game = req.getBody(Game.class);
         res.send(game);
         throw new UnsupportedOperationException("todo");
     }
@@ -63,7 +63,7 @@ public class Service {
      * Join a game
      */
     void gameJoin(Request req, Response res) {
-        var game = req.getBody(GamePlay.class);
+        var game = req.getBody(Game.class);
         res.send(game);
         throw new UnsupportedOperationException("todo");
     }
