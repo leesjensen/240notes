@@ -1,13 +1,18 @@
 package service;
 
 import com.google.gson.Gson;
-
+import spark.*;
 
 /**
  * A service request.
  */
-public class Request {
-    private Gson body;
+public class HTTPRequest {
+    private String body;
+
+
+    public HTTPRequest(Request request) {
+        this.body = request.body();
+    }
 
     /**
      * Gets the body of the service requests.
@@ -16,7 +21,6 @@ public class Request {
      * @return The body as the requested object.
      */
     public <T> T getBody(Class<T> clazz) {
-        final String json = "{}";
-        return new Gson().fromJson(json, clazz);
+        return new Gson().fromJson(body, clazz);
     }
 }

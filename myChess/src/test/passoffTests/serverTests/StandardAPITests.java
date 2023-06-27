@@ -2,7 +2,6 @@ package passoffTests.serverTests;
 
 import org.junit.jupiter.api.*;
 import passoffTests.TestFactory;
-import passoffTests.obfuscatedTestClasses.TestServerFacade;
 import passoffTests.testClasses.TestModels;
 
 import java.util.Arrays;

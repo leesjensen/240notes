@@ -14,7 +14,7 @@ public class Database {
      *
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    void clear() throws DataAccessException {
+    public void clear() throws DataAccessException {
         throw new UnsupportedOperationException("todo");
     }
 
@@ -24,7 +24,7 @@ public class Database {
      * @param user
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    void writeUser(User user) throws DataAccessException {
+    public void writeUser(User user) throws DataAccessException {
         throw new UnsupportedOperationException("todo");
     }
 
@@ -45,7 +45,7 @@ public class Database {
      * @param token
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    void writeAuth(AuthToken token) throws DataAccessException {
+    public void writeAuth(AuthToken token) throws DataAccessException {
         throw new UnsupportedOperationException("todo");
     }
 
@@ -66,7 +66,7 @@ public class Database {
      * @param game
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    void writeGame(Game game) throws DataAccessException {
+    public void writeGame(Game game) throws DataAccessException {
         throw new UnsupportedOperationException("todo");
     }
 

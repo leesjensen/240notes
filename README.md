@@ -384,11 +384,36 @@ I prefer to use:
 - Comments when the business logic is complex or not clear from the code
 - Comments for public endpoints where the tests can code cannot be referenced
 
+Here are a couple of examples of comments that could be improved (or eliminated):
+
+```java
+/**
+ * Provides access to the ChessServer
+ * Is obfuscated into a Jar to keep hidden from students
+ */
+public class TestServerFacade {}
+```
+
+The problem with this is `Why`? Why is it important to keep it hidden from students? Even with obfuscation Intellij we simply decompile it. What is it that we don't want students to have?
+
+```java
+    /**
+     * Adds a chess piece to the chess board
+     * @param position where to add the piece to
+     * @param piece the piece to add
+     */
+    void addPiece(ChessPosition position, ChessPiece piece) {}
+```
+
+In this example the code is better docs than the docs. The variable names speak for themselves, but by adding JavaDocs you have just created maintenance overhead. Plus the docs are just bad. They stutter. `addPiece() Adds a piece, Piece the piece to add` - Really?
+
 ## 3-web-api
 
 This one looks pretty big. Hook up the server, write the endpoints, store data in memory, and write tests.
 
-I read the `WebAPI` document and there are some pretty details requirements about how to structure the code. It might be good if some of that was given in the design section.
+I read the `WebAPI` document and there are some pretty details requirements about how to structure the code. It might be good if some of that was given in the design section. I had to go back and change my model objects based upon the requirements in this module.
+
+There is no description of how the game will actually be played. I think we need a big picture overview in here somewhere.
 
 - Shouldn't `clear` be a `DELETE` instead of a `POST`.
 - How do you observe?
@@ -412,3 +437,46 @@ I rewrote the web interface to be a little more modern, while still being vanill
 ### Starter Code
 
 Followed the directions for copying over the libs, serverTests, and web. Installed the required libs. Note that gson is included both in the libs and the requested maven dependencies.
+
+### Writing the server
+
+[Spark docs](https://sparkjava.com/documentation)
+[Spark Tutorial](https://medium.com/@durgaswaroop/create-a-simple-rest-application-with-spark-micro-framework-84ebd66b4ce7)
+
+Here is an example of using different times of `Route` implementations for a Spark handler.
+
+```java
+package server;
+
+import spark.*;
+
+import static spark.Spark.*;
+
+public class Server {
+    public static void main(String[] args) {
+        port(8080);
+        externalStaticFileLocation("web");
+
+        Spark.get("/hello1", (request, response) -> "Hello1");
+        get("/hello2", (request, response) -> handle(request, response));
+        get("/hello3", new Cow());
+    }
+
+    static public Object handle(Request req, Response res) throws Exception {
+        return "Hello2";
+    }
+
+
+    private static class Cow implements Route {
+        public Object handle(Request req, Response res) throws Exception {
+            return "Hello3";
+        }
+    }
+}
+```
+
+Spark supports path parameters.
+
+```java
+get("/hello/:name", (request, response) -> "Hello " + request.params(":name"));
+```

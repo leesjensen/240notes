@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 /**
  * A service response.
  */
-public class Response {
+public class HTTPResponse {
     /**
      * Converts the given object and sends it as a response.
      *
