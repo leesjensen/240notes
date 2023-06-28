@@ -418,6 +418,9 @@ There is no description of how the game will actually be played. I think we need
 - Shouldn't `clear` be a `DELETE` instead of a `POST`.
 - How do you observe?
 - How do you actually play the game?
+- If you can login with a username, then what is the point of the userid or email? Are all three of them unique keys?
+- Trying to register an existing user should return 409 (conflict), not 403 (forbidden).
+- Returning `success` should instead just use HTTP status codes. Errors can have descriptive messages.
 
 | Endpoint       | Purpose                             | Description                                                                                                                                                                                                                                                                                                                                                                               |
 | -------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

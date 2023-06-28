@@ -16,13 +16,19 @@ public class User {
     /**
      * ID associated with the user.
      */
-    private final int userID;
+    private int userID;
 
-    public User(String name, String username, String password, String email) {
-        this.username = name;
-        this.password = password;
-        this.email = email;
-        this.userID = UUID.randomUUID().hashCode();
+    public User(int userID) {
+        this.userID = userID;
+    }
+
+    public User(User copy) {
+        this.username = copy.username;
+        this.password = copy.password;
+        this.email = copy.email;
+        if (copy.userID == 0) {
+            this.userID = Math.abs(UUID.randomUUID().hashCode());
+        }
     }
 
 
@@ -30,8 +36,8 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getPassword() {
+        return password;
     }
 
     public int getUserID() {

@@ -2,6 +2,7 @@ package model;
 
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Associates a user and a unique token to demonstrate the user's authorization state.
@@ -23,8 +24,8 @@ public class AuthToken {
      * @param authToken to associate with User
      * @param userID    to associate with token
      */
-    public AuthToken(String authToken, int userID) {
-        this.authToken = authToken;
+    public AuthToken(int userID) {
+        this.authToken = UUID.randomUUID().toString();
         this.userID = userID;
     }
 

@@ -29,7 +29,7 @@ function send(path, params, method, authToken) {
       return response.json();
     })
     .then((data) => {
-      document.getElementById('authToken').value = data.authToken || 'none';
+      document.getElementById('authToken').value = data.authToken || authToken || 'none';
       document.getElementById('response').innerText = JSON.stringify(data, null, 2);
     })
     .catch((reason) => {

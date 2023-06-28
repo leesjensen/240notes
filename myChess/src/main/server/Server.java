@@ -32,7 +32,7 @@ public class Server {
     }
 
     public static Object errorHandler(Exception e, Request req, Response res) {
-        var body = new Gson().toJson(Map.of("message", e.getMessage(), "success", false));
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %v", e.getMessage()), "success", false));
         res.type("application/json");
         res.status(500);
         res.body(body);

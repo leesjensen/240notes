@@ -38,8 +38,12 @@ public class Game {
     /**
      * Create a game. This will generate a unique ID for the game.
      */
-    public Game() {
-        this.gameID = UUID.randomUUID().hashCode();
+    public Game(Game copy) {
+        this.gameID = Math.abs(UUID.randomUUID().hashCode());
+        this.gameName = copy.gameName;
+        this.blackPlayerID = copy.blackPlayerID;
+        this.whitePlayerID = copy.whitePlayerID;
+        this.game = new chess.Game();
     }
 
     public String getGameName() {
