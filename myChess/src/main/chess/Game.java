@@ -1,12 +1,30 @@
 package chess;
 
+import com.google.gson.Gson;
+
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 
 public class Game implements ChessGame {
 
     private Board board;
     private TeamColor turn;
+
+
+    public Game() {
+        this.board = new Board();
+        this.turn = TeamColor.WHITE;
+    }
+
+    public Game(ChessGame copy) {
+        this.board = new Board(copy.getBoard());
+        this.turn = copy.getTeamTurn();
+    }
+
+    public static Game CreateGame(String serializedGame) {
+        return new Gson().fromJson(serializedGame, Game.class);
+    }
 
     @Override
     public TeamColor getTeamTurn() {
@@ -113,6 +131,11 @@ public class Game implements ChessGame {
     @Override
     public ChessBoard getBoard() {
         return board;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 
 

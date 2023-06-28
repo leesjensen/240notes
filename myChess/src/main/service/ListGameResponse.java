@@ -17,20 +17,20 @@ class ListGamesResponse {
     }
 
 
-    public static List<ListGamesResponse> toList(Collection<Game> games, Database database) throws DataAccessException {
+    public static List<ListGamesResponse> toList(Collection<Game> games, DataAccess dataAccess) throws DataAccessException {
         ArrayList<ListGamesResponse> list = new ArrayList<>();
         for (var game : games) {
             var gameResponse = new ListGamesResponse(game);
-            gameResponse.blackUsername = readUsername(game.getBlackPlayerID(), database);
-            gameResponse.whiteUsername = readUsername(game.getWhitePlayerID(), database);
+            gameResponse.blackUsername = readUsername(game.getBlackPlayerID(), dataAccess);
+            gameResponse.whiteUsername = readUsername(game.getWhitePlayerID(), dataAccess);
             list.add(gameResponse);
         }
         return list;
     }
 
-    private static String readUsername(int userID, Database database) throws DataAccessException {
+    private static String readUsername(int userID, DataAccess dataAccess) throws DataAccessException {
         if (userID != 0) {
-            var user = database.readUser(new User(userID));
+            var user = dataAccess.readUser(new User(userID));
             if (user != null) {
                 return user.getUsername();
             }

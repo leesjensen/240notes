@@ -1,7 +1,5 @@
 package model;
 
-import java.util.UUID;
-
 /**
  * The user of the application. This may be a player, observer, or admin.
  */
@@ -26,9 +24,7 @@ public class User {
         this.username = copy.username;
         this.password = copy.password;
         this.email = copy.email;
-        if (copy.userID == 0) {
-            this.userID = Math.abs(UUID.randomUUID().hashCode());
-        }
+        this.userID = copy.userID;
     }
 
 
@@ -42,5 +38,25 @@ public class User {
 
     public int getUserID() {
         return userID;
+    }
+
+    public Object getEmail() {
+        return email;
+    }
+
+    public void setUserID(int id) {
+        this.userID = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

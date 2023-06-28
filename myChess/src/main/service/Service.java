@@ -1,8 +1,8 @@
 package service;
 
 import com.google.gson.Gson;
+import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
-import dataAccess.Database;
 import model.*;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.*;
@@ -14,17 +14,22 @@ import java.util.Map;
  * The service contains all the endpoints necessary to manage game play and users.
  */
 public class Service {
-    final private Database database = new Database();
+    final private DataAccess dataAccess;
 
     private static <T> T getBody(Request request, Class<T> clazz) {
         return new Gson().fromJson(request.body(), clazz);
+    }
+
+
+    public Service() throws DataAccessException {
+        this.dataAccess = new DataAccess();
     }
 
     /**
      * Clear out the entire database of users and games.
      */
     public Object databaseClear(Request ignoredReq, Response res) throws DataAccessException {
-        database.clear();
+        dataAccess.clear();
         return send("success", true);
     }
 
@@ -32,9 +37,9 @@ public class Service {
      * Register a user.
      */
     public Object userRegister(Request req, Response res) throws DataAccessException {
-        var user = database.writeUser(getBody(req, User.class));
+        var user = dataAccess.writeUser(getBody(req, User.class));
         if (user != null) {
-            var authToken = database.writeAuth(user);
+            var authToken = dataAccess.writeAuth(user);
             return send("username", user.getUsername(), "success", true, "authToken", authToken.getAuthToken());
         }
 
@@ -46,9 +51,9 @@ public class Service {
      */
     public Object userLogin(Request req, Response res) throws DataAccessException {
         User user = getBody(req, User.class);
-        User loggedInUser = database.readUser(user);
+        User loggedInUser = dataAccess.readUser(user);
         if (loggedInUser != null && loggedInUser.getPassword().equals(user.getPassword())) {
-            var authToken = database.writeAuth(loggedInUser);
+            var authToken = dataAccess.writeAuth(loggedInUser);
             return send("success", true, "username", loggedInUser.getUsername(), "authToken", authToken.getAuthToken());
         }
 
@@ -61,7 +66,7 @@ public class Service {
     public Object userLogout(Request req, Response res) throws DataAccessException {
         var authToken = isAuthorized(req);
         if (authToken != null) {
-            database.deleteAuth(authToken);
+            dataAccess.deleteAuth(authToken);
             return send("success", true);
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
@@ -73,7 +78,7 @@ public class Service {
      */
     public Object gameCreate(Request req, Response res) throws DataAccessException {
         if (isAuthorized(req) != null) {
-            var game = database.newGame(getBody(req, Game.class));
+            var game = dataAccess.newGame(getBody(req, Game.class));
             return send("success", true, "gameID", game.getGameID());
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
@@ -85,8 +90,8 @@ public class Service {
      */
     public Object gameList(Request req, Response res) throws DataAccessException {
         if (isAuthorized(req) != null) {
-            var games = database.listGames();
-            return send("success", true, "games", ListGamesResponse.toList(games, database));
+            var games = dataAccess.listGames();
+            return send("success", true, "games", ListGamesResponse.toList(games, dataAccess));
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
     }
@@ -98,7 +103,7 @@ public class Service {
         var authToken = isAuthorized(req);
         if (authToken != null) {
             var joinReq = getBody(req, JoinRequest.class);
-            var game = database.readGame(joinReq.gameID);
+            var game = dataAccess.readGame(joinReq.gameID);
             if (game != null) {
                 if (joinReq.playerColor != null) {
                     if (joinReq.playerColor.equals("WHITE")) {
@@ -114,7 +119,7 @@ public class Service {
                             return error(res, HttpStatus.FORBIDDEN_403, "Color taken");
                         }
                     }
-                    database.updateGame(game);
+                    dataAccess.updateGame(game);
                 }
                 return send("success", true);
             }
@@ -145,7 +150,7 @@ public class Service {
     private AuthToken isAuthorized(Request req) throws DataAccessException {
         var token = req.headers("authorization");
         if (token != null) {
-            return database.readAuth(token);
+            return dataAccess.readAuth(token);
         }
         return null;
     }

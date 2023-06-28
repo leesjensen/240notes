@@ -19,10 +19,19 @@ public class AuthToken {
     private final int userID;
 
     /**
-     * Creates an immutable authorization token.
+     * Creates an immutable authorization.
      *
-     * @param authToken to associate with User
-     * @param userID    to associate with token
+     * @param userID to associate with token
+     */
+    public AuthToken(int userID, String authToken) {
+        this.authToken = authToken;
+        this.userID = userID;
+    }
+
+    /**
+     * Creates an immutable authorization that auto creates the backing token.
+     *
+     * @param userID to associate with token
      */
     public AuthToken(int userID) {
         this.authToken = UUID.randomUUID().toString();

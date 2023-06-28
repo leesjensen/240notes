@@ -483,3 +483,43 @@ Spark supports path parameters.
 ```java
 get("/hello/:name", (request, response) -> "Hello " + request.params(":name"));
 ```
+
+I created a single `Server`, `Service` and `Database` class that handles all the endpoints and database operations. I used the model classes for most endpoint request and responses, but had to create a couple specialized classes for response/requests that are non-standard.
+
+I probably spend 6 hours on this. Pretty easy plumbing work. Spark is OK. It would be nice if it supported JSON directly and also had the concept of middleware like Express does.
+
+## 4-database
+
+Followed `GettingStarted-Database` and copied over the test file and the dataAccess `database` file. Changed the password to match my database.
+
+Added `com.mysql:mysql-connector-j:8.0.33` to my libraries using Maven. The docs didn't have `com.` on the front. Mistake?
+
+Manually stopping and restarting the server during the tests is a bit weird. Why doesn't the test just start up and restart the server?
+
+If I don't restart the server everything works fine and so I am ready to actually plug in the database.
+
+There is a nice document that tells you how to install MySQL.
+
+I'm not a huge fan of the unit test requirement for the web-api and database modules. It seems like the higher level HTTP tests do a great job testing the code, and adding more tests just creates maintenance. Of course this is good practice, but wouldn't it be better to just add tests the to the existing suite?
+
+It is interesting that the `database.java` file was provided to establish the connection. Was that considered too hard for the students to do?
+
+Why doesn't the `database.java` file use a connection pool?
+
+I like the new automatic resource management functionality that works on anything that implements `AutoClosable`.
+
+```java
+try (var conn = db.getConnection()) {
+    try (var preparedStatement = conn.prepareStatement("UPDATE users SET name = ? WHERE id = ?")) {
+        preparedStatement.setString(1, "John Doe");
+        preparedStatement.setInt(2, 100);
+        preparedStatement.executeUpdate();
+    }
+} catch (SQLException e) {
+    throw new DataAccessException("Unable to configure database");
+}
+```
+
+Not a huge fan of MySQL in Java. Feels really clunky. There must be some good libraries out there that make it easier.
+
+This took me about 5 hours. Easy plumbing work.

@@ -35,15 +35,21 @@ public class Game {
      */
     private ChessGame game;
 
+
+    public Game() {
+        game = new chess.Game();
+    }
+
+
     /**
      * Create a game. This will generate a unique ID for the game.
      */
     public Game(Game copy) {
-        this.gameID = Math.abs(UUID.randomUUID().hashCode());
+        this.gameID = copy.gameID;
         this.gameName = copy.gameName;
         this.blackPlayerID = copy.blackPlayerID;
         this.whitePlayerID = copy.whitePlayerID;
-        this.game = new chess.Game();
+        this.game = new chess.Game(copy.getGame());
     }
 
     public String getGameName() {
@@ -58,27 +64,35 @@ public class Game {
         return gameID;
     }
 
+    public Game setGameID(int gameID) {
+        this.gameID = gameID;
+        return this;
+    }
+
     public int getBlackPlayerID() {
         return blackPlayerID;
     }
 
-    public void setBlackPlayerID(int blackPlayerID) {
+    public Game setBlackPlayerID(int blackPlayerID) {
         this.blackPlayerID = blackPlayerID;
+        return this;
     }
 
     public int getWhitePlayerID() {
         return whitePlayerID;
     }
 
-    public void setWhitePlayerID(int whitePlayerID) {
+    public Game setWhitePlayerID(int whitePlayerID) {
         this.whitePlayerID = whitePlayerID;
+        return this;
     }
 
     public ChessGame getGame() {
         return game;
     }
 
-    public void setGame(ChessGame game) {
+    public Game setGame(ChessGame game) {
         this.game = game;
+        return this;
     }
 }
