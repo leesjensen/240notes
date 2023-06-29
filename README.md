@@ -523,3 +523,26 @@ try (var conn = db.getConnection()) {
 Not a huge fan of MySQL in Java. Feels really clunky. There must be some good libraries out there that make it easier.
 
 This took me about 5 hours. Easy plumbing work.
+
+## 5-pre-game (Client)
+
+Followed instructions in `GettingStarted-Pregame`.
+
+- Created client module
+- Created shared module
+- Setup dependencies on shared module for `myChess` (server) and `client`
+- Moved shared files to Shared module
+- Created client JAR. After building the JAR I can run it with: `java -jar client.jar`
+
+Read `Pregame`. Not really enough info here to know how to get started building the REPL.
+
+I'm a bit confused on what the instructions for testing are. Am I testing my ServerFacade? Am I supposed to write that now? The instructions seems to indicate that I wasn't suppose to implement game play yet.
+
+I spent a lot of time remembering how reflection works in Java. Also relearned how to build an HTTP client (painful).
+Playing around with console output to move things around. Surprised that they don't backspace the board for display.
+Implementing tests for my eval function since there are no provided tests for this module.
+Got about half of the functions working after 8 hours of work. Basically just need to display the blank board.
+
+## 6-game-play (WebSocket)
+
+The protocol is named `WebSocket`, not `Web Socket` or `WebSockets`.

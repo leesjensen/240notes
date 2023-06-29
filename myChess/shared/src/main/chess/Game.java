@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 
 public class Game implements ChessGame {
 

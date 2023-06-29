@@ -7,8 +7,7 @@ import model.*;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The service contains all the endpoints necessary to manage game play and users.
@@ -91,7 +90,7 @@ public class Service {
     public Object gameList(Request req, Response res) throws DataAccessException {
         if (isAuthorized(req) != null) {
             var games = dataAccess.listGames();
-            return send("success", true, "games", ListGamesResponse.toList(games, dataAccess));
+            return send("success", true, "games", toList(games, dataAccess));
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
     }
@@ -155,8 +154,26 @@ public class Service {
         return null;
     }
 
-    private class JoinRequest {
-        public String playerColor;
-        public int gameID;
+
+    private static List<GameResponse> toList(Collection<Game> games, DataAccess dataAccess) throws DataAccessException {
+        ArrayList<GameResponse> list = new ArrayList<>();
+        for (var game : games) {
+            var gameResponse = new GameResponse(game);
+            gameResponse.blackUsername = readUsername(game.getBlackPlayerID(), dataAccess);
+            gameResponse.whiteUsername = readUsername(game.getWhitePlayerID(), dataAccess);
+            list.add(gameResponse);
+        }
+        return list;
     }
+
+    private static String readUsername(int userID, DataAccess dataAccess) throws DataAccessException {
+        if (userID != 0) {
+            var user = dataAccess.readUser(new User(userID));
+            if (user != null) {
+                return user.getUsername();
+            }
+        }
+        return null;
+    }
+
 }

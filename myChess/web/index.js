@@ -63,8 +63,8 @@ function createGame() {
   displayRequest('POST', '/games/create', { gameName: 'gameName' });
 }
 function joinGame() {
-  displayRequest('POST', '/games/join', { playerColor: 'WHITE/BLACK', gameID: '0' });
+  displayRequest('POST', '/games/join', { playerColor: 'WHITE/BLACK', gameID: 0 });
 }
 function watchGame() {
-  displayRequest('POST', '/games/watch', { gameID: '0' });
+  displayRequest('POST', '/games/watch', { gameID: 0 });
 }

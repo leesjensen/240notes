@@ -2,8 +2,6 @@ package model;
 
 import chess.ChessGame;
 
-import java.util.UUID;
-
 
 /**
  * Represents the players and current state of a Chess game.
