@@ -19,38 +19,36 @@ public class clientTests {
         assertThrows(NoSuchMethodException.class, () -> client.eval("garbage"));
     }
 
+    static final String loggedOutHelp = "  \u001B[38;5;12mregister <USERNAME> <PASSWORD> <EMAIL>\u001B[38;5;0m - \u001B[38;5;5mto create an account\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mlogin <USERNAME> <PASSWORD>\u001B[38;5;0m - \u001B[38;5;5mto play chess\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mquit\u001B[38;5;0m - \u001B[38;5;5mplaying chess\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mhelp\u001B[38;5;0m - \u001B[38;5;5mwith possible commands\u001B[38;5;0m\n";
+
+    static final String loggedInHelp = "  \u001B[38;5;12mcreate <NAME>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mlist\u001B[38;5;0m - \u001B[38;5;5mgames\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mjoin <ID>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mobserve <ID>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mlogout\u001B[38;5;0m - \u001B[38;5;5mwhen you are done\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mquit\u001B[38;5;0m - \u001B[38;5;5mplaying chess\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mhelp\u001B[38;5;0m - \u001B[38;5;5mwith possible commands\u001B[38;5;0m\n";
+
     @Test
     public void helpTest() throws Exception {
-        assertEquals(
-                "  \u001B[38;5;12mregister <USERNAME> <PASSWORD> <EMAIL>\u001B[38;5;0m - \u001B[38;5;5mto create an account\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mlogin <USERNAME> <PASSWORD>\u001B[38;5;0m - \u001B[38;5;5mto play chess\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mquit\u001B[38;5;0m - \u001B[38;5;5mplaying chess\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mhelp\u001B[38;5;0m - \u001B[38;5;5mwith possible commands\u001B[38;5;0m\n",
-                client.eval("HELP")
-        );
-
+        assertEquals(loggedOutHelp, client.eval("HELP"));
         client.eval("register joe jackson joe@mail.com");
-
-        assertEquals("  \u001B[38;5;12mcreate <NAME>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mlist\u001B[38;5;0m - \u001B[38;5;5mgames\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mjoin <ID>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mobserve <ID>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mlogout\u001B[38;5;0m - \u001B[38;5;5mwhen you are done\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mquit\u001B[38;5;0m - \u001B[38;5;5mplaying chess\u001B[38;5;0m\n" +
-                        "  \u001B[38;5;12mhelp\u001B[38;5;0m - \u001B[38;5;5mwith possible commands\u001B[38;5;0m\n",
-                client.eval("HELP")
-        );
-
+        assertEquals(loggedInHelp, client.eval("HELP"));
+        client.eval("logout");
+        assertEquals(loggedOutHelp, client.eval("HELP"));
     }
 
     @Test
-    public void registerTest() throws Exception {
+    public void loginTest() throws Exception {
         assertEquals("Success", client.eval("register joe password c@mail.com"));
+        assertEquals("Success", client.eval("login joe password"));
     }
 
-
     @Test
-    public void listGamesTest() throws Exception {
+    public void gamesTest() throws Exception {
         assertEquals("Success", client.eval("register joe password c@mail.com"));
 
         assertEquals("Success", client.eval("create game1"));
