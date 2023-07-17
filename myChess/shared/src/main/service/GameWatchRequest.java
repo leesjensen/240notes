@@ -3,13 +3,11 @@ package service;
 
 import com.google.gson.Gson;
 
-public class JoinRequest {
-    public String playerColor;
+public class GameWatchRequest {
     public int gameID;
 
-    public JoinRequest(int gameID, String playerColor) {
+    public GameWatchRequest(int gameID) {
         this.gameID = gameID;
-        this.playerColor = playerColor;
     }
 
     @Override

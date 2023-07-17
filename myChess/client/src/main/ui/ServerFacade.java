@@ -18,7 +18,6 @@ public class ServerFacade {
 
     public void clear() throws Exception {
         var r = this.makeRequest("POST", "/clear", null, null, Map.class);
-        System.out.println(r);
     }
 
     public LoginResponse register(String username, String password, String email) throws Exception {
@@ -40,8 +39,13 @@ public class ServerFacade {
         return this.makeRequest("POST", "/games/create", request, authToken, CreateGameResponse.class);
     }
 
-    public GameListResponse listGames(String authToken) throws Exception {
-        return this.makeRequest("GET", "/games/list", null, authToken, GameListResponse.class);
+    public ListGamesResponse listGames(String authToken) throws Exception {
+        return this.makeRequest("GET", "/games/list", null, authToken, ListGamesResponse.class);
+    }
+
+    public GameJoinResponse joinGame(String authToken, String gameID, String color) throws Exception {
+        var request = new JoinRequest(Integer.parseInt(gameID), color.toUpperCase());
+        return this.makeRequest("POST", "/games/join", request, authToken, GameJoinResponse.class);
     }
 
     private <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> clazz) throws Exception {

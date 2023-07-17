@@ -81,19 +81,10 @@
         <td>
             <span class="description">Join a Chess Game</span> The request body must contain the game ID, as well as
             what
-            color the user wants to claim. The response JSON contains a success status and, if failed, an error message
-            describing the reason. An authToken is required to call this endpoint.
-        </td>
-    </tr>
-    <tr>
-        <td class="endpoint" onclick="watchGame()">
-            <div>/games/watch</div>
-        </td>
-        <td>
-            <span class="description">Watch a game</span> The request body must contain the game ID. The response JSON
-            contains a success status and, if failed, an error message describing the reason. An authToken is required
-            to
-            call this endpoint.
+            color the user wants to claim. If no color is specified then you join as an observer. The response JSON
+            contains
+            a success status and, if failed, an error message describing the reason. An authToken is required to call
+            this endpoint.
         </td>
     </tr>
     <tr>

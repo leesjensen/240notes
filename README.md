@@ -9,8 +9,9 @@
 ## IntelliJ
 
 - Turn on format on save in Settings>Tools>Actions on Save
-- Select multiple lines with cursors: `Option-Option-down/up arrow`
-- Select same text multiple cursors: `Ctrl-G`
+- `Option-Option-down/up arrow`: Select multiple lines with cursors:
+- `Ctrl-G`: Select same text multiple cursors
+- `CMD-B`: Goto definition
 
 ## Curl
 
@@ -112,6 +113,18 @@ To build a jar file from the output use:
 
 ```sh
 java -classpath spell.jar spell.Main notsobig.txt cow
+```
+
+## Streams, lambdas, and optionals
+
+Here is an example of using stream, lambda, and optional to get the root cause of an exception. This is really not that much cleaner than more explicit code, but it seems to be where the cool Java kids are going.
+
+It is interesting that you can pass a method to the `iterate` function and it uses reflection to find that method on the object. This must be most useful the the `hasNext/next` iteration.
+
+```java
+        Optional<Throwable> rootCause = Stream.iterate(e, Throwable::getCause)
+                .filter(element -> element.getCause() == null)
+                .findFirst();
 ```
 
 # Implementing SpellChecker

@@ -19,7 +19,11 @@ public class ChessClient {
         }
 
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
-        return (String) this.getClass().getDeclaredMethod(tokens[0], String[].class).invoke(this, new Object[]{params});
+        try {
+            return (String) this.getClass().getDeclaredMethod(tokens[0], String[].class).invoke(this, new Object[]{params});
+        } catch (NoSuchMethodException e) {
+            throw new Exception("Unknown command");
+        }
     }
 
     public void clear() throws Exception {
@@ -50,13 +54,12 @@ public class ChessClient {
 
 
     private String logout(String[] params) throws Exception {
-        if (authToken != null) {
-            var response = server.logout(authToken);
-            if (response.success) {
-                state = State.LOGGED_OUT;
-                authToken = null;
-                return "Success";
-            }
+        verifyAuth();
+        var response = server.logout(authToken);
+        if (response.success) {
+            state = State.LOGGED_OUT;
+            authToken = null;
+            return "Success";
         }
         return "Failure";
     }
@@ -76,6 +79,8 @@ public class ChessClient {
 
 
     private String create(String[] params) throws Exception {
+        verifyAuth();
+
         if (params.length == 1 && state == State.LOGGED_IN) {
             var response = server.createGame(authToken, params[0]);
             if (response.success) {
@@ -86,29 +91,50 @@ public class ChessClient {
     }
 
     private String list(String[] params) throws Exception {
-        if (authToken != null) {
-            var response = server.listGames(authToken);
-            if (response.success) {
-                return response.toString();
-            }
+        verifyAuth();
+        var response = server.listGames(authToken);
+        if (response.success) {
+            return response.toString();
         }
         return "Failure";
     }
 
 
-    private String join(String[] params) {
-        if (params.length == 0 || (params[0] != "white" && params[0] != "black")) {
-            throw new IllegalArgumentException("Must be WHITE or BLACK");
+    private String join(String[] params) throws Exception {
+        verifyAuth();
+        if (state == State.LOGGED_IN) {
+            if (params.length == 2 && (params[1].equalsIgnoreCase("WHITE") || params[1].equalsIgnoreCase("BLACK"))) {
+                server.joinGame(authToken, params[0], params[1]);
+                state = (params[1].equalsIgnoreCase("WHITE") ? State.WHITE : State.BLACK);
+                printBoard(State.WHITE);
+                printBoard(State.BLACK);
+                return "Success";
+            }
         }
-        state = (params[0] == "white" ? State.WHITE : State.BLACK);
-        return "join!";
+
+        return "Failure";
     }
 
 
-    private String observe(String[] params) {
-        return "observe!";
+    private String observe(String[] params) throws Exception {
+        verifyAuth();
+        if (state == State.LOGGED_IN) {
+            if (params.length == 1) {
+                server.joinGame(authToken, params[0], "");
+                state = State.OBSERVING;
+                printBoard(State.WHITE);
+                printBoard(State.BLACK);
+                return "Success";
+            }
+        }
+
+        return "Failure";
     }
 
+
+    private void printBoard(State state) {
+
+    }
 
     private static record Help(String cmd, String description) {
     }
@@ -123,7 +149,7 @@ public class ChessClient {
     static final List<Help> loggedInHelp = List.of(
             new Help("create <NAME>", "a game"),
             new Help("list", "games"),
-            new Help("join <ID>", "a game"),
+            new Help("join <ID> [WHITE|BLACK]", "a game"),
             new Help("observe <ID>", "a game"),
             new Help("logout", "when you are done"),
             new Help("quit", "playing chess"),
@@ -138,4 +164,11 @@ public class ChessClient {
         return sb.toString();
 
     }
+
+    private void verifyAuth() throws Exception {
+        if (authToken == null) {
+            throw new Exception("Please login or register");
+        }
+    }
+
 }

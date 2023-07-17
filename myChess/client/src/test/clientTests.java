@@ -1,6 +1,6 @@
 import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
-import service.GameListResponse;
+import service.ListGamesResponse;
 import ui.ChessClient;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,16 +48,42 @@ public class clientTests {
     }
 
     @Test
-    public void gamesTest() throws Exception {
+    public void gameTest() throws Exception {
         assertEquals("Success", client.eval("register joe password c@mail.com"));
 
         assertEquals("Success", client.eval("create game1"));
         assertEquals("Success", client.eval("create game2"));
 
-        var gameListText = client.eval("list");
-        var gameList = new Gson().fromJson(gameListText, GameListResponse.class);
+        var gameList = listGames();
         assertTrue(gameList.success);
         assertEquals(2, gameList.games.length);
+
+        if (gameList.games.length == 2) {
+            var gameID = gameList.games[0].gameID;
+
+            assertEquals("Success", client.eval(String.format("join %s white", gameID)));
+            // Can't join if already joined
+            assertEquals("Failure", client.eval(String.format("join %s white", gameID)));
+
+            client.eval("logout");
+            assertEquals("Success", client.eval("login joe password"));
+            assertEquals("Success", client.eval(String.format("observe %s", gameID)));
+            // Can't join if observing
+            assertEquals("Failure", client.eval(String.format("join %s BLACK", gameID)));
+
+            client.eval("logout");
+            assertEquals("Success", client.eval("login joe password"));
+            assertEquals("Success", client.eval(String.format("join %s BLACK", gameID)));
+
+            gameList = listGames();
+            assertEquals("joe", gameList.games[0].blackUsername);
+            assertEquals("joe", gameList.games[0].whiteUsername);
+        }
+    }
+
+    private ListGamesResponse listGames() throws Exception {
+        var gameListText = client.eval("list");
+        return new Gson().fromJson(gameListText, ListGamesResponse.class);
     }
 }
 

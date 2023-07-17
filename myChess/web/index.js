@@ -42,6 +42,7 @@ function displayRequest(method, endpoint, request) {
   document.getElementById('handleBox').value = endpoint;
   const body = request ? JSON.stringify(request, null, 2) : '';
   document.getElementById('requestBox').value = body;
+  document.getElementById('response').innerText = '';
 }
 
 function clearDB() {
@@ -63,8 +64,5 @@ function createGame() {
   displayRequest('POST', '/games/create', { gameName: 'gameName' });
 }
 function joinGame() {
-  displayRequest('POST', '/games/join', { playerColor: 'WHITE/BLACK', gameID: 0 });
-}
-function watchGame() {
-  displayRequest('POST', '/games/watch', { gameID: 0 });
+  displayRequest('POST', '/games/join', { playerColor: 'WHITE|BLACK|<empty>', gameID: 0 });
 }

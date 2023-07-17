@@ -21,7 +21,7 @@ public class Repl {
                 try {
                     result = client.eval(input);
                 } catch (Throwable e) {
-                    // ignore
+                    result = String.format("Error: %s", util.ExceptionUtil.getMsg(e));
                 }
 
                 System.out.print(RESET_TEXT_COLOR + result);
