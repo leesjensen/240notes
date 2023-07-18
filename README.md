@@ -551,10 +551,13 @@ Read `Pregame`. Not really enough info here to know how to get started building 
 
 I'm a bit confused on what the instructions for testing are. Am I testing my ServerFacade? Am I supposed to write that now? The instructions seems to indicate that I wasn't suppose to implement game play yet.
 
-I spent a lot of time remembering how reflection works in Java. Also relearned how to build an HTTP client (painful).
-Playing around with console output to move things around. Surprised that they don't backspace the board for display.
+I spent a lot of time remembering how reflection works in Java. Also relearned how to build an HTTP client (painful in Java).
+Playing around with console output to move things around. Surprised that they don't backspace the board for display in the example.
 Implementing tests for my eval function since there are no provided tests for this module.
-Got about half of the functions working after 8 hours of work. Basically just need to display the blank board.
+Painting the board is painful because the colors display differently on different terminals.
+After about 16 hours of work I got everything working.
+
+I had to type cast board so that I could tell it how I wanted toString to paint the board. The other possibilities is to expose the ability to access the board array.
 
 ## 6-game-play (WebSocket)
 

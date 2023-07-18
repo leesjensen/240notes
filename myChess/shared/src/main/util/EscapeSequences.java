@@ -1,4 +1,4 @@
-package ui;
+package util;
 
 /**
  * This class contains constants and functions relating to ANSI Escape Sequences that are useful in the Client display
@@ -47,13 +47,13 @@ public class EscapeSequences {
     public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
     public static final String RESET_BG_COLOR = SET_BG_COLOR + "0m";
 
-    public static final String WHITE_KING = " ♔ "; //" \u2654 ";
+    public static final String WHITE_KING = " K "; //" \u2654 ";
     public static final String WHITE_QUEEN = " Q "; //" \u2655 ";
     public static final String WHITE_BISHOP = " B "; //" \u2656 ";
     public static final String WHITE_KNIGHT = " N "; //" \u2657 ";
     public static final String WHITE_ROOK = " R "; //" \u2658 ";
     public static final String WHITE_PAWN = " P "; //" \u2659 ";
-    public static final String BLACK_KING = " ♚ "; //" \u265A ";
+    public static final String BLACK_KING = " K "; //" \u265A ";
     public static final String BLACK_QUEEN = " Q "; //" \u265B ";
     public static final String BLACK_BISHOP = " B "; //" \u265C ";
     public static final String BLACK_KNIGHT = " N "; //" \u265D ";

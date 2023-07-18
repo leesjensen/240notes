@@ -1,8 +1,13 @@
 package ui;
 
+import chess.Board;
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.Game;
+
 import java.util.*;
 
-import static ui.EscapeSequences.*;
+import static util.EscapeSequences.*;
 
 
 public class ChessClient {
@@ -10,6 +15,8 @@ public class ChessClient {
     private State state = State.LOGGED_OUT;
     private String authToken;
     final private ServerFacade server = new ServerFacade("http://localhost:8080");
+
+    private Game game;
 
     public String eval(String input) throws Exception {
         input = input.toLowerCase();
@@ -50,6 +57,12 @@ public class ChessClient {
             }
         }
         return "Failure";
+    }
+
+    private String board(String[] params) {
+        Board board = new Board();
+        board.resetBoard();
+        return board.toString(ChessGame.TeamColor.WHITE) + "\n" + board.toString(ChessGame.TeamColor.BLACK);
     }
 
 
@@ -106,8 +119,10 @@ public class ChessClient {
             if (params.length == 2 && (params[1].equalsIgnoreCase("WHITE") || params[1].equalsIgnoreCase("BLACK"))) {
                 server.joinGame(authToken, params[0], params[1]);
                 state = (params[1].equalsIgnoreCase("WHITE") ? State.WHITE : State.BLACK);
-                printBoard(State.WHITE);
-                printBoard(State.BLACK);
+                game = new Game();
+                game.getBoard().resetBoard();
+                printGame(game.getBoard(), State.BLACK);
+                printGame(game.getBoard(), State.WHITE);
                 return "Success";
             }
         }
@@ -122,8 +137,10 @@ public class ChessClient {
             if (params.length == 1) {
                 server.joinGame(authToken, params[0], "");
                 state = State.OBSERVING;
-                printBoard(State.WHITE);
-                printBoard(State.BLACK);
+                game = new Game();
+                game.getBoard().resetBoard();
+                printGame(game.getBoard(), State.WHITE);
+                printGame(game.getBoard(), State.BLACK);
                 return "Success";
             }
         }
@@ -132,8 +149,9 @@ public class ChessClient {
     }
 
 
-    private void printBoard(State state) {
-
+    private void printGame(ChessBoard board, State state) {
+        System.out.print(((Board) board).toString(state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK));
+        System.out.println();
     }
 
     private static record Help(String cmd, String description) {
@@ -149,7 +167,7 @@ public class ChessClient {
     static final List<Help> loggedInHelp = List.of(
             new Help("create <NAME>", "a game"),
             new Help("list", "games"),
-            new Help("join <ID> [WHITE|BLACK]", "a game"),
+            new Help("join <ID> [WHITE|BLACK|<empty>]", "a game"),
             new Help("observe <ID>", "a game"),
             new Help("logout", "when you are done"),
             new Help("quit", "playing chess"),

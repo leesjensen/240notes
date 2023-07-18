@@ -1,11 +1,12 @@
 package ui;
 
+import chess.Board;
+
 import java.util.Scanner;
 
-import static ui.EscapeSequences.*;
+import static util.EscapeSequences.*;
 
 public class Repl {
-
     public static void main(String[] args) {
 
         System.out.println(WHITE_KING + " Welcome to 240 chess. Type Help to get started " + BLACK_KING);
@@ -13,7 +14,7 @@ public class Repl {
         ChessClient client = new ChessClient();
 
         while (true) {
-            System.out.print(SET_TEXT_COLOR_DARK_GREY + "\n>>> " + SET_TEXT_COLOR_GREEN);
+            System.out.print(RESET_TEXT_COLOR + "\n>>> " + SET_TEXT_COLOR_GREEN);
             String input = scanner.nextLine();
 
             try {
@@ -21,11 +22,14 @@ public class Repl {
                 try {
                     result = client.eval(input);
                 } catch (Throwable e) {
-                    result = String.format("Error: %s", util.ExceptionUtil.getMsg(e));
+                    e = util.ExceptionUtil.getRoot(e);
+                    result = String.format("Error: %s", e.getMessage());
+                    e.printStackTrace();
                 }
 
                 System.out.print(RESET_TEXT_COLOR + result);
             } catch (Throwable e) {
+                System.out.println(e);
             }
         }
     }

@@ -1,3 +1,4 @@
+import chess.Board;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
 import service.ListGamesResponse;
@@ -16,7 +17,7 @@ public class clientTests {
 
     @Test
     public void badCmdTest() {
-        assertThrows(NoSuchMethodException.class, () -> client.eval("garbage"));
+        assertThrows(Exception.class, () -> client.eval("garbage"));
     }
 
     static final String loggedOutHelp = "  \u001B[38;5;12mregister <USERNAME> <PASSWORD> <EMAIL>\u001B[38;5;0m - \u001B[38;5;5mto create an account\u001B[38;5;0m\n" +
@@ -26,7 +27,7 @@ public class clientTests {
 
     static final String loggedInHelp = "  \u001B[38;5;12mcreate <NAME>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
             "  \u001B[38;5;12mlist\u001B[38;5;0m - \u001B[38;5;5mgames\u001B[38;5;0m\n" +
-            "  \u001B[38;5;12mjoin <ID>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
+            "  \u001B[38;5;12mjoin <ID> [WHITE|BLACK|<empty>]\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
             "  \u001B[38;5;12mobserve <ID>\u001B[38;5;0m - \u001B[38;5;5ma game\u001B[38;5;0m\n" +
             "  \u001B[38;5;12mlogout\u001B[38;5;0m - \u001B[38;5;5mwhen you are done\u001B[38;5;0m\n" +
             "  \u001B[38;5;12mquit\u001B[38;5;0m - \u001B[38;5;5mplaying chess\u001B[38;5;0m\n" +
@@ -79,6 +80,14 @@ public class clientTests {
             assertEquals("joe", gameList.games[0].blackUsername);
             assertEquals("joe", gameList.games[0].whiteUsername);
         }
+    }
+
+
+    @Test
+    public void boardTest() {
+        Board board = new Board();
+        board.resetBoard();
+        System.out.print(board);
     }
 
     private ListGamesResponse listGames() throws Exception {
