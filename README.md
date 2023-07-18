@@ -561,4 +561,18 @@ I had to type cast board so that I could tell it how I wanted toString to paint 
 
 ## 6-game-play (WebSocket)
 
+Jul 18 1:00
+
 The protocol is named `WebSocket`, not `Web Socket` or `WebSockets`.
+
+Copied over the test and WebSocket files from `StarterCode-Gameplay` as specified in the getting started instruction.
+
+I don't understand why the `leave` command is available for players? Don't they have to resign? Is that an automatic resign? Also what is the point of not leaving the game on `resign`?
+
+I don't understand why there is a `join` HTTP and `JOIN_PLAYER` WebSocket message.
+
+Why have each client keep their own copy of the board. Why not just have the server send out the board after every change?
+
+Does a player have to resign if they are checkmated?
+
+https://sequencediagram.org/index.html#initialData=C4S2BsFMAIHEEMC2MAK54E8BQWAO8AnUAYxHwDthoBlSAgNzq3mOAHsDo1M6BGZ1hy7oMdAEwD2nAPIAjAM51GBflgC8agDJsA5iHIascxQz4BaAHy1TBAFza95aMaV9o+efIDuHACZZuUQIxS2tle119YR5g93hPHwJ-QPMrVzsHKJSVOIS-HA0EZGhiAkh4UDYDNQCRVLC6WwBhMoqYIsh+bN5Q9NsAKTYojt5oACFNAEEmgGlamJ7emwHpAEkAOQB9FCmATQBRACUsBoIzS277aUmAEU3YSYBZffmgkLTlzRB5YFfxJfCg2GSE60AA6gAJVYAFRe2RCAMa-TWWx2kwOx1O5ws8Kut3uTxeWIudRUtnW0mhqwAYqsmpMqdJ1tAABQAKyGTnh0Fk6GIAGsAJRGBTpHofcJfH4ikzKcWnAacuAg-guGyLCVIlGbaRjahHABqRxO6WxarleLuD2eJps2MuFKptPpjOZ7KV5rcbFFNmFxJxpLE5MpNLpDNWTNZHKinpy3tldGF6jUHXcIkM3WxCsekxm+02j2kRugkDEkAALLblPbSbxLQSbf7cZprlbCVW6GafRaW-jrUTTSSFsGnWHXazEGxGCWy+W-YOAzEg47Qy6I27J9PSxX53bLLG6yvneHIyzNzBt3OCimQSUqsRwABXeQgKoZ2tZvqHfbUVawdYdmcQ5BIeIbHuOLJlC+OhcrWu7VsB4gjquJ5ulBIAwdEIHwZ2+7dnwyHgeurLoZh3RJvCn6fPskxGoBNbDkeY7ESyUDwNO8I4UBFgHoRzGnmxHGBkmMpilRko0XROA4EAA
