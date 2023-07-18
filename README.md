@@ -127,6 +127,15 @@ It is interesting that you can pass a method to the `iterate` function and it us
                 .findFirst();
 ```
 
+## Method reference
+
+You can use a method reference as a more concise representation. This is useful in places like lambda functions or in a switch statement.
+
+```java
+  Spark.post("/user/register", (r, s) -> service.userRegister(r, s));
+  Spark.post("/user/register", service::userRegister);
+```
+
 # Implementing SpellChecker
 
 1. You have four hours to complete the exam. There are three tries with decreasing max value (100, 80, 60). Save 30 minutes to upload your artifacts.
@@ -575,4 +584,46 @@ Why have each client keep their own copy of the board. Why not just have the ser
 
 Does a player have to resign if they are checkmated?
 
+You have to name your ws endpoint `connect` in order for the tests to work.
+
 https://sequencediagram.org/index.html#initialData=C4S2BsFMAIHEEMC2MAK54E8BQWAO8AnUAYxHwDthoBlSAgNzq3mOAHsDo1M6BGZ1hy7oMdAEwD2nAPIAjAM51GBflgC8agDJsA5iHIascxQz4BaAHy1TBAFza95aMaV9o+efIDuHACZZuUQIxS2tle119YR5g93hPHwJ-QPMrVzsHKJSVOIS-HA0EZGhiAkh4UDYDNQCRVLC6WwBhMoqYIsh+bN5Q9NsAKTYojt5oACFNAEEmgGlamJ7emwHpAEkAOQB9FCmATQBRACUsBoIzS277aUmAEU3YSYBZffmgkLTlzRB5YFfxJfCg2GSE60AA6gAJVYAFRe2RCAMa-TWWx2kwOx1O5ws8Kut3uTxeWIudRUtnW0mhqwAYqsmpMqdJ1tAABQAKyGTnh0Fk6GIAGsAJRGBTpHofcJfH4ikzKcWnAacuAg-guGyLCVIlGbaRjahHABqRxO6WxarleLuD2eJps2MuFKptPpjOZ7KV5rcbFFNmFxJxpLE5MpNLpDNWTNZHKinpy3tldGF6jUHXcIkM3WxCsekxm+02j2kRugkDEkAALLblPbSbxLQSbf7cZprlbCVW6GafRaW-jrUTTSSFsGnWHXazEGxGCWy+W-YOAzEg47Qy6I27J9PSxX53bLLG6yvneHIyzNzBt3OCimQSUqsRwABXeQgKoZ2tZvqHfbUVawdYdmcQ5BIeIbHuOLJlC+OhcrWu7VsB4gjquJ5ulBIAwdEIHwZ2+7dnwyHgeurLoZh3RJvCn6fPskxGoBNbDkeY7ESyUDwNO8I4UBFgHoRzGnmxHGBkmMpilRko0XROA4EAA
+
+Setting up the websocket on the server is pretty trivial.
+
+```java
+import com.google.gson.Gson;
+import org.eclipse.jetty.websocket.api.*;
+import org.eclipse.jetty.websocket.api.annotations.*;
+import webSocketMessages.userCommands.UserGameCommand;
+import static spark.Spark.*;
+
+@WebSocket
+public class WebSocketHandler {
+    public static void main(String[] args) {
+        webSocket("/connect", WebSocketHandler.class);
+        init();
+    }
+
+
+    @OnWebSocketConnect
+    public void onConnect(Session user) throws Exception {
+        System.out.println("connection opened");
+    }
+
+
+    @OnWebSocketClose
+    public void onClose(Session user, int statusCode, String reason) {
+        System.out.println("connection closed");
+    }
+
+
+    @OnWebSocketMessage
+    public void onMessage(Session user, String message) throws java.io.IOException {
+        System.out.println("message received: " + message);
+
+        UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
+        System.out.println("JSON received: " + new Gson().toJson(command));
+        user.getRemote().sendString("hello");
+    }
+}
+```

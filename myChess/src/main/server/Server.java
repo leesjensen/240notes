@@ -7,27 +7,28 @@ import java.util.Map;
 
 import spark.*;
 
-import static spark.Spark.*;
+import static spark.Spark.webSocket;
 
 public class Server {
     public static void main(String[] args) {
         try {
-            port(8080);
-            externalStaticFileLocation("web");
+            Spark.port(8080);
+            webSocket("/connect", WebSocketHandler.class);
+            Spark.externalStaticFileLocation("web");
 
             var service = new Service();
 
-            post("/user/register", service::userRegister);
-            post("/user/login", service::userLogin);
-            post("/user/logout", service::userLogout);
-            post("/clear", service::databaseClear);
-            post("/games/create", service::gameCreate);
-            post("/games/join", service::gameJoin);
-            post("/games/watch", service::gameWatch);
-            get("/games/list", service::gameList);
+            Spark.post("/user/register", service::userRegister);
+            Spark.post("/user/login", service::userLogin);
+            Spark.post("/user/logout", service::userLogout);
+            Spark.post("/clear", service::databaseClear);
+            Spark.post("/games/create", service::gameCreate);
+            Spark.post("/games/join", service::gameJoin);
+            Spark.post("/games/watch", service::gameWatch);
+            Spark.get("/games/list", service::gameList);
 
-            exception(Exception.class, Server::errorHandler);
-            notFound((req, res) -> {
+            Spark.exception(Exception.class, Server::errorHandler);
+            Spark.notFound((req, res) -> {
                 var msg = String.format("[%s] %s not found", req.requestMethod(), req.pathInfo());
                 return errorHandler(new Exception(msg), req, res);
             });
