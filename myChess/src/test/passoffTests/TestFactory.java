@@ -48,7 +48,7 @@ public class TestFactory {
         3 Seconds will be enough for most computers. Feel free to change as you see fit, just know increasing it can
         make tests take longer to run. (On the flip side, if you've got a good computer feel free to decrease it)
          */
-        return 3L;
+        return 60L;
     }
     //------------------------------------------------------------------------------------------------------------------
 }

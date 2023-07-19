@@ -13,6 +13,11 @@ import java.util.*;
  * The service contains all the endpoints necessary to manage game play and users.
  */
 public class Service {
+
+    public Service(DataAccess dataAccess) {
+        this.dataAccess = dataAccess;
+    }
+
     final private DataAccess dataAccess;
 
     private static <T> T getBody(Request request, Class<T> clazz) throws DataAccessException {
@@ -21,11 +26,6 @@ public class Service {
             throw new DataAccessException("Missing body");
         }
         return body;
-    }
-
-
-    public Service() throws DataAccessException {
-        this.dataAccess = new DataAccess();
     }
 
     /**
@@ -103,40 +103,6 @@ public class Service {
      * Join a game
      */
     public Object gameJoin(Request req, Response res) throws DataAccessException {
-        var authToken = isAuthorized(req);
-        if (authToken != null) {
-            var userID = authToken.getUserID();
-            var joinReq = getBody(req, JoinRequest.class);
-            var game = dataAccess.readGame(joinReq.gameID);
-            if (game != null) {
-                if (joinReq.playerColor != null && !joinReq.playerColor.isEmpty()) {
-                    if (joinReq.playerColor.equals("WHITE")) {
-                        if (game.getWhitePlayerID() == 0 || game.getWhitePlayerID() == userID) {
-                            game.setWhitePlayerID(userID);
-                        } else {
-                            return error(res, HttpStatus.FORBIDDEN_403, "Color taken");
-                        }
-                    } else if (joinReq.playerColor.equals("BLACK")) {
-                        if (game.getBlackPlayerID() == 0 || game.getBlackPlayerID() == userID) {
-                            game.setBlackPlayerID(userID);
-                        } else {
-                            return error(res, HttpStatus.FORBIDDEN_403, "Color taken");
-                        }
-                    }
-                    dataAccess.updateGame(game);
-                }
-                return send("success", true);
-            }
-            return error(res, HttpStatus.BAD_REQUEST_400, "Unknown game");
-        }
-        return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
-    }
-
-
-    /**
-     * Join a game
-     */
-    public Object gameWatch(Request req, Response res) throws DataAccessException {
         var authToken = isAuthorized(req);
         if (authToken != null) {
             var userID = authToken.getUserID();

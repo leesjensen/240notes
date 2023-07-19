@@ -9,6 +9,8 @@ import java.sql.SQLException;
  */
 public class Database {
 
+    public static final String DB_NAME = "leeChess";
+
     //FIXME replace with your database URL
     //private static final String MYSQL_URL = "localhost:3306/MyAwesomeChessDatabase";
     private static final String MYSQL_URL = "localhost:3306";
@@ -33,7 +35,7 @@ public class Database {
      * @return new Connection object
      * @throws DataAccessException
      */
-    public Connection openConnection() throws DataAccessException {
+    public Connection openConnection(boolean setDB) throws DataAccessException {
         try {
             //shouldn't try to open an active connection
             if (conn != null) {
@@ -46,7 +48,9 @@ public class Database {
 
             // Open a database connection to the file given in the path
             conn = DriverManager.getConnection(CONNECTION_URL, DB_USERNAME, DB_PASSWORD);
-            conn.setCatalog("chess");
+            if (setDB) {
+                conn.setCatalog(DB_NAME);
+            }
 
             // Start a transaction
             conn.setAutoCommit(false);
@@ -64,12 +68,11 @@ public class Database {
      * @return Connection to database
      * @throws DataAccessException
      */
-    public Connection getConnection() throws DataAccessException {
+    public Connection getConnection(boolean setDB) throws DataAccessException {
         if (conn == null) {
-            return openConnection();
-        } else {
-            return conn;
+            openConnection(setDB);
         }
+        return conn;
     }
 
     /**

@@ -59,7 +59,7 @@ public class DataAccess {
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
     public User readUser(User user) throws DataAccessException {
-        var conn = db.getConnection();
+        var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement("SELECT userID, username, password, email from `user` WHERE userID=? OR username=?")) {
             preparedStatement.setInt(1, user.getUserID());
             preparedStatement.setString(2, user.getUsername());
@@ -104,7 +104,7 @@ public class DataAccess {
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
     public AuthToken readAuth(String authToken) throws DataAccessException {
-        var conn = db.getConnection();
+        var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement("SELECT authToken, userID from `authentication` WHERE authToken=?")) {
             preparedStatement.setString(1, authToken);
             try (var rs = preparedStatement.executeQuery()) {
@@ -171,7 +171,7 @@ public class DataAccess {
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
     public Game readGame(int gameID) throws DataAccessException {
-        var conn = db.getConnection();
+        var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement("SELECT gameName, whitePlayerID, blackPlayerID, game FROM `game` WHERE gameID=?")) {
             preparedStatement.setInt(1, gameID);
             try (var rs = preparedStatement.executeQuery()) {
@@ -203,7 +203,7 @@ public class DataAccess {
      */
     public Collection<Game> listGames() throws DataAccessException {
         var result = new ArrayList<Game>();
-        var conn = db.getConnection();
+        var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerID, blackPlayerID, game FROM `game`")) {
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
@@ -259,9 +259,10 @@ public class DataAccess {
 
     private void configureDatabase() throws DataAccessException {
         db = new Database();
-        var conn = db.getConnection();
         try {
-            createDatabase(conn);
+            createDatabase();
+
+            var conn = db.getConnection(true);
             for (var statement : createStatements) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
@@ -274,15 +275,18 @@ public class DataAccess {
         }
     }
 
-    private void createDatabase(Connection conn) throws SQLException {
+    private void createDatabase() throws SQLException, DataAccessException {
+        var conn = db.getConnection(false);
         try (var createStmt = conn.createStatement()) {
-            createStmt.execute("CREATE DATABASE IF NOT EXISTS `chess`");
+            createStmt.execute("CREATE DATABASE IF NOT EXISTS `" + Database.DB_NAME + "`");
+        } finally {
+            db.closeConnection(true);
         }
     }
 
 
     private void executeCommand(String statement) throws DataAccessException {
-        var conn = db.getConnection();
+        var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -293,7 +297,7 @@ public class DataAccess {
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
-        var conn = db.getConnection();
+        var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
             for (var i = 0; i < params.length; i++) {
                 var param = params[i];

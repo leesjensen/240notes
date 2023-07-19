@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataAccess.DataAccess;
 import service.Service;
 
 import java.util.Map;
@@ -13,10 +14,13 @@ public class Server {
     public static void main(String[] args) {
         try {
             Spark.port(8080);
-            webSocket("/connect", WebSocketHandler.class);
             Spark.externalStaticFileLocation("web");
 
-            var service = new Service();
+            var dataAccess = new DataAccess();
+            var service = new Service(dataAccess);
+            var webSocketHandler = new WebSocketHandler(dataAccess);
+
+            webSocket("/connect", webSocketHandler);
 
             Spark.post("/user/register", service::userRegister);
             Spark.post("/user/login", service::userLogin);
@@ -24,7 +28,6 @@ public class Server {
             Spark.post("/clear", service::databaseClear);
             Spark.post("/games/create", service::gameCreate);
             Spark.post("/games/join", service::gameJoin);
-            Spark.post("/games/watch", service::gameWatch);
             Spark.get("/games/list", service::gameList);
 
             Spark.exception(Exception.class, Server::errorHandler);

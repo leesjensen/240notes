@@ -544,6 +544,8 @@ try (var conn = db.getConnection()) {
 
 Not a huge fan of MySQL in Java. Feels really clunky. There must be some good libraries out there that make it easier.
 
+It seems like there is a problem with the starter database code. It isn't multithreaded. It creates a single connection and returns it to everyone who asks. So if two endpoints execute at the same time they are going to have a problem.
+
 This took me about 5 hours. Easy plumbing work.
 
 ## 5-pre-game (Client)
