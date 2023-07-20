@@ -1,6 +1,7 @@
 package chess;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,8 +22,8 @@ public class Game implements ChessGame {
         this.turn = copy.getTeamTurn();
     }
 
-    public static Game CreateGame(String serializedGame) {
-        return new Gson().fromJson(serializedGame, Game.class);
+    public static Game Create(String serializedGame) {
+        return createSerializer().fromJson(serializedGame, Game.class);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class Game implements ChessGame {
             }
         }
 
-        throw new InvalidMoveException();
+        throw new InvalidMoveException(String.format("Move %s is not valid", move));
     }
 
     @Override
@@ -132,10 +133,17 @@ public class Game implements ChessGame {
         return board;
     }
 
+
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return createSerializer().toJson(this);
     }
 
 
+    private static Gson createSerializer() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Piece.class, Piece.getJsonTypeAdapter());
+        builder.enableComplexMapKeySerialization();
+        return builder.create();
+    }
 }

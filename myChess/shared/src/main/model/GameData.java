@@ -1,12 +1,21 @@
 package model;
 
 import chess.ChessGame;
+import chess.InvalidMoveException;
+import chess.Move;
 
 
 /**
  * Represents the players and current state of a Chess game.
  */
-public class Game {
+public class GameData {
+
+    enum GameState {
+        WHITE,
+        BLACK,
+        DRAW,
+        UNDECIDED
+    }
 
     /**
      * Descriptive name of the game.
@@ -33,20 +42,39 @@ public class Game {
      */
     private ChessGame game;
 
+    public boolean isGameOver() {
+        return state != GameState.UNDECIDED;
+    }
 
-    public Game() {
+    public void makeMove(Move move) throws InvalidMoveException {
+        game.makeMove(move);
+        var nextTurn = game.getTeamTurn();
+
+        if (game.isInCheckmate(nextTurn)) {
+            resign(nextTurn);
+        } else if (game.isInStalemate(nextTurn)) {
+            state = GameState.DRAW;
+        }
+    }
+
+    public void resign(ChessGame.TeamColor color) {
+        state = color == ChessGame.TeamColor.WHITE ? GameState.BLACK : GameState.WHITE;
+    }
+
+    private GameState state;
+
+    public GameData() {
         game = new chess.Game();
+        state = GameState.UNDECIDED;
     }
 
 
-    /**
-     * Create a game. This will generate a unique ID for the game.
-     */
-    public Game(Game copy) {
+    public GameData(GameData copy) {
         this.gameID = copy.gameID;
         this.gameName = copy.gameName;
         this.blackPlayerID = copy.blackPlayerID;
         this.whitePlayerID = copy.whitePlayerID;
+        this.state = copy.state;
         this.game = new chess.Game(copy.getGame());
     }
 
@@ -62,7 +90,7 @@ public class Game {
         return gameID;
     }
 
-    public Game setGameID(int gameID) {
+    public GameData setGameID(int gameID) {
         this.gameID = gameID;
         return this;
     }
@@ -71,7 +99,7 @@ public class Game {
         return blackPlayerID;
     }
 
-    public Game setBlackPlayerID(int blackPlayerID) {
+    public GameData setBlackPlayerID(int blackPlayerID) {
         this.blackPlayerID = blackPlayerID;
         return this;
     }
@@ -80,7 +108,7 @@ public class Game {
         return whitePlayerID;
     }
 
-    public Game setWhitePlayerID(int whitePlayerID) {
+    public GameData setWhitePlayerID(int whitePlayerID) {
         this.whitePlayerID = whitePlayerID;
         return this;
     }
@@ -89,7 +117,7 @@ public class Game {
         return game;
     }
 
-    public Game setGame(ChessGame game) {
+    public GameData setGame(ChessGame game) {
         this.game = game;
         return this;
     }

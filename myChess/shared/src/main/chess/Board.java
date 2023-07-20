@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Board implements ChessBoard {
 
-    final private ChessPiece[][] board = new ChessPiece[8][8];
+    final private Piece[][] board = new Piece[8][8];
 
     final private ArrayList<ChessMove> history = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class Board implements ChessBoard {
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        board[position.getRow() - 1][position.getColumn() - 1] = piece;
+        board[position.getRow() - 1][position.getColumn() - 1] = (Piece) piece;
     }
 
     @Override

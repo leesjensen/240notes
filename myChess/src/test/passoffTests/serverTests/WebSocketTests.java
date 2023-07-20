@@ -46,7 +46,7 @@ public class WebSocketTests {
     static Long waitTime;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         serverFacade = new TestServerFacade("localhost", TestFactory
                 .getServerPort());
         serverFacade.clear();
@@ -77,7 +77,7 @@ public class WebSocketTests {
     }
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
 
         bobExecutor = Executors.newSingleThreadExecutor();
         jamesExecutor = Executors.newSingleThreadExecutor();
@@ -169,7 +169,7 @@ public class WebSocketTests {
     }
 
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         bobClient.disconnect();
         jamesClient.disconnect();
         alfredClient.disconnect();
@@ -194,7 +194,7 @@ public class WebSocketTests {
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(new GetServerMessages(1,
                 bobClient, readyLatch));
 
-        try{
+        try {
             bobMessages = bobResult.get(waitTime, TimeUnit.SECONDS);
         } catch (TimeoutException ignore) {
         }
@@ -203,32 +203,6 @@ public class WebSocketTests {
         assertEquals(1, bobMessages.size(), "Bob didn't get a message");
         assertEquals(TestModels.TestServerMessageType.LOAD_GAME, bobMessages.get(0).serverMessageType, "Bob's message was not a LOAD_GAME message");
         assertNotNull(bobMessages.get(0).game, "Bob's LOAD_GAME message did not contain a game");
-
-        //join empty game
-        joinCommand = new TestModels.TestCommand();
-        joinCommand.commandType = TestModels.TestCommandType.JOIN_PLAYER;
-        joinCommand.authToken = alfredAuth;
-        joinCommand.playerColor = BLACK;
-        joinCommand.gameID = emptyGame;
-
-        //make sure got load board message
-        readyLatch = new CountDownLatch(1);
-        List<TestModels.TestMessage> alfredMessages = new ArrayList<>();
-        testExecutor.submit(alfredClient.getSendMessageRunnable(joinCommand, readyLatch));
-        Future<List<TestModels.TestMessage>> alfredResult = bobExecutor.submit(new GetServerMessages(1,
-                alfredClient, readyLatch));
-        try{
-            alfredMessages = alfredResult.get(waitTime, TimeUnit.SECONDS);
-        } catch (TimeoutException ignore) {
-        }
-
-        //check received messages
-        assertEquals(1, alfredMessages.size(), "Alfred did not get a message");
-        assertEquals(TestModels.TestServerMessageType.LOAD_GAME, alfredMessages.get(0).serverMessageType, "Alfred's message was not a LOAD_GAME message");
-        assertNotNull(alfredMessages.get(0).game, "Alfreds LOAD_GAME message did not contain a game");
-
-
-
 
         //join other spot on game
         joinCommand = new TestModels.TestCommand();
@@ -248,9 +222,9 @@ public class WebSocketTests {
 
         //get messages
         List<TestModels.TestMessage> jamesMessages = new ArrayList<>();
-        try{
-            jamesMessages = jamesResult.get(waitTime*2, TimeUnit.SECONDS);
-            bobMessages = bobResult.get(waitTime*2, TimeUnit.SECONDS);
+        try {
+            jamesMessages = jamesResult.get(waitTime * 2, TimeUnit.SECONDS);
+            bobMessages = bobResult.get(waitTime * 2, TimeUnit.SECONDS);
         } catch (TimeoutException ignore) {
         }
 
@@ -283,7 +257,7 @@ public class WebSocketTests {
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(new GetServerMessages(1,
                 bobClient, readyLatch));
 
-        try{
+        try {
             bobMessages = bobResult.get(waitTime, TimeUnit.SECONDS);
         } catch (TimeoutException ignore) {
         }
@@ -313,7 +287,7 @@ public class WebSocketTests {
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(new GetServerMessages(1,
                 bobClient, readyLatch));
 
-        try{
+        try {
             bobMessages = bobResult.get(waitTime, TimeUnit.SECONDS);
         } catch (TimeoutException ignore) {
         }
@@ -336,7 +310,7 @@ public class WebSocketTests {
         testExecutor.submit(alfredClient.getSendMessageRunnable(joinCommand, readyLatch));
         Future<List<TestModels.TestMessage>> alfredResult = bobExecutor.submit(new GetServerMessages(1,
                 alfredClient, readyLatch));
-        try{
+        try {
             alfredMessages = alfredResult.get(waitTime, TimeUnit.SECONDS);
         } catch (TimeoutException ignore) {
         }
@@ -345,7 +319,6 @@ public class WebSocketTests {
         assertEquals(1, alfredMessages.size(), "Alfred did not get a message");
         assertEquals(TestModels.TestServerMessageType.LOAD_GAME, alfredMessages.get(0).serverMessageType, "Alfred's message was not a LOAD_GAME message");
         assertNotNull(alfredMessages.get(0).game, "Alfred's LOAD_GAME message did not contain a game");
-
 
 
         //watch game with active player
@@ -365,9 +338,9 @@ public class WebSocketTests {
 
         //get messages
         List<TestModels.TestMessage> jamesMessages = new ArrayList<>();
-        try{
-            jamesMessages = jamesResult.get(waitTime*2, TimeUnit.SECONDS);
-            bobMessages = bobResult.get(waitTime*2, TimeUnit.SECONDS);
+        try {
+            jamesMessages = jamesResult.get(waitTime * 2, TimeUnit.SECONDS);
+            bobMessages = bobResult.get(waitTime * 2, TimeUnit.SECONDS);
         } catch (TimeoutException ignore) {
         }
 
@@ -408,12 +381,13 @@ public class WebSocketTests {
         jamesClient.connect();
         readyLatch = new CountDownLatch(2);
         testExecutor.submit(jamesClient.getSendMessageRunnable(joinCommand, readyLatch));
+
         Future<List<TestModels.TestMessage>> jamesResult = jamesExecutor.submit(
                 new GetServerMessages(1, jamesClient, readyLatch));
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(
                 new GetServerMessages(1, bobClient, readyLatch));
-        jamesResult.get(2*waitTime, TimeUnit.SECONDS);
-        bobResult.get(2*waitTime, TimeUnit.SECONDS);
+        jamesResult.get(2 * waitTime, TimeUnit.SECONDS);
+        bobResult.get(2 * waitTime, TimeUnit.SECONDS);
 
         //have alfred observe game
         joinCommand = new TestModels.TestCommand();
@@ -439,10 +413,10 @@ public class WebSocketTests {
         List<TestModels.TestMessage> alfredMessages = new ArrayList<>();
 
         //wait to get all messages
-        try{
-            bobMessages = bobResult.get(waitTime*3, TimeUnit.SECONDS);
-            jamesMessages = jamesResult.get(waitTime*3, TimeUnit.SECONDS);
-            alfredMessages = alfredResult.get(waitTime*3, TimeUnit.SECONDS);
+        try {
+            bobMessages = bobResult.get(waitTime * 3, TimeUnit.SECONDS);
+            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.SECONDS);
+            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.SECONDS);
 
         } catch (TimeoutException ignore) {
         }
@@ -493,8 +467,8 @@ public class WebSocketTests {
                 new GetServerMessages(1, jamesClient, readyLatch));
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(
                 new GetServerMessages(1, bobClient, readyLatch));
-        bobResult.get(2*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(2*waitTime, TimeUnit.SECONDS);
+        bobResult.get(2 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(2 * waitTime, TimeUnit.SECONDS);
 
 
         //have alfred join as an observer
@@ -512,9 +486,9 @@ public class WebSocketTests {
                 new GetServerMessages(1, alfredClient, readyLatch));
         bobResult = bobExecutor.submit(new GetServerMessages(1, bobClient, readyLatch));
         jamesResult = jamesExecutor.submit(new GetServerMessages(1, jamesClient, readyLatch));
-        alfredResult.get(3*waitTime, TimeUnit.SECONDS);
-        bobResult.get(3*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(3*waitTime, TimeUnit.SECONDS);
+        alfredResult.get(3 * waitTime, TimeUnit.SECONDS);
+        bobResult.get(3 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(3 * waitTime, TimeUnit.SECONDS);
 
 
         //have bob make a move
@@ -550,10 +524,10 @@ public class WebSocketTests {
         List<TestModels.TestMessage> alfredMessages = new ArrayList<>();
 
         //wait to get all messages
-        try{
-            bobMessages = bobResult.get(waitTime*3, TimeUnit.SECONDS);
-            jamesMessages = jamesResult.get(waitTime*3, TimeUnit.SECONDS);
-            alfredMessages = alfredResult.get(waitTime*3, TimeUnit.SECONDS);
+        try {
+            bobMessages = bobResult.get(waitTime * 3, TimeUnit.SECONDS);
+            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.SECONDS);
+            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.SECONDS);
 
         } catch (TimeoutException ignore) {
         }
@@ -566,17 +540,17 @@ public class WebSocketTests {
 
         assertEquals(2, jamesMessages.size(), "Expected 2 messages for James, got " + jamesMessages.size());
         boolean isLoadGameFirst = jamesMessages.get(0).serverMessageType == TestModels.TestServerMessageType.LOAD_GAME;
-        assertEquals(TestModels.TestServerMessageType.LOAD_GAME, jamesMessages.get(isLoadGameFirst?0:1).serverMessageType, "Didn't get load game message");
-        assertNotNull(jamesMessages.get(isLoadGameFirst?0:1).game, "James LOAD_GAME message didn't contain a game");
-        assertEquals(TestModels.TestServerMessageType.NOTIFICATION, jamesMessages.get(isLoadGameFirst?1:0).serverMessageType, "Didn't get notification");
-        assertNotNull(jamesMessages.get(isLoadGameFirst?1:0).message, "James NOTIFICATION message didn't contain a message");
+        assertEquals(TestModels.TestServerMessageType.LOAD_GAME, jamesMessages.get(isLoadGameFirst ? 0 : 1).serverMessageType, "Didn't get load game message");
+        assertNotNull(jamesMessages.get(isLoadGameFirst ? 0 : 1).game, "James LOAD_GAME message didn't contain a game");
+        assertEquals(TestModels.TestServerMessageType.NOTIFICATION, jamesMessages.get(isLoadGameFirst ? 1 : 0).serverMessageType, "Didn't get notification");
+        assertNotNull(jamesMessages.get(isLoadGameFirst ? 1 : 0).message, "James NOTIFICATION message didn't contain a message");
 
         assertEquals(2, alfredMessages.size(), "Expected 2 messages for Alfred, got " + alfredMessages.size());
         isLoadGameFirst = alfredMessages.get(0).serverMessageType == TestModels.TestServerMessageType.LOAD_GAME;
-        assertEquals(TestModels.TestServerMessageType.LOAD_GAME, alfredMessages.get(isLoadGameFirst?0:1).serverMessageType, "Didn't get load game message");
-        assertNotNull(alfredMessages.get(isLoadGameFirst?0:1).game, "Alfred's LOAD_GAME message didn't contain a game");
-        assertEquals(TestModels.TestServerMessageType.NOTIFICATION, alfredMessages.get(isLoadGameFirst?1:0).serverMessageType, "Didn't get notification");
-        assertNotNull(alfredMessages.get(isLoadGameFirst?1:0).message, "Alfred's NOTIFICATION message didn't contain a message");
+        assertEquals(TestModels.TestServerMessageType.LOAD_GAME, alfredMessages.get(isLoadGameFirst ? 0 : 1).serverMessageType, "Didn't get load game message");
+        assertNotNull(alfredMessages.get(isLoadGameFirst ? 0 : 1).game, "Alfred's LOAD_GAME message didn't contain a game");
+        assertEquals(TestModels.TestServerMessageType.NOTIFICATION, alfredMessages.get(isLoadGameFirst ? 1 : 0).serverMessageType, "Didn't get notification");
+        assertNotNull(alfredMessages.get(isLoadGameFirst ? 1 : 0).message, "Alfred's NOTIFICATION message didn't contain a message");
     }
 
     @Test
@@ -610,8 +584,8 @@ public class WebSocketTests {
                 new GetServerMessages(1, jamesClient, readyLatch));
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(
                 new GetServerMessages(1, bobClient, readyLatch));
-        bobResult.get(2*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(2*waitTime, TimeUnit.SECONDS);
+        bobResult.get(2 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(2 * waitTime, TimeUnit.SECONDS);
 
 
         //have alfred join as an observer
@@ -630,9 +604,9 @@ public class WebSocketTests {
                 new GetServerMessages(1, alfredClient, readyLatch));
         bobResult = bobExecutor.submit(new GetServerMessages(1, bobClient, readyLatch));
         jamesResult = jamesExecutor.submit(new GetServerMessages(1, jamesClient, readyLatch));
-        alfredResult.get(3*waitTime, TimeUnit.SECONDS);
-        bobResult.get(3*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(3*waitTime, TimeUnit.SECONDS);
+        alfredResult.get(3 * waitTime, TimeUnit.SECONDS);
+        bobResult.get(3 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(3 * waitTime, TimeUnit.SECONDS);
 
         //have bob make an invalid move
         //try move rook
@@ -667,10 +641,10 @@ public class WebSocketTests {
 
         //wait to get all messages
         //only bob should get a message
-        try{
-            bobMessages = bobResult.get(waitTime*3, TimeUnit.SECONDS);
-            jamesMessages = jamesResult.get(waitTime*3, TimeUnit.SECONDS);
-            alfredMessages = alfredResult.get(waitTime*3, TimeUnit.SECONDS);
+        try {
+            bobMessages = bobResult.get(waitTime * 3, TimeUnit.SECONDS);
+            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.SECONDS);
+            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.SECONDS);
 
         } catch (TimeoutException ignore) {
         }
@@ -716,8 +690,8 @@ public class WebSocketTests {
                 new GetServerMessages(1, jamesClient, readyLatch));
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(
                 new GetServerMessages(1, bobClient, readyLatch));
-        bobResult.get(2*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(2*waitTime, TimeUnit.SECONDS);
+        bobResult.get(2 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(2 * waitTime, TimeUnit.SECONDS);
 
 
         //have alfred join as an observer
@@ -735,9 +709,9 @@ public class WebSocketTests {
                 new GetServerMessages(1, alfredClient, readyLatch));
         bobResult = bobExecutor.submit(new GetServerMessages(1, bobClient, readyLatch));
         jamesResult = jamesExecutor.submit(new GetServerMessages(1, jamesClient, readyLatch));
-        alfredResult.get(3*waitTime, TimeUnit.SECONDS);
-        bobResult.get(3*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(3*waitTime, TimeUnit.SECONDS);
+        alfredResult.get(3 * waitTime, TimeUnit.SECONDS);
+        bobResult.get(3 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(3 * waitTime, TimeUnit.SECONDS);
 
         //have james resign
         //create command
@@ -762,10 +736,10 @@ public class WebSocketTests {
 
         //wait to get all messages
         //only bob should get a message
-        try{
-            bobMessages = bobResult.get(waitTime*3, TimeUnit.SECONDS);
-            jamesMessages = jamesResult.get(waitTime*3, TimeUnit.SECONDS);
-            alfredMessages = alfredResult.get(waitTime*3, TimeUnit.SECONDS);
+        try {
+            bobMessages = bobResult.get(waitTime * 3, TimeUnit.SECONDS);
+            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.SECONDS);
+            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.SECONDS);
 
         } catch (TimeoutException ignore) {
         }
@@ -784,7 +758,7 @@ public class WebSocketTests {
 
     @Test
     @Order(8)
-    public void invalidResign()  throws ExecutionException, InterruptedException, TimeoutException {
+    public void invalidResign() throws ExecutionException, InterruptedException, TimeoutException {
         //have bob join the game as a player
         TestModels.TestCommand joinCommand = new TestModels.TestCommand();
         joinCommand.commandType = TestModels.TestCommandType.JOIN_PLAYER;
@@ -813,8 +787,8 @@ public class WebSocketTests {
                 new GetServerMessages(1, jamesClient, readyLatch));
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(
                 new GetServerMessages(1, bobClient, readyLatch));
-        bobResult.get(2*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(2*waitTime, TimeUnit.SECONDS);
+        bobResult.get(2 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(2 * waitTime, TimeUnit.SECONDS);
 
 
         //have alfred join as an observer
@@ -832,9 +806,9 @@ public class WebSocketTests {
                 new GetServerMessages(1, alfredClient, readyLatch));
         bobResult = bobExecutor.submit(new GetServerMessages(1, bobClient, readyLatch));
         jamesResult = jamesExecutor.submit(new GetServerMessages(1, jamesClient, readyLatch));
-        alfredResult.get(3*waitTime, TimeUnit.SECONDS);
-        bobResult.get(3*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(3*waitTime, TimeUnit.SECONDS);
+        alfredResult.get(3 * waitTime, TimeUnit.SECONDS);
+        bobResult.get(3 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(3 * waitTime, TimeUnit.SECONDS);
 
         //have alfred try to resign
         //create command
@@ -859,10 +833,10 @@ public class WebSocketTests {
 
         //wait to get all messages
         //only alfred should get a message
-        try{
-            bobMessages = bobResult.get(waitTime*3, TimeUnit.SECONDS);
-            jamesMessages = jamesResult.get(waitTime*3, TimeUnit.SECONDS);
-            alfredMessages = alfredResult.get(waitTime*3, TimeUnit.SECONDS);
+        try {
+            bobMessages = bobResult.get(waitTime * 3, TimeUnit.SECONDS);
+            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.SECONDS);
+            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.SECONDS);
 
         } catch (TimeoutException ignore) {
         }
@@ -879,7 +853,7 @@ public class WebSocketTests {
 
     @Test
     @Order(9)
-    public void leaveGame()  throws ExecutionException, InterruptedException, TimeoutException {
+    public void leaveGame() throws ExecutionException, InterruptedException, TimeoutException {
         //have bob join the game as a player
         TestModels.TestCommand joinCommand = new TestModels.TestCommand();
         joinCommand.commandType = TestModels.TestCommandType.JOIN_PLAYER;
@@ -908,8 +882,8 @@ public class WebSocketTests {
                 new GetServerMessages(1, jamesClient, readyLatch));
         Future<List<TestModels.TestMessage>> bobResult = bobExecutor.submit(
                 new GetServerMessages(1, bobClient, readyLatch));
-        bobResult.get(2*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(2*waitTime, TimeUnit.SECONDS);
+        bobResult.get(2 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(2 * waitTime, TimeUnit.SECONDS);
 
 
         //have alfred join as an observer
@@ -927,9 +901,9 @@ public class WebSocketTests {
                 new GetServerMessages(1, alfredClient, readyLatch));
         bobResult = bobExecutor.submit(new GetServerMessages(1, bobClient, readyLatch));
         jamesResult = jamesExecutor.submit(new GetServerMessages(1, jamesClient, readyLatch));
-        alfredResult.get(3*waitTime, TimeUnit.SECONDS);
-        bobResult.get(3*waitTime, TimeUnit.SECONDS);
-        jamesResult.get(3*waitTime, TimeUnit.SECONDS);
+        alfredResult.get(3 * waitTime, TimeUnit.SECONDS);
+        bobResult.get(3 * waitTime, TimeUnit.SECONDS);
+        jamesResult.get(3 * waitTime, TimeUnit.SECONDS);
 
 
         //have bob leave game
@@ -953,9 +927,9 @@ public class WebSocketTests {
 
         //wait to get all messages
         //Bob can get message if you want, but probably not. Everyone else needs to get notified
-        try{
-            jamesMessages = jamesResult.get(waitTime*3, TimeUnit.SECONDS);
-            alfredMessages = alfredResult.get(waitTime*3, TimeUnit.SECONDS);
+        try {
+            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.SECONDS);
+            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.SECONDS);
 
         } catch (TimeoutException ignore) {
         }
@@ -991,9 +965,9 @@ public class WebSocketTests {
 
         //wait to get all messages
         //Bob should not get message (he already left). James must get notified
-        try{
-            jamesMessages = jamesResult.get(waitTime*3, TimeUnit.SECONDS);
-            bobMessages = bobResult.get(waitTime*2, TimeUnit.SECONDS);
+        try {
+            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.SECONDS);
+            bobMessages = bobResult.get(waitTime * 2, TimeUnit.SECONDS);
 
         } catch (TimeoutException ignore) {
         }
@@ -1018,6 +992,7 @@ public class WebSocketTests {
         List<TestModels.TestMessage> messages;
         CountDownLatch latch;
         CountDownLatch readyLatch;
+
         public GetServerMessages(Integer numMessagesExpected, TestClient socket,
                                  CountDownLatch readyLatch) {
             this.numMessagesExpected = numMessagesExpected;

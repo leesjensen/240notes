@@ -9,7 +9,7 @@ public class GameResponse {
     public String blackUsername;
     public String gameName;
 
-    public GameResponse(Game game) {
+    public GameResponse(GameData game) {
         this.gameID = game.getGameID();
         this.gameName = game.getGameName();
     }

@@ -38,9 +38,9 @@ public class DataAccess {
      * @param user with both username and ID provided.
      * @throws DataAccessException for database or sql query violations.
      */
-    public User writeUser(User user) throws DataAccessException {
+    public UserData writeUser(UserData user) throws DataAccessException {
         if (user.getUsername() != null) {
-            var u = new User(user);
+            var u = new UserData(user);
             var ID = executeUpdate("INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)", u.getUsername(), u.getPassword(), u.getEmail());
             if (ID != 0) {
                 u.setUserID(ID);
@@ -58,14 +58,14 @@ public class DataAccess {
      * @return The requested @User
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    public User readUser(User user) throws DataAccessException {
+    public UserData readUser(UserData user) throws DataAccessException {
         var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement("SELECT userID, username, password, email from `user` WHERE userID=? OR username=?")) {
             preparedStatement.setInt(1, user.getUserID());
             preparedStatement.setString(2, user.getUsername());
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    var u = new User(rs.getInt("userID"));
+                    var u = new UserData(rs.getInt("userID"));
                     u.setUsername(rs.getString("username"));
                     u.setPassword(rs.getString("password"));
                     u.setEmail(rs.getString("email"));
@@ -89,7 +89,7 @@ public class DataAccess {
      * @return The @AuthToken for the user.
      * @throws DataAccessException for database or sql query violations.
      */
-    public AuthToken writeAuth(User user) throws DataAccessException {
+    public AuthToken writeAuth(UserData user) throws DataAccessException {
         var a = new AuthToken(user.getUserID());
         executeUpdate("INSERT INTO `authentication` (authToken, userID) VALUES (?, ?)", a.getAuthToken(), a.getUserID());
 
@@ -137,9 +137,13 @@ public class DataAccess {
      * @param game
      * @throws DataAccessException for database or sql query violations.
      */
-    public Game newGame(Game game) throws DataAccessException {
-        var g = new Game(game);
-        var ID = executeUpdate("INSERT INTO `game` (gameName, whitePlayerID, blackPlayerID, game) VALUES (?, ?, ?, ?)", g.getGameName(), g.getWhitePlayerID(), g.getBlackPlayerID(), g.getGame().toString());
+    public GameData newGame(GameData game) throws DataAccessException {
+        var g = new GameData(game);
+        var ID = executeUpdate("INSERT INTO `game` (gameName, whitePlayerID, blackPlayerID, game) VALUES (?, ?, ?, ?)",
+                g.getGameName(),
+                g.getWhitePlayerID(),
+                g.getBlackPlayerID(),
+                g.getGame().toString());
         if (ID != 0) {
             return g.setGameID(ID);
         }
@@ -154,7 +158,7 @@ public class DataAccess {
      * @return the @Game if it was updated, and null if there was no game with that ID.
      * @throws DataAccessException for database or sql query violations.
      */
-    public void updateGame(Game game) throws DataAccessException {
+    public void updateGame(GameData game) throws DataAccessException {
         executeUpdate("UPDATE `game` set gameName=?, whitePlayerID=?, blackPlayerID=?, game=? WHERE gameID=?",
                 game.getGameName(),
                 game.getWhitePlayerID(),
@@ -170,18 +174,19 @@ public class DataAccess {
      * @return The requested Game or null if not found.
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    public Game readGame(int gameID) throws DataAccessException {
+    public GameData readGame(int gameID) throws DataAccessException {
         var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement("SELECT gameName, whitePlayerID, blackPlayerID, game FROM `game` WHERE gameID=?")) {
             preparedStatement.setInt(1, gameID);
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    var game = new Game();
+                    var gs = rs.getString("game");
+                    var game = new GameData();
                     game.setGameID(gameID);
                     game.setGameName(rs.getString("gameName"));
                     game.setWhitePlayerID(rs.getInt("whitePlayerID"));
                     game.setBlackPlayerID(rs.getInt("blackPlayerID"));
-                    game.setGame(chess.Game.CreateGame(rs.getString("game")));
+                    game.setGame(chess.Game.Create(gs));
 
                     return game;
                 }
@@ -201,18 +206,18 @@ public class DataAccess {
      * @return the list of @Game objects
      * @throws DataAccessException for database or sql query violations.
      */
-    public Collection<Game> listGames() throws DataAccessException {
-        var result = new ArrayList<Game>();
+    public Collection<GameData> listGames() throws DataAccessException {
+        var result = new ArrayList<GameData>();
         var conn = db.getConnection(true);
         try (var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerID, blackPlayerID, game FROM `game`")) {
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
-                    var game = new Game();
+                    var game = new GameData();
                     game.setGameID(rs.getInt("gameID"));
                     game.setGameName(rs.getString("gameName"));
                     game.setWhitePlayerID(rs.getInt("whitePlayerID"));
                     game.setBlackPlayerID(rs.getInt("blackPlayerID"));
-                    game.setGame(chess.Game.CreateGame(rs.getString("game")));
+                    game.setGame(chess.Game.Create(rs.getString("game")));
 
                     result.add(game);
                 }

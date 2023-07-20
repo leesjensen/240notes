@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
@@ -40,7 +41,7 @@ public class Service {
      * Register a user.
      */
     public Object userRegister(Request req, Response res) throws DataAccessException {
-        var user = dataAccess.writeUser(getBody(req, User.class));
+        var user = dataAccess.writeUser(getBody(req, UserData.class));
         if (user != null) {
             var authToken = dataAccess.writeAuth(user);
             return send("username", user.getUsername(), "success", true, "authToken", authToken.getAuthToken());
@@ -53,8 +54,8 @@ public class Service {
      * Login a user.
      */
     public Object userLogin(Request req, Response res) throws DataAccessException {
-        User user = getBody(req, User.class);
-        User loggedInUser = dataAccess.readUser(user);
+        UserData user = getBody(req, UserData.class);
+        UserData loggedInUser = dataAccess.readUser(user);
         if (loggedInUser != null && loggedInUser.getPassword().equals(user.getPassword())) {
             var authToken = dataAccess.writeAuth(loggedInUser);
             return send("success", true, "username", loggedInUser.getUsername(), "authToken", authToken.getAuthToken());
@@ -81,7 +82,10 @@ public class Service {
      */
     public Object gameCreate(Request req, Response res) throws DataAccessException {
         if (isAuthorized(req) != null) {
-            var game = dataAccess.newGame(getBody(req, Game.class));
+            var body = getBody(req, GameData.class);
+            body.getGame().getBoard().resetBoard();
+            body.getGame().setTeamTurn(ChessGame.TeamColor.WHITE);
+            var game = dataAccess.newGame(body);
             return send("success", true, "gameID", game.getGameID());
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
@@ -160,7 +164,7 @@ public class Service {
     }
 
 
-    private static List<GameResponse> toList(Collection<Game> games, DataAccess dataAccess) throws DataAccessException {
+    private static List<GameResponse> toList(Collection<GameData> games, DataAccess dataAccess) throws DataAccessException {
         ArrayList<GameResponse> list = new ArrayList<>();
         for (var game : games) {
             var gameResponse = new GameResponse(game);
@@ -173,7 +177,7 @@ public class Service {
 
     private static String readUsername(int userID, DataAccess dataAccess) throws DataAccessException {
         if (userID != 0) {
-            var user = dataAccess.readUser(new User(userID));
+            var user = dataAccess.readUser(new UserData(userID));
             if (user != null) {
                 return user.getUsername();
             }

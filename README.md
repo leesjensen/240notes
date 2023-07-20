@@ -544,6 +544,8 @@ try (var conn = db.getConnection()) {
 
 Not a huge fan of MySQL in Java. Feels really clunky. There must be some good libraries out there that make it easier.
 
+I need to do Type conversion for all of the piece types so that Gson can properly recreate the objects.
+
 It seems like there is a problem with the starter database code. It isn't multithreaded. It creates a single connection and returns it to everyone who asks. So if two endpoints execute at the same time they are going to have a problem.
 
 This took me about 5 hours. Easy plumbing work.
@@ -629,3 +631,9 @@ public class WebSocketHandler {
     }
 }
 ```
+
+Why is `GameDataCache` a global singleton? Why not just make it a member of the `GameConnectionHandler`?
+
+Need test for making multiple moves.
+
+I needed to add the database serialization adapters since Piece has subclasses. It is a bit strange because each piece only differs by methods, not that actually data of the piece. Perhaps it would be better if it was just methods for the pieces rather than classes.

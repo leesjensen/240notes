@@ -1,16 +1,31 @@
 package chess;
 
+import java.util.Locale;
+
 public class Move implements ChessMove {
 
-    ChessPosition start;
+    Position start;
 
-    ChessPosition end;
+    Position end;
 
     ChessPiece.PieceType promotionPiece;
 
+    public static Move CreateMove(String notation) {
+        if (notation.length() == 4) {
+            notation = notation.toLowerCase(Locale.ROOT);
+            int rowStart = 'a' - notation.charAt(0);
+            int colStart = notation.charAt(1);
+            int rowEnd = 'a' - notation.charAt(2);
+            int colEnd = notation.charAt(3);
+
+            return new Move(new Position(rowStart, colStart), new Position(rowEnd, colEnd), null);
+        }
+        return null;
+    }
+
     public Move(ChessPosition start, ChessPosition end, ChessPiece.PieceType promotionType) {
-        this.start = start;
-        this.end = end;
+        this.start = new Position(start.getRow(), start.getColumn());
+        this.end = new Position(end.getRow(), end.getColumn());
         this.promotionPiece = promotionType;
     }
 

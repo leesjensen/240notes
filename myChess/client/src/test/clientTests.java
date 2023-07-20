@@ -45,6 +45,8 @@ public class clientTests {
     @Test
     public void loginTest() throws Exception {
         assertEquals("Success", client.eval("register joe password c@mail.com"));
+        assertEquals("Failure", client.eval("login joe password"));
+        assertEquals("Success", client.eval("logout"));
         assertEquals("Success", client.eval("login joe password"));
     }
 

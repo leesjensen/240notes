@@ -1,9 +1,11 @@
 package model;
 
+import com.google.gson.Gson;
+
 /**
  * The user of the application. This may be a player, observer, or admin.
  */
-public class User {
+public class UserData {
     /**
      * Non-unique textual name of the user.
      */
@@ -16,11 +18,11 @@ public class User {
      */
     private int userID;
 
-    public User(int userID) {
+    public UserData(int userID) {
         this.userID = userID;
     }
 
-    public User(User copy) {
+    public UserData(UserData copy) {
         this.username = copy.username;
         this.password = copy.password;
         this.email = copy.email;
@@ -58,5 +60,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
