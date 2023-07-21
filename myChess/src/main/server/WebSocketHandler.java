@@ -200,6 +200,12 @@ public class WebSocketHandler {
     private void leave(Connection connection, GameCommand command) throws Exception {
         var gameData = dataAccess.readGame(command.gameID);
         if (gameData != null) {
+            if (gameData.getBlackPlayerID() == connection.user.getUserID()) {
+                gameData.setBlackPlayerID(0);
+            } else if (gameData.getWhitePlayerID() == connection.user.getUserID()) {
+                gameData.setWhitePlayerID(0);
+            }
+            dataAccess.updateGame(gameData);
             connections.remove(connection.session);
             var notificationMsg = (new NotificationMessage(String.format("%s left", connection.user.getUsername()))).toString();
             connections.broadcast(gameData.getGameID(), -1, notificationMsg);

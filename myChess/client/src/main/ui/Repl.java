@@ -9,25 +9,16 @@ import static util.EscapeSequences.*;
 public class Repl {
     public static void main(String[] args) {
         try {
-            System.out.println(WHITE_KING + " Welcome to 240 chess. Type Help to get started " + BLACK_KING);
+            System.out.printf("👑 Welcome to 240 chess. Type Help to get started. 👑\n");
             Scanner scanner = new Scanner(System.in);
             ChessClient client = new ChessClient();
 
             while (true) {
-                System.out.print(RESET_TEXT_COLOR + "\n>>> " + SET_TEXT_COLOR_GREEN);
+                client.printPrompt();
                 String input = scanner.nextLine();
 
                 try {
-                    var result = "Error with command. Try: Help";
-                    try {
-                        result = client.eval(input);
-                    } catch (Throwable e) {
-                        e = util.ExceptionUtil.getRoot(e);
-                        result = String.format("Error: %s", e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                    System.out.print(RESET_TEXT_COLOR + result);
+                    client.eval(input);
                 } catch (Throwable e) {
                     System.out.println(e);
                 }

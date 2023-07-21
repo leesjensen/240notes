@@ -2,6 +2,7 @@ package ui;
 
 import chess.*;
 import model.GameData;
+import util.ExceptionUtil;
 import webSocketMessages.userCommands.GameCommand;
 import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.MoveCommand;
@@ -26,22 +27,38 @@ public class ChessClient implements DisplayHandler {
     }
 
     public String eval(String input) throws Exception {
-        input = input.toLowerCase();
-        var tokens = input.split(" ");
-        if (tokens.length == 0) {
-            tokens = new String[]{"Help"};
-        }
 
-        var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+        var result = "Error with command. Try: Help";
         try {
-            return (String) this.getClass().getDeclaredMethod(tokens[0], String[].class).invoke(this, new Object[]{params});
-        } catch (NoSuchMethodException e) {
-            throw new Exception("Unknown command");
+            input = input.toLowerCase();
+            var tokens = input.split(" ");
+            if (tokens.length == 0) {
+                tokens = new String[]{"Help"};
+            }
+
+            var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+            try {
+                result = (String) this.getClass().getDeclaredMethod(tokens[0], String[].class).invoke(this, new Object[]{params});
+            } catch (NoSuchMethodException e) {
+                result = String.format("Unknown command\n%s", help(params));
+            }
+        } catch (Throwable e) {
+            var root = ExceptionUtil.getRoot(e);
+            result = String.format("Error: %s", root.getMessage());
         }
+        System.out.print(RESET_TEXT_COLOR + result);
+        return result;
     }
 
     public void clear() throws Exception {
         server.clear();
+    }
+
+    private String clear(String[] params) throws Exception {
+        clear();
+        state = State.LOGGED_OUT;
+        gameData = null;
+        return "Success";
     }
 
     private String help(String[] params) {
@@ -144,6 +161,7 @@ public class ChessClient implements DisplayHandler {
             if (params.length == 1) {
                 var gameID = Integer.parseInt(params[0]);
                 server.joinGame(authToken, gameID, null);
+                webSocket.sendCommand(new GameCommand(GameCommand.CommandType.JOIN_OBSERVER, gameID, authToken));
                 state = State.OBSERVING;
                 return "Success";
             }
@@ -153,7 +171,7 @@ public class ChessClient implements DisplayHandler {
     }
 
     private String redraw(String[] params) {
-        if (isPlaying()) {
+        if (isPlaying() || isObserving()) {
             printGame();
             return "Success";
         }
@@ -177,7 +195,7 @@ public class ChessClient implements DisplayHandler {
     }
 
     private String leave(String[] params) throws Exception {
-        if (isPlaying()) {
+        if (isPlaying() || isObserving()) {
             webSocket.sendCommand(new GameCommand(GameCommand.CommandType.LEAVE, gameData.getGameID(), authToken));
             state = State.LOGGED_IN;
             gameData = null;
@@ -197,8 +215,14 @@ public class ChessClient implements DisplayHandler {
     }
 
     private void printGame() {
+        System.out.println("\n");
         System.out.print(((Board) gameData.getGame().getBoard()).toString(state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK));
         System.out.println();
+        printPrompt();
+    }
+
+    public void printPrompt() {
+        System.out.print(RESET_TEXT_COLOR + String.format("\n[%s] >>> ", state) + SET_TEXT_COLOR_GREEN);
     }
 
     public boolean isMoveLegal(Move move) {
@@ -207,6 +231,11 @@ public class ChessClient implements DisplayHandler {
 
     public boolean isPlaying() {
         return (gameData != null && (state == State.WHITE || state == State.BLACK) && !isGameOver());
+    }
+
+
+    public boolean isObserving() {
+        return (gameData != null && (state == State.OBSERVING));
     }
 
     public boolean isGameOver() {
@@ -225,7 +254,9 @@ public class ChessClient implements DisplayHandler {
 
     @Override
     public void message(String message) {
-        System.out.println("NOTIFY: " + message);
+        System.out.println();
+        System.out.println(SET_TEXT_COLOR_MAGENTA + "NOTIFY: " + message);
+        printPrompt();
     }
 
     @Override

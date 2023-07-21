@@ -113,7 +113,11 @@ public class Service {
             var joinReq = getBody(req, JoinRequest.class);
             var game = dataAccess.readGame(joinReq.gameID);
             if (game != null) {
-                if (joinReq.playerColor != null) {
+                if (joinReq.playerColor == null) {
+                    return send("success", true);
+                } else if (game.isGameOver()) {
+                    return error(res, HttpStatus.FORBIDDEN_403, "Game is over");
+                } else {
                     if (joinReq.playerColor == ChessGame.TeamColor.WHITE) {
                         if (game.getWhitePlayerID() == 0 || game.getWhitePlayerID() == userID) {
                             game.setWhitePlayerID(userID);
@@ -128,8 +132,8 @@ public class Service {
                         }
                     }
                     dataAccess.updateGame(game);
+                    return send("success", true);
                 }
-                return send("success", true);
             }
             return error(res, HttpStatus.BAD_REQUEST_400, "Unknown game");
         }

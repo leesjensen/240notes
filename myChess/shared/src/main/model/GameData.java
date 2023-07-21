@@ -100,18 +100,16 @@ public class GameData {
         return blackPlayerID;
     }
 
-    public GameData setBlackPlayerID(int blackPlayerID) {
+    public void setBlackPlayerID(int blackPlayerID) {
         this.blackPlayerID = blackPlayerID;
-        return this;
     }
 
     public int getWhitePlayerID() {
         return whitePlayerID;
     }
 
-    public GameData setWhitePlayerID(int whitePlayerID) {
+    public void setWhitePlayerID(int whitePlayerID) {
         this.whitePlayerID = whitePlayerID;
-        return this;
     }
 
     public Game getGame() {

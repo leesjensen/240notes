@@ -678,7 +678,7 @@ I needed to add the database serialization adapters since Piece has subclasses. 
 If you want to run the game from the console you can use:
 
 ```java
-java -cp out/production/client:out/production/shared:libs/gson-2.10.1.jar ui.Repl
+java -cp out/production/client:out/production/shared:libs/gson-2.10.1.jar:libs/tyrus-standalone-client-1.15.jar ui.Repl
 ```
 
 ### Client
