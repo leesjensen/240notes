@@ -59,7 +59,7 @@ public class DataAccess {
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
     public UserData readUser(UserData user) throws DataAccessException {
-        var conn = db.getConnection(true);
+        var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT userID, username, password, email from `user` WHERE userID=? OR username=?")) {
             preparedStatement.setInt(1, user.getUserID());
             preparedStatement.setString(2, user.getUsername());
@@ -76,7 +76,7 @@ public class DataAccess {
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
-            db.closeConnection(true);
+            db.returnConnection(conn);
         }
 
         return null;
@@ -104,7 +104,7 @@ public class DataAccess {
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
     public AuthToken readAuth(String authToken) throws DataAccessException {
-        var conn = db.getConnection(true);
+        var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT userID from `authentication` WHERE authToken=?")) {
             preparedStatement.setString(1, authToken);
             try (var rs = preparedStatement.executeQuery()) {
@@ -115,7 +115,7 @@ public class DataAccess {
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
-            db.closeConnection(true);
+            db.returnConnection(conn);
         }
 
         return null;
@@ -175,7 +175,7 @@ public class DataAccess {
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
     public GameData readGame(int gameID) throws DataAccessException {
-        var conn = db.getConnection(true);
+        var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT gameName, whitePlayerID, blackPlayerID, game FROM `game` WHERE gameID=?")) {
             preparedStatement.setInt(1, gameID);
             try (var rs = preparedStatement.executeQuery()) {
@@ -194,7 +194,7 @@ public class DataAccess {
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
-            db.closeConnection(true);
+            db.returnConnection(conn);
         }
 
         return null;
@@ -208,7 +208,7 @@ public class DataAccess {
      */
     public Collection<GameData> listGames() throws DataAccessException {
         var result = new ArrayList<GameData>();
-        var conn = db.getConnection(true);
+        var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerID, blackPlayerID, game FROM `game`")) {
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
@@ -225,7 +225,7 @@ public class DataAccess {
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
-            db.closeConnection(true);
+            db.returnConnection(conn);
         }
 
         return result;
@@ -265,44 +265,42 @@ public class DataAccess {
     private void configureDatabase() throws DataAccessException {
         db = new Database();
         try {
-            createDatabase();
+            try (var conn = db.openConnection()) {
+                createDatabase(conn);
 
-            var conn = db.getConnection(true);
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
+                for (var statement : createStatements) {
+                    try (var preparedStatement = conn.prepareStatement(statement)) {
+                        preparedStatement.executeUpdate();
+                    }
                 }
             }
         } catch (SQLException e) {
             throw new DataAccessException(String.format("Unable to configure database: %s", e.getMessage()));
-        } finally {
-            db.closeConnection(true);
         }
     }
 
-    private void createDatabase() throws SQLException, DataAccessException {
-        var conn = db.getConnection(false);
+    private void createDatabase(Connection conn) throws SQLException, DataAccessException {
         try (var createStmt = conn.createStatement()) {
             createStmt.execute("CREATE DATABASE IF NOT EXISTS `" + Database.DB_NAME + "`");
-        } finally {
-            db.closeConnection(true);
         }
+
+        conn.setCatalog(Database.DB_NAME);
     }
 
 
     private void executeCommand(String statement) throws DataAccessException {
-        var conn = db.getConnection(true);
+        var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(String.format("Failed to execute command: %s", e.getMessage()));
         } finally {
-            db.closeConnection(true);
+            db.returnConnection(conn);
         }
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
-        var conn = db.getConnection(true);
+        var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
             for (var i = 0; i < params.length; i++) {
                 var param = params[i];
@@ -328,7 +326,7 @@ public class DataAccess {
             }
             throw new DataAccessException(String.format("executeUpdate error: %s, %s", statement, e.getMessage()));
         } finally {
-            db.closeConnection(true);
+            db.returnConnection(conn);
         }
     }
 

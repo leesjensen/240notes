@@ -1,8 +1,10 @@
 package dataAccess;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 /**
  * Class responsible for creating connections to the database
@@ -11,96 +13,38 @@ public class Database {
 
     public static final String DB_NAME = "leeChess";
 
-    //FIXME replace with your database URL
-    //private static final String MYSQL_URL = "localhost:3306/MyAwesomeChessDatabase";
-    private static final String MYSQL_URL = "localhost:3306";
-
-    //FIXME replace with your database username
-    //private static final String DB_USERNAME = "AwesomeChessServer";
     private static final String DB_USERNAME = "root";
-
-    //FIXME replace with your database password (null if no password)
-    //private static final String DB_PASSWORD = null;
     private static final String DB_PASSWORD = "monkeypie";
 
-    /**
-     * The connection to the database
-     */
-    private static Connection conn;
-    private static final String DATABASE_DRIVER = "jdbc:mysql://";
+    private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306";
 
-    /**
-     * Initiates a connection to the database
-     *
-     * @return new Connection object
-     * @throws DataAccessException
-     */
-    public Connection openConnection(boolean setDB) throws DataAccessException {
+    private final LinkedList<Connection> connections = new LinkedList<>();
+
+    synchronized public Connection getConnection() throws DataAccessException {
         try {
-            //shouldn't try to open an active connection
-            if (conn != null) {
-                throw new DataAccessException("Database connection already open");
-            }
-
-            //The Structure for this Connection is driver:language:path
-            //The path assumes you start in the root of your project unless given a non-relative path
-            final String CONNECTION_URL = DATABASE_DRIVER + MYSQL_URL;
-
-            // Open a database connection to the file given in the path
-            conn = DriverManager.getConnection(CONNECTION_URL, DB_USERNAME, DB_PASSWORD);
-            if (setDB) {
-                conn.setCatalog(DB_NAME);
-            }
-
-            // Start a transaction
-            conn.setAutoCommit(false);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DataAccessException("Unable to open connection to database");
-        }
-
-        return conn;
-    }
-
-    /**
-     * If a connection exists, opens a connection. Otherwise, just uses current connection
-     *
-     * @return Connection to database
-     * @throws DataAccessException
-     */
-    public Connection getConnection(boolean setDB) throws DataAccessException {
-        if (conn == null) {
-            openConnection(setDB);
-        }
-        return conn;
-    }
-
-    /**
-     * Closes connection to database.
-     *
-     * @param commit If we want to commit changes to the database. If false, no changes will be made
-     * @throws DataAccessException
-     */
-    public void closeConnection(boolean commit) {
-        if (conn == null) {
-            return;
-        }
-
-        try {
-            if (commit) {
-                //This will commit the changes to the database
-                conn.commit();
+            Connection connection;
+            if (connections.isEmpty()) {
+                connection = DriverManager.getConnection(CONNECTION_URL, DB_USERNAME, DB_PASSWORD);
+                connection.setCatalog(DB_NAME);
             } else {
-                //If we find out something went wrong, pass a false into closeConnection and this
-                //will rollback any changes we made during this connection
-                conn.rollback();
+                connection = connections.removeFirst();
             }
-
-            conn.close();
-            conn = null;
-
+            return connection;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataAccessException(e.getMessage());
         }
+    }
+
+    synchronized public void returnConnection(Connection connection) {
+        connections.add(connection);
+    }
+
+    /**
+     * Returns a connection that is not associated with the pool and doesn't have a catalog set.
+     * You must close the connection when done.
+     */
+    public Connection openConnection() throws SQLException {
+        return DriverManager.getConnection(CONNECTION_URL, DB_USERNAME, DB_PASSWORD);
     }
 }
+
