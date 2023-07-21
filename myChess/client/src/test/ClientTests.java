@@ -6,12 +6,13 @@ import ui.ChessClient;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class clientTests {
+public class ClientTests {
 
-    private ChessClient client = new ChessClient();
+    private ChessClient client;
 
     @BeforeEach
     public void setup() throws Exception {
+        client = new ChessClient();
         client.clear();
     }
 
@@ -71,7 +72,7 @@ public class clientTests {
             client.eval("logout");
             assertEquals("Success", client.eval("login joe password"));
             assertEquals("Success", client.eval(String.format("observe %s", gameID)));
-            // Can't join if observing
+            // Can't join if already observing
             assertEquals("Failure", client.eval(String.format("join %s BLACK", gameID)));
 
             client.eval("logout");

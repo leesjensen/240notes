@@ -73,7 +73,7 @@ public class DataAccess {
                     return u;
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
             db.closeConnection(true);
@@ -105,14 +105,14 @@ public class DataAccess {
      */
     public AuthToken readAuth(String authToken) throws DataAccessException {
         var conn = db.getConnection(true);
-        try (var preparedStatement = conn.prepareStatement("SELECT authToken, userID from `authentication` WHERE authToken=?")) {
+        try (var preparedStatement = conn.prepareStatement("SELECT userID from `authentication` WHERE authToken=?")) {
             preparedStatement.setString(1, authToken);
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    return new AuthToken(rs.getInt("userID"), rs.getString("authToken"));
+                    return new AuthToken(rs.getInt("userID"), authToken);
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
             db.closeConnection(true);
@@ -154,17 +154,17 @@ public class DataAccess {
     /**
      * Update an existing game.
      *
-     * @param game
+     * @param gameData
      * @return the @Game if it was updated, and null if there was no game with that ID.
      * @throws DataAccessException for database or sql query violations.
      */
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(GameData gameData) throws DataAccessException {
         executeUpdate("UPDATE `game` set gameName=?, whitePlayerID=?, blackPlayerID=?, game=? WHERE gameID=?",
-                game.getGameName(),
-                game.getWhitePlayerID(),
-                game.getBlackPlayerID(),
-                game.getGame().toString(),
-                game.getGameID());
+                gameData.getGameName(),
+                gameData.getWhitePlayerID(),
+                gameData.getBlackPlayerID(),
+                gameData.getGame().toString(),
+                gameData.getGameID());
     }
 
     /**
@@ -181,17 +181,17 @@ public class DataAccess {
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
                     var gs = rs.getString("game");
-                    var game = new GameData();
-                    game.setGameID(gameID);
-                    game.setGameName(rs.getString("gameName"));
-                    game.setWhitePlayerID(rs.getInt("whitePlayerID"));
-                    game.setBlackPlayerID(rs.getInt("blackPlayerID"));
-                    game.setGame(chess.Game.Create(gs));
+                    var gameData = new GameData();
+                    gameData.setGameID(gameID);
+                    gameData.setGameName(rs.getString("gameName"));
+                    gameData.setWhitePlayerID(rs.getInt("whitePlayerID"));
+                    gameData.setBlackPlayerID(rs.getInt("blackPlayerID"));
+                    gameData.setGame(chess.Game.Create(gs));
 
-                    return game;
+                    return gameData;
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
             db.closeConnection(true);
@@ -222,7 +222,7 @@ public class DataAccess {
                     result.add(game);
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         } finally {
             db.closeConnection(true);

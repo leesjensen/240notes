@@ -548,6 +548,39 @@ I need to do Type conversion for all of the piece types so that Gson can properl
 
 It seems like there is a problem with the starter database code. It isn't multithreaded. It creates a single connection and returns it to everyone who asks. So if two endpoints execute at the same time they are going to have a problem.
 
+I had to write an serialization adaptor to make sure the Piece class was created with proper sub-class.
+
+```java
+    private static final TypeAdapter<Piece> chessPieceTypeAdapter = new TypeAdapter<>() {
+        @Override
+        public void write(JsonWriter w, Piece chessPiece) throws IOException {
+            if (chessPiece != null) {
+                w.beginObject();
+                w.name("pieceColor");
+                w.value(chessPiece.pieceColor.toString());
+                w.name("type");
+                w.value(chessPiece.type.toString());
+                w.endObject();
+            } else {
+                w.nullValue();
+            }
+        }
+
+        @Override
+        public Piece read(JsonReader jsonReader) {
+            Piece chessPiece = new Gson().fromJson(jsonReader, Piece.class);
+            if (chessPiece != null) {
+                chessPiece = Piece.create(chessPiece.pieceColor, chessPiece.type);
+            }
+            return chessPiece;
+        }
+    };
+
+    public static TypeAdapter<Piece> getJsonTypeAdapter() {
+        return chessPieceTypeAdapter;
+    }
+```
+
 This took me about 5 hours. Easy plumbing work.
 
 ## 5-pre-game (Client)
@@ -584,6 +617,8 @@ I don't understand why the `leave` command is available for players? Don't they 
 
 I don't understand why there is a `join` HTTP and `JOIN_PLAYER` WebSocket message.
 
+How do you enable the ability to redraw the board without an endpoint to get the board from the server? I guess you just redraw what the client has cached?
+
 Why have each client keep their own copy of the board. Why not just have the server send out the board after every change?
 
 Does a player have to resign if they are checkmated?
@@ -591,6 +626,8 @@ Does a player have to resign if they are checkmated?
 You have to name your ws endpoint `connect` in order for the tests to work.
 
 https://sequencediagram.org/index.html#initialData=C4S2BsFMAIHEEMC2MAK54E8BQWAO8AnUAYxHwDthoBlSAgNzq3mOAHsDo1M6BGZ1hy7oMdAEwD2nAPIAjAM51GBflgC8agDJsA5iHIascxQz4BaAHy1TBAFza95aMaV9o+efIDuHACZZuUQIxS2tle119YR5g93hPHwJ-QPMrVzsHKJSVOIS-HA0EZGhiAkh4UDYDNQCRVLC6WwBhMoqYIsh+bN5Q9NsAKTYojt5oACFNAEEmgGlamJ7emwHpAEkAOQB9FCmATQBRACUsBoIzS277aUmAEU3YSYBZffmgkLTlzRB5YFfxJfCg2GSE60AA6gAJVYAFRe2RCAMa-TWWx2kwOx1O5ws8Kut3uTxeWIudRUtnW0mhqwAYqsmpMqdJ1tAABQAKyGTnh0Fk6GIAGsAJRGBTpHofcJfH4ikzKcWnAacuAg-guGyLCVIlGbaRjahHABqRxO6WxarleLuD2eJps2MuFKptPpjOZ7KV5rcbFFNmFxJxpLE5MpNLpDNWTNZHKinpy3tldGF6jUHXcIkM3WxCsekxm+02j2kRugkDEkAALLblPbSbxLQSbf7cZprlbCVW6GafRaW-jrUTTSSFsGnWHXazEGxGCWy+W-YOAzEg47Qy6I27J9PSxX53bLLG6yvneHIyzNzBt3OCimQSUqsRwABXeQgKoZ2tZvqHfbUVawdYdmcQ5BIeIbHuOLJlC+OhcrWu7VsB4gjquJ5ulBIAwdEIHwZ2+7dnwyHgeurLoZh3RJvCn6fPskxGoBNbDkeY7ESyUDwNO8I4UBFgHoRzGnmxHGBkmMpilRko0XROA4EAA
+
+### Server
 
 Setting up the websocket on the server is pretty trivial.
 
@@ -637,3 +674,68 @@ Why is `GameDataCache` a global singleton? Why not just make it a member of the 
 Need test for making multiple moves.
 
 I needed to add the database serialization adapters since Piece has subclasses. It is a bit strange because each piece only differs by methods, not that actually data of the piece. Perhaps it would be better if it was just methods for the pieces rather than classes.
+
+If you want to run the game from the console you can use:
+
+```java
+java -cp out/production/client:out/production/shared:libs/gson-2.10.1.jar ui.Repl
+```
+
+### Client
+
+To set up the client WebSocket communication we use the JDK javax.websocket.endpoint interface with the glassfish.tyrus.bundles.standalone.client.jdk implementation. I don't know where I first installed that, but it is there in my libs.
+
+```json
+{
+  "board": {
+    "squares": [
+      [
+        { "pieceColor": "WHITE", "type": "ROOK" },
+        { "pieceColor": "WHITE", "type": "KNIGHT" },
+        { "pieceColor": "WHITE", "type": "BISHOP" },
+        { "pieceColor": "WHITE", "type": "QUEEN" },
+        { "pieceColor": "WHITE", "type": "KING" },
+        { "pieceColor": "WHITE", "type": "BISHOP" },
+        { "pieceColor": "WHITE", "type": "KNIGHT" },
+        { "pieceColor": "WHITE", "type": "ROOK" }
+      ],
+      [
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" }
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" }
+      ],
+      [
+        { "pieceColor": "BLACK", "type": "ROOK" },
+        { "pieceColor": "BLACK", "type": "KNIGHT" },
+        { "pieceColor": "BLACK", "type": "BISHOP" },
+        { "pieceColor": "BLACK", "type": "QUEEN" },
+        { "pieceColor": "BLACK", "type": "KING" },
+        { "pieceColor": "BLACK", "type": "BISHOP" },
+        { "pieceColor": "BLACK", "type": "KNIGHT" },
+        { "pieceColor": "BLACK", "type": "ROOK" }
+      ]
+    ],
+    "history": []
+  },
+  "turn": "WHITE"
+}
+```

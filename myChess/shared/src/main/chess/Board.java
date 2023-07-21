@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Board implements ChessBoard {
 
-    final private Piece[][] board = new Piece[8][8];
+    final private Piece[][] squares = new Piece[8][8];
 
     final private ArrayList<ChessMove> history = new ArrayList<>();
 
@@ -14,7 +14,7 @@ public class Board implements ChessBoard {
     public Board(ChessBoard copy) {
         if (copy instanceof Board c) {
             for (var i = 0; i < 8; i++) {
-                System.arraycopy(c.board[i], 0, board[i], 0, 8);
+                System.arraycopy(c.squares[i], 0, squares[i], 0, 8);
             }
         }
     }
@@ -32,17 +32,17 @@ public class Board implements ChessBoard {
     }
 
     private void removePiece(ChessPosition position) {
-        board[position.getRow() - 1][position.getColumn() - 1] = null;
+        squares[position.getRow() - 1][position.getColumn() - 1] = null;
     }
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        board[position.getRow() - 1][position.getColumn() - 1] = (Piece) piece;
+        squares[position.getRow() - 1][position.getColumn() - 1] = (Piece) piece;
     }
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
-        return board[position.getRow() - 1][position.getColumn() - 1];
+        return squares[position.getRow() - 1][position.getColumn() - 1];
     }
 
     @Override
@@ -60,10 +60,14 @@ public class Board implements ChessBoard {
                 ChessPiece.PieceType.ROOK
         };
         for (var i = 0; i < 8; i++) {
-            board[0][i] = Piece.create(ChessGame.TeamColor.WHITE, pieces[i]);
-            board[1][i] = Piece.create(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-            board[6][i] = Piece.create(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-            board[7][i] = Piece.create(ChessGame.TeamColor.BLACK, pieces[i]);
+            squares[0][i] = Piece.create(ChessGame.TeamColor.WHITE, pieces[i]);
+            squares[1][i] = new Pawn(ChessGame.TeamColor.WHITE);
+            squares[2][i] = null;
+            squares[3][i] = null;
+            squares[4][i] = null;
+            squares[5][i] = null;
+            squares[6][i] = new Pawn(ChessGame.TeamColor.BLACK);
+            squares[7][i] = Piece.create(ChessGame.TeamColor.BLACK, pieces[i]);
         }
     }
 
@@ -177,8 +181,8 @@ public class Board implements ChessBoard {
 
         for (var i = 0; i < 8; i++) {
             for (var j = 0; j < 8; j++) {
-                if (board[i][j] != null) {
-                    result.add(new PiecePlacement(board[i][j], new Position(i + 1, j + 1)));
+                if (squares[i][j] != null) {
+                    result.add(new PiecePlacement(squares[i][j], new Position(i + 1, j + 1)));
                 }
             }
         }
@@ -219,7 +223,7 @@ public class Board implements ChessBoard {
     private static final String BLACK_PIECE = color(RED);
     private static final String WHITE_PIECE = color(GREEN);
 
-    Map<ChessPiece.PieceType, String> pieceMap = Map.of(
+    private static final Map<ChessPiece.PieceType, String> pieceMap = Map.of(
             ChessPiece.PieceType.KING, "K",
             ChessPiece.PieceType.QUEEN, "Q",
             ChessPiece.PieceType.BISHOP, "B",
@@ -236,36 +240,39 @@ public class Board implements ChessBoard {
 
     public String toString(ChessGame.TeamColor playerColor) {
         var sb = new StringBuilder();
-        var currentSquare = BOARD_WHITE;
-        var rows = new int[]{7, 6, 5, 4, 3, 2, 1, 0};
-        var columns = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
-        var columnsLetters = "    a  b  c  d  e  f  g  h    ";
-        if (playerColor == ChessGame.TeamColor.BLACK) {
-            columnsLetters = "    h  g  f  e  d  c  b  a    ";
-            rows = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
-            columns = new int[]{7, 6, 5, 4, 3, 2, 1, 0};
-        }
-        sb.append(BORDER).append(columnsLetters).append(COLOR_RESET).append("\n");
-        for (var i : rows) {
-            var row = " " + (i + 1) + " ";
-            sb.append(BORDER).append(row).append(COLOR_RESET);
-            for (var j : columns) {
-                var piece = board[i][j];
-                if (piece != null) {
-                    var color = (piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? WHITE_PIECE : BLACK_PIECE;
-                    var p = pieceMap.get(piece.getPieceType());
-                    sb.append(currentSquare).append(color).append(" ").append(p).append(" ").append(COLOR_RESET);
-                } else {
-                    sb.append(currentSquare).append("   ").append(COLOR_RESET);
+        try {
+            var currentSquare = BOARD_WHITE;
+            var rows = new int[]{7, 6, 5, 4, 3, 2, 1, 0};
+            var columns = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
+            var columnsLetters = "    a  b  c  d  e  f  g  h    ";
+            if (playerColor == ChessGame.TeamColor.BLACK) {
+                columnsLetters = "    h  g  f  e  d  c  b  a    ";
+                rows = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
+                columns = new int[]{7, 6, 5, 4, 3, 2, 1, 0};
+            }
+            sb.append(BORDER).append(columnsLetters).append(COLOR_RESET).append("\n");
+            for (var i : rows) {
+                var row = " " + (i + 1) + " ";
+                sb.append(BORDER).append(row).append(COLOR_RESET);
+                for (var j : columns) {
+                    var piece = squares[i][j];
+                    if (piece != null) {
+                        var color = (piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? WHITE_PIECE : BLACK_PIECE;
+                        var p = pieceMap.get(piece.getPieceType());
+                        sb.append(currentSquare).append(color).append(" ").append(p).append(" ").append(COLOR_RESET);
+                    } else {
+                        sb.append(currentSquare).append("   ").append(COLOR_RESET);
+                    }
+                    currentSquare = currentSquare.equals(BOARD_BLACK) ? BOARD_WHITE : BOARD_BLACK;
                 }
+                sb.append(BORDER).append(row).append(COLOR_RESET);
+                sb.append('\n');
                 currentSquare = currentSquare.equals(BOARD_BLACK) ? BOARD_WHITE : BOARD_BLACK;
             }
-            sb.append(BORDER).append(row).append(COLOR_RESET);
-            sb.append('\n');
-            currentSquare = currentSquare.equals(BOARD_BLACK) ? BOARD_WHITE : BOARD_BLACK;
+            sb.append(BORDER).append(columnsLetters).append(COLOR_RESET).append("\n");
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
-        sb.append(BORDER).append(columnsLetters).append(COLOR_RESET).append("\n");
-
         return sb.toString();
     }
 }

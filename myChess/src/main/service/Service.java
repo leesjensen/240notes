@@ -113,14 +113,14 @@ public class Service {
             var joinReq = getBody(req, JoinRequest.class);
             var game = dataAccess.readGame(joinReq.gameID);
             if (game != null) {
-                if (joinReq.playerColor != null && !joinReq.playerColor.isEmpty()) {
-                    if (joinReq.playerColor.equals("WHITE")) {
+                if (joinReq.playerColor != null) {
+                    if (joinReq.playerColor == ChessGame.TeamColor.WHITE) {
                         if (game.getWhitePlayerID() == 0 || game.getWhitePlayerID() == userID) {
                             game.setWhitePlayerID(userID);
                         } else {
                             return error(res, HttpStatus.FORBIDDEN_403, "Color taken");
                         }
-                    } else if (joinReq.playerColor.equals("BLACK")) {
+                    } else if (joinReq.playerColor == ChessGame.TeamColor.BLACK) {
                         if (game.getBlackPlayerID() == 0 || game.getBlackPlayerID() == userID) {
                             game.setBlackPlayerID(userID);
                         } else {

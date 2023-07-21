@@ -136,11 +136,12 @@ public class Game implements ChessGame {
 
     @Override
     public String toString() {
-        return createSerializer().toJson(this);
+        var json = createSerializer().toJson(this);
+        return json;
     }
 
 
-    private static Gson createSerializer() {
+    public static Gson createSerializer() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Piece.class, Piece.getJsonTypeAdapter());
         builder.enableComplexMapKeySerialization();

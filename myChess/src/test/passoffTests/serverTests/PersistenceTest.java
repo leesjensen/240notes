@@ -4,6 +4,7 @@ import passoffTests.testClasses.TestModels;
 import passoffTests.obfuscatedTestClasses.TestServerFacade;
 import org.junit.jupiter.api.*;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 import static chess.ChessGame.TeamColor.BLACK;
@@ -18,7 +19,7 @@ public class PersistenceTest {
     static String existingAuth;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         existingUser = new TestModels.TestUser();
         existingUser.username = "Joseph";
         existingUser.password = "Smith";
@@ -33,7 +34,7 @@ public class PersistenceTest {
     }
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         serverFacade.clear();
 
         TestModels.TestRegisterRequest registerRequest = new TestModels.TestRegisterRequest();
@@ -52,9 +53,27 @@ public class PersistenceTest {
         return result;
     }
 
+
+    @Test
+    public void readWriteTest() {
+        var createRequest = new TestModels.TestCreateRequest();
+        createRequest.gameName = "test1";
+        var createResult = serverFacade.createGame(createRequest, existingAuth);
+        var listResult = serverFacade.listGames(existingAuth);
+
+        boolean gameFound = false;
+        for (var g : listResult.games) {
+            if (g.gameID.equals(createResult.gameID)) {
+                gameFound = true;
+                break;
+            }
+        }
+        assertTrue(gameFound);
+    }
+
     @Test
     @DisplayName("Persistence Test")
-    public void persistenceTest(){
+    public void persistenceTest() {
         //insert a bunch of data
         //-------------------------------------------------------------------------------------------------------------
         //register 2nd user
@@ -108,7 +127,7 @@ public class PersistenceTest {
         //set games & check if swapped
         TestModels.TestListResult.TestListEntry game1 = listResult.games[0];
         TestModels.TestListResult.TestListEntry game2 = listResult.games[1];
-        if (game1.gameID == createResult2.gameID){ //swap games if needed
+        if (game1.gameID == createResult2.gameID) { //swap games if needed
             TestModels.TestListResult.TestListEntry tempGame = game1;
             game1 = game2;
             game2 = tempGame;

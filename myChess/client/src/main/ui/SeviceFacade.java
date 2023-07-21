@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import service.*;
 
@@ -7,11 +8,11 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class ServerFacade {
+public class SeviceFacade {
 
     private String serverUrl;
 
-    public ServerFacade(String url) {
+    public SeviceFacade(String url) {
         serverUrl = url;
     }
 
@@ -43,8 +44,8 @@ public class ServerFacade {
         return this.makeRequest("GET", "/games/list", null, authToken, ListGamesResponse.class);
     }
 
-    public GameJoinResponse joinGame(String authToken, String gameID, String color) throws Exception {
-        var request = new JoinRequest(Integer.parseInt(gameID), color.toUpperCase());
+    public GameJoinResponse joinGame(String authToken, int gameID, ChessGame.TeamColor color) throws Exception {
+        var request = new JoinRequest(gameID, color);
         return this.makeRequest("POST", "/games/join", request, authToken, GameJoinResponse.class);
     }
 
@@ -66,6 +67,8 @@ public class ServerFacade {
             }
         }
         http.connect();
+        var statusCode = http.getResponseCode();
+        System.out.println(String.format(("Status %d returned from [%s] %s"), statusCode, method, path));
         try (InputStream respBody = http.getInputStream()) {
             InputStreamReader inputStreamReader = new InputStreamReader(respBody);
             return new Gson().fromJson(inputStreamReader, clazz);

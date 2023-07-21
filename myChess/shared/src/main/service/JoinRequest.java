@@ -1,13 +1,14 @@
 package service;
 
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 
 public class JoinRequest {
-    public String playerColor;
+    public ChessGame.TeamColor playerColor;
     public int gameID;
 
-    public JoinRequest(int gameID, String playerColor) {
+    public JoinRequest(int gameID, ChessGame.TeamColor playerColor) {
         this.gameID = gameID;
         this.playerColor = playerColor;
     }

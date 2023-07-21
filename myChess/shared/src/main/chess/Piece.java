@@ -88,27 +88,26 @@ public class Piece implements ChessPiece {
     }
 
 
-    private static TypeAdapter<Piece> chessPieceTypeAdapter = new TypeAdapter<>() {
+    private static final TypeAdapter<Piece> chessPieceTypeAdapter = new TypeAdapter<>() {
         @Override
-        public void write(JsonWriter jsonWriter, Piece chessPiece) throws IOException {
-            jsonWriter.value(new Gson().toJson(chessPiece));
+        public void write(JsonWriter w, Piece chessPiece) throws IOException {
+            if (chessPiece != null) {
+                w.beginObject();
+                w.name("pieceColor");
+                w.value(chessPiece.pieceColor.toString());
+                w.name("type");
+                w.value(chessPiece.type.toString());
+                w.endObject();
+            } else {
+                w.nullValue();
+            }
         }
 
         @Override
-        public Piece read(JsonReader jsonReader) throws IOException {
-            Gson gson = new Gson();
-
-            String json = gson.fromJson(jsonReader, String.class);
-            Piece chessPiece = gson.fromJson(json, Piece.class);
+        public Piece read(JsonReader jsonReader) {
+            Piece chessPiece = new Gson().fromJson(jsonReader, Piece.class);
             if (chessPiece != null) {
-                switch (chessPiece.getPieceType()) {
-                    case PAWN -> chessPiece = gson.fromJson(json, Pawn.class);
-                    case ROOK -> chessPiece = gson.fromJson(json, Rook.class);
-                    case KNIGHT -> chessPiece = gson.fromJson(json, Knight.class);
-                    case BISHOP -> chessPiece = gson.fromJson(json, Bishop.class);
-                    case QUEEN -> chessPiece = gson.fromJson(json, Queen.class);
-                    case KING -> chessPiece = gson.fromJson(json, King.class);
-                }
+                chessPiece = Piece.create(chessPiece.pieceColor, chessPiece.type);
             }
             return chessPiece;
         }

@@ -1,22 +1,24 @@
 package ui;
 
-import chess.Board;
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.Game;
+import chess.*;
+import webSocketMessages.userCommands.JoinPlayerCommand;
 
 import java.util.*;
 
 import static util.EscapeSequences.*;
 
 
-public class ChessClient {
+public class ChessClient implements DisplayHandler {
 
     private State state = State.LOGGED_OUT;
     private String authToken;
-    final private ServerFacade server = new ServerFacade("http://localhost:8080");
+    final private SeviceFacade server;
+    final private WebSocketFacade webSocket;
 
-    private Game game;
+    public ChessClient() throws Exception {
+        server = new SeviceFacade("http://localhost:8080");
+        webSocket = new WebSocketFacade("ws://localhost:8080/connect", this);
+    }
 
     public String eval(String input) throws Exception {
         input = input.toLowerCase();
@@ -116,13 +118,14 @@ public class ChessClient {
         verifyAuth();
         if (state == State.LOGGED_IN) {
             if (params.length == 2 && (params[1].equalsIgnoreCase("WHITE") || params[1].equalsIgnoreCase("BLACK"))) {
-                server.joinGame(authToken, params[0], params[1]);
-                state = (params[1].equalsIgnoreCase("WHITE") ? State.WHITE : State.BLACK);
-                game = new Game();
-                game.getBoard().resetBoard();
-                printGame(game.getBoard(), State.BLACK);
-                printGame(game.getBoard(), State.WHITE);
-                return "Success";
+                var gameID = Integer.parseInt(params[0]);
+                var color = ChessGame.TeamColor.valueOf(params[1].toUpperCase());
+                var joinResponse = server.joinGame(authToken, gameID, color);
+                if (joinResponse.success) {
+                    state = (params[1].equalsIgnoreCase("WHITE") ? State.WHITE : State.BLACK);
+                    webSocket.sendCommand(new JoinPlayerCommand(authToken, gameID, color));
+                    return "Success";
+                }
             }
         }
 
@@ -134,12 +137,9 @@ public class ChessClient {
         verifyAuth();
         if (state == State.LOGGED_IN) {
             if (params.length == 1) {
-                server.joinGame(authToken, params[0], "");
+                var gameID = Integer.parseInt(params[0]);
+                server.joinGame(authToken, gameID, null);
                 state = State.OBSERVING;
-                game = new Game();
-                game.getBoard().resetBoard();
-                printGame(game.getBoard(), State.WHITE);
-                printGame(game.getBoard(), State.BLACK);
                 return "Success";
             }
         }
@@ -172,6 +172,16 @@ public class ChessClient {
     private void printGame(ChessBoard board, State state) {
         System.out.print(((Board) board).toString(state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK));
         System.out.println();
+    }
+
+    @Override
+    public void updateBoard(Game game) {
+        printGame(game.getBoard(), state);
+    }
+
+    @Override
+    public void printMessage(String message) {
+        System.out.println(message);
     }
 
     /**
