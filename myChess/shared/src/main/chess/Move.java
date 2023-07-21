@@ -13,10 +13,10 @@ public class Move implements ChessMove {
     public Move(String notation) {
         notation = notation.toLowerCase(Locale.ROOT);
         if (notation.length() >= 4) {
-            int rowStart = 'a' - notation.charAt(0);
-            int colStart = notation.charAt(1);
-            int rowEnd = 'a' - notation.charAt(2);
-            int colEnd = notation.charAt(3);
+            int colStart = notation.charAt(0) - 'a' + 1;
+            int rowStart = notation.charAt(1) - '1' + 1;
+            int colEnd = notation.charAt(2) - 'a' + 1;
+            int rowEnd = notation.charAt(3) - '1' + 1;
 
             start = new Position(rowStart, colStart);
             end = new Position(rowEnd, colEnd);
