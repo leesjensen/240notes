@@ -6,7 +6,7 @@ public class Board implements ChessBoard {
 
     final private Piece[][] squares = new Piece[8][8];
 
-    final private ArrayList<ChessMove> history = new ArrayList<>();
+    final private ArrayList<Move> history = new ArrayList<>();
 
     public Board() {
     }
@@ -24,10 +24,10 @@ public class Board implements ChessBoard {
         removePiece(move.getStartPosition());
         addPiece(move.getEndPosition(), piece);
 
-        history.add(move);
+        history.add((Move) move);
     }
 
-    public List<ChessMove> getHistory() {
+    public List<Move> getHistory() {
         return history;
     }
 

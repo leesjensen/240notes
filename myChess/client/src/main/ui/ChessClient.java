@@ -2,6 +2,7 @@ package ui;
 
 import chess.*;
 import model.GameData;
+import webSocketMessages.userCommands.GameCommand;
 import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.MoveCommand;
 
@@ -152,9 +153,11 @@ public class ChessClient implements DisplayHandler {
     }
 
     private String redraw(String[] params) {
-        Board board = new Board();
-        board.resetBoard();
-        return board.toString(ChessGame.TeamColor.WHITE) + "\n" + board.toString(ChessGame.TeamColor.BLACK);
+        if (isPlaying()) {
+            printGame();
+            return "Success";
+        }
+        return "Failure";
     }
 
     private String legal(String[] params) throws Exception {
@@ -163,43 +166,70 @@ public class ChessClient implements DisplayHandler {
 
     private String move(String[] params) throws Exception {
         verifyAuth();
-        if (isTurn()) {
+        if (params.length == 1) {
             var move = new Move(params[0]);
-            webSocket.sendCommand(new MoveCommand(authToken, gameData.getGameID(), move));
-            return "Success";
+            if (isTurn() && isMoveLegal(move)) {
+                webSocket.sendCommand(new MoveCommand(authToken, gameData.getGameID(), move));
+                return "Success";
+            }
         }
         return "Failure";
     }
 
     private String leave(String[] params) throws Exception {
-        throw new NoSuchMethodException();
+        if (isPlaying()) {
+            webSocket.sendCommand(new GameCommand(GameCommand.CommandType.LEAVE, gameData.getGameID(), authToken));
+            state = State.LOGGED_IN;
+            gameData = null;
+            return "Success";
+        }
+        return "Failure";
     }
 
     private String resign(String[] params) throws Exception {
-        throw new NoSuchMethodException();
+        if (isPlaying()) {
+            webSocket.sendCommand(new GameCommand(GameCommand.CommandType.RESIGN, gameData.getGameID(), authToken));
+            state = State.LOGGED_IN;
+            gameData = null;
+            return "Success";
+        }
+        return "Failure";
     }
 
-    private void printGame(ChessBoard board, State state) {
-        System.out.print(((Board) board).toString(state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK));
+    private void printGame() {
+        System.out.print(((Board) gameData.getGame().getBoard()).toString(state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK));
         System.out.println();
     }
 
-    public boolean isPlaying() {
-        return (gameData != null && (state == State.WHITE || state == State.BLACK));
+    public boolean isMoveLegal(Move move) {
+        return ((Board) gameData.getGame().getBoard()).isMoveLegal(move);
     }
 
-    private boolean isTurn() {
+    public boolean isPlaying() {
+        return (gameData != null && (state == State.WHITE || state == State.BLACK) && !isGameOver());
+    }
+
+    public boolean isGameOver() {
+        return (gameData != null && gameData.isGameOver());
+    }
+
+    public boolean isTurn() {
         return (isPlaying() && state.isTurn(gameData.getGame().getTeamTurn()));
     }
 
     @Override
     public void updateBoard(GameData game) {
         this.gameData = game;
-        printGame(game.getGame().getBoard(), state);
+        printGame();
     }
 
     @Override
-    public void printMessage(String message) {
+    public void message(String message) {
+        System.out.println("NOTIFY: " + message);
+    }
+
+    @Override
+    public void error(String message) {
         System.out.println(message);
     }
 
