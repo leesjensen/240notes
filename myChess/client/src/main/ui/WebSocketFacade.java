@@ -1,9 +1,7 @@
 package ui;
 
 import chess.Game;
-import chess.Piece;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import webSocketMessages.serverMessages.*;
 import webSocketMessages.userCommands.GameCommand;
 

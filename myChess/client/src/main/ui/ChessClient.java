@@ -1,7 +1,9 @@
 package ui;
 
 import chess.*;
+import model.GameData;
 import webSocketMessages.userCommands.JoinPlayerCommand;
+import webSocketMessages.userCommands.MoveCommand;
 
 import java.util.*;
 
@@ -12,8 +14,10 @@ public class ChessClient implements DisplayHandler {
 
     private State state = State.LOGGED_OUT;
     private String authToken;
+    private GameData gameData;
     final private SeviceFacade server;
     final private WebSocketFacade webSocket;
+
 
     public ChessClient() throws Exception {
         server = new SeviceFacade("http://localhost:8080");
@@ -158,7 +162,13 @@ public class ChessClient implements DisplayHandler {
     }
 
     private String move(String[] params) throws Exception {
-        throw new NoSuchMethodException();
+        verifyAuth();
+        if (isTurn()) {
+            var move = new Move(params[0]);
+            webSocket.sendCommand(new MoveCommand(authToken, gameData.getGameID(), move));
+            return "Success";
+        }
+        return "Failure";
     }
 
     private String leave(String[] params) throws Exception {
@@ -174,9 +184,18 @@ public class ChessClient implements DisplayHandler {
         System.out.println();
     }
 
+    public boolean isPlaying() {
+        return (gameData != null && (state == State.WHITE || state == State.BLACK));
+    }
+
+    private boolean isTurn() {
+        return (isPlaying() && state.isTurn(gameData.getGame().getTeamTurn()));
+    }
+
     @Override
-    public void updateBoard(Game game) {
-        printGame(game.getBoard(), state);
+    public void updateBoard(GameData game) {
+        this.gameData = game;
+        printGame(game.getGame().getBoard(), state);
     }
 
     @Override

@@ -10,17 +10,27 @@ public class Move implements ChessMove {
 
     ChessPiece.PieceType promotionPiece;
 
-    public static Move CreateMove(String notation) {
-        if (notation.length() == 4) {
-            notation = notation.toLowerCase(Locale.ROOT);
+    public Move(String notation) {
+        notation = notation.toLowerCase(Locale.ROOT);
+        if (notation.length() >= 4) {
             int rowStart = 'a' - notation.charAt(0);
             int colStart = notation.charAt(1);
             int rowEnd = 'a' - notation.charAt(2);
             int colEnd = notation.charAt(3);
 
-            return new Move(new Position(rowStart, colStart), new Position(rowEnd, colEnd), null);
+            start = new Position(rowStart, colStart);
+            end = new Position(rowEnd, colEnd);
         }
-        return null;
+
+        if (notation.length() == 5) {
+            promotionPiece = switch (notation.charAt(4)) {
+                case 'q' -> ChessPiece.PieceType.QUEEN;
+                case 'b' -> ChessPiece.PieceType.BISHOP;
+                case 'n' -> ChessPiece.PieceType.KNIGHT;
+                case 'r' -> ChessPiece.PieceType.ROOK;
+                default -> null;
+            };
+        }
     }
 
     public Move(ChessPosition start, ChessPosition end, ChessPiece.PieceType promotionType) {

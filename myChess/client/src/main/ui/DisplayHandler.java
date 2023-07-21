@@ -1,9 +1,9 @@
 package ui;
 
-import chess.Game;
+import model.GameData;
 
 public interface DisplayHandler {
-    void updateBoard(Game game);
+    void updateBoard(GameData game);
 
     void printMessage(String message);
 

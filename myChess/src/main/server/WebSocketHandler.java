@@ -150,7 +150,7 @@ public class WebSocketHandler {
             var expectedID = (command.playerColor == ChessGame.TeamColor.BLACK) ? gameData.getBlackPlayerID() : gameData.getWhitePlayerID();
             if (expectedID == connection.user.getUserID()) {
                 connection.game = gameData;
-                var loadMsg = (new LoadMessage((chess.Game) gameData.getGame())).toString();
+                var loadMsg = (new LoadMessage(gameData)).toString();
                 connection.send(loadMsg);
 
                 var notificationMsg = (new NotificationMessage(String.format("%s joined %s as %s", connection.user.getUsername(), gameData.getGameName(), command.playerColor))).toString();
@@ -167,7 +167,7 @@ public class WebSocketHandler {
         var gameData = dataAccess.readGame(command.gameID);
         if (gameData != null) {
             connection.game = gameData;
-            var loadMsg = (new LoadMessage((chess.Game) gameData.getGame())).toString();
+            var loadMsg = (new LoadMessage(gameData)).toString();
             connection.send(loadMsg);
 
             var notificationMsg = (new NotificationMessage(String.format("%s observing %s", connection.user.getUsername(), gameData.getGameName()))).toString();
@@ -187,7 +187,7 @@ public class WebSocketHandler {
 
             connection.game = gameData;
 
-            var loadMsg = (new LoadMessage((chess.Game) gameData.getGame())).toString();
+            var loadMsg = (new LoadMessage(gameData)).toString();
             connections.broadcast(gameData.getGameID(), -1, loadMsg);
 
             var notificationMsg = (new NotificationMessage(String.format("%s moved %s", connection.user.getUsername(), command.move))).toString();

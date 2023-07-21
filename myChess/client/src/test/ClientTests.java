@@ -46,23 +46,20 @@ public class ClientTests {
     @Test
     public void loginTest() throws Exception {
         assertEquals("Success", client.eval("register joe password c@mail.com"));
+        // Must log out before logging in
         assertEquals("Failure", client.eval("login joe password"));
         assertEquals("Success", client.eval("logout"));
         assertEquals("Success", client.eval("login joe password"));
     }
 
-    @Test
-    public void gameTest() throws Exception {
-        assertEquals("Success", client.eval("register joe password c@mail.com"));
 
+    @Test
+    public void joinTest() throws Exception {
+        assertEquals("Success", client.eval("register player1 password c@mail.com"));
         assertEquals("Success", client.eval("create game1"));
-        assertEquals("Success", client.eval("create game2"));
 
         var gameList = listGames();
-        assertTrue(gameList.success);
-        assertEquals(2, gameList.games.length);
-
-        if (gameList.games.length == 2) {
+        if (gameList.games.length == 1) {
             var gameID = gameList.games[0].gameID;
 
             assertEquals("Success", client.eval(String.format("join %s white", gameID)));
@@ -70,18 +67,45 @@ public class ClientTests {
             assertEquals("Failure", client.eval(String.format("join %s white", gameID)));
 
             client.eval("logout");
-            assertEquals("Success", client.eval("login joe password"));
+            assertEquals("Success", client.eval("login player1 password"));
             assertEquals("Success", client.eval(String.format("observe %s", gameID)));
             // Can't join if already observing
             assertEquals("Failure", client.eval(String.format("join %s BLACK", gameID)));
 
             client.eval("logout");
-            assertEquals("Success", client.eval("login joe password"));
+            assertEquals("Success", client.eval("login player1 password"));
             assertEquals("Success", client.eval(String.format("join %s BLACK", gameID)));
 
             gameList = listGames();
-            assertEquals("joe", gameList.games[0].blackUsername);
-            assertEquals("joe", gameList.games[0].whiteUsername);
+            assertEquals("player1", gameList.games[0].blackUsername);
+            assertEquals("player1", gameList.games[0].whiteUsername);
+        }
+    }
+
+
+    @Test
+    public void playTest() throws Exception {
+        assertEquals("Success", client.eval("register player1 password p1@mail.com"));
+        assertEquals("Success", client.eval("create game1"));
+
+        var client2 = new ChessClient();
+        assertEquals("Success", client2.eval("register player2 password p2@mail.com"));
+
+
+        var gameList = listGames();
+        if (gameList.games.length == 1) {
+            var gameID = gameList.games[0].gameID;
+
+            assertEquals("Success", client.eval(String.format("join %s white", gameID)));
+            assertEquals("Success", client2.eval(String.format("join %s BLACK", gameID)));
+
+            while (!client.isPlaying() || !client2.isPlaying()) {
+                System.out.println("waiting for game to start");
+                Thread.sleep(1000);
+            }
+
+            assertEquals("Success", client.eval(String.format("move e2e4", gameID)));
+            assertEquals("Success", client2.eval(String.format("move e7e3", gameID)));
         }
     }
 

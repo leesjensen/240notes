@@ -1,6 +1,7 @@
 package model;
 
 import chess.ChessGame;
+import chess.Game;
 import chess.InvalidMoveException;
 import chess.Move;
 
@@ -40,7 +41,7 @@ public class GameData {
     /**
      * The moves of the game. When serialized, this outputs the board positions.
      */
-    private ChessGame game;
+    private Game game;
 
     public boolean isGameOver() {
         return state != GameState.UNDECIDED;
@@ -113,11 +114,11 @@ public class GameData {
         return this;
     }
 
-    public ChessGame getGame() {
+    public Game getGame() {
         return game;
     }
 
-    public GameData setGame(ChessGame game) {
+    public GameData setGame(Game game) {
         this.game = game;
         return this;
     }

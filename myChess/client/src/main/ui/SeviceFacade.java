@@ -67,7 +67,7 @@ public class SeviceFacade {
             }
         }
         http.connect();
-        System.out.println(String.format(("Status %d returned from [%s] %s"), http.getResponseCode(), method, path));
+//        System.out.println(String.format(("Status %d returned from [%s] %s"), http.getResponseCode(), method, path));
         try (InputStream respBody = http.getInputStream()) {
             InputStreamReader inputStreamReader = new InputStreamReader(respBody);
             return new Gson().fromJson(inputStreamReader, clazz);
