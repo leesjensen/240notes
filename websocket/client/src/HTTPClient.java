@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class HTTPClient {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         while (true) get(scanner.nextLine());
     }

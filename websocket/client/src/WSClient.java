@@ -18,12 +18,7 @@ public class WSClient extends Endpoint {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, socketURI);
 
-        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-            @Override
-            public void onMessage(String message) {
-                System.out.println(message);
-            }
-        });
+        this.session.addMessageHandler((MessageHandler.Whole<String>) System.out::println);
     }
 
     @Override
