@@ -9,9 +9,9 @@ public class HTTPClient {
         while (true) get(scanner.nextLine());
     }
 
-    public static void get(String req) {
+    public static void get(String msg) {
         try {
-            var url = new URL("http://localhost:8080/echo/" + req);
+            var url = new URL("http://localhost:8080/echo/" + msg);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);

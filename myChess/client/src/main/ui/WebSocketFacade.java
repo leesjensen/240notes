@@ -33,17 +33,13 @@ public class WebSocketFacade extends Endpoint {
 
                 try {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
-                        LoadMessage loadGameMessage = gson.fromJson(message, LoadMessage.class);
-                        responseHandler.updateBoard(loadGameMessage.game);
-                    } else if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
-                        NotificationMessage notificationMessage = gson.fromJson(message, NotificationMessage.class);
-                        responseHandler.message(notificationMessage.message);
-                    } else if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
-                        ErrorMessage errorMessage = gson.fromJson(message, ErrorMessage.class);
-                        responseHandler.error(errorMessage.errorMessage);
-                    } else {
-                        System.out.println("Received invalid message");
+                    switch (serverMessage.getServerMessageType()) {
+                        case LOAD_GAME:
+                            responseHandler.updateBoard(gson.fromJson(message, LoadMessage.class).game);
+                        case NOTIFICATION:
+                            responseHandler.message(gson.fromJson(message, NotificationMessage.class).message);
+                        case ERROR:
+                            responseHandler.error(gson.fromJson(message, ErrorMessage.class).errorMessage);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
