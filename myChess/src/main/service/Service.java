@@ -34,7 +34,7 @@ public class Service {
      */
     public Object databaseClear(Request ignoredReq, Response res) throws DataAccessException {
         dataAccess.clear();
-        return send("success", true);
+        return send();
     }
 
     /**
@@ -44,7 +44,7 @@ public class Service {
         var user = dataAccess.writeUser(getBody(req, UserData.class));
         if (user != null) {
             var authToken = dataAccess.writeAuth(user);
-            return send("username", user.getUsername(), "success", true, "authToken", authToken.getAuthToken());
+            return send("username", user.getUsername(), "authToken", authToken.getAuthToken());
         }
 
         return error(res, HttpStatus.FORBIDDEN_403, "User already exists");
@@ -58,7 +58,7 @@ public class Service {
         UserData loggedInUser = dataAccess.readUser(user);
         if (loggedInUser != null && loggedInUser.getPassword().equals(user.getPassword())) {
             var authToken = dataAccess.writeAuth(loggedInUser);
-            return send("success", true, "username", loggedInUser.getUsername(), "authToken", authToken.getAuthToken());
+            return send("username", loggedInUser.getUsername(), "authToken", authToken.getAuthToken());
         }
 
         return error(res, HttpStatus.UNAUTHORIZED_401, "Invalid username or password");
@@ -71,7 +71,7 @@ public class Service {
         var authToken = isAuthorized(req);
         if (authToken != null) {
             dataAccess.deleteAuth(authToken);
-            return send("success", true);
+            return send();
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
     }
@@ -86,7 +86,7 @@ public class Service {
             body.getGame().getBoard().resetBoard();
             body.getGame().setTeamTurn(ChessGame.TeamColor.WHITE);
             var game = dataAccess.newGame(body);
-            return send("success", true, "gameID", game.getGameID());
+            return send("gameID", game.getGameID());
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
     }
@@ -98,7 +98,7 @@ public class Service {
     public Object gameList(Request req, Response res) throws DataAccessException {
         if (isAuthorized(req) != null) {
             var games = dataAccess.listGames();
-            return send("success", true, "games", toList(games, dataAccess));
+            return send("games", toList(games, dataAccess));
         }
         return error(res, HttpStatus.UNAUTHORIZED_401, "Not authorized");
     }
@@ -132,7 +132,7 @@ public class Service {
                         }
                     }
                     dataAccess.updateGame(game);
-                    return send("success", true);
+                    return send();
                 }
             }
             return error(res, HttpStatus.BAD_REQUEST_400, "Unknown game");
@@ -143,7 +143,7 @@ public class Service {
 
     private static String error(Response res, int statusCode, String message) {
         res.status(statusCode);
-        return send("message", String.format("Error: %s", message), "success", false);
+        return send("message", String.format("Error: %s", message));
     }
 
 

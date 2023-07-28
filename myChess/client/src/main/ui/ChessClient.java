@@ -17,12 +17,12 @@ public class ChessClient implements DisplayHandler {
     private State state = State.LOGGED_OUT;
     private String authToken;
     private GameData gameData;
-    final private SeviceFacade server;
+    final private ServiceFacade server;
     final private WebSocketFacade webSocket;
 
 
     public ChessClient() throws Exception {
-        server = new SeviceFacade("http://localhost:8080");
+        server = new ServiceFacade("http://localhost:8080");
         webSocket = new WebSocketFacade("ws://localhost:8080/connect", this);
     }
 

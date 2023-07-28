@@ -8,11 +8,11 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class SeviceFacade {
+public class ServiceFacade {
 
     private String serverUrl;
 
-    public SeviceFacade(String url) {
+    public ServiceFacade(String url) {
         serverUrl = url;
     }
 

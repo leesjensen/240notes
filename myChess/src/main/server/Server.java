@@ -12,6 +12,10 @@ import static spark.Spark.webSocket;
 
 public class Server {
     public static void main(String[] args) {
+        new Server().run();
+    }
+
+    private void run() {
         try {
             Spark.port(8080);
             Spark.externalStaticFileLocation("web");
@@ -22,26 +26,27 @@ public class Server {
 
             webSocket("/connect", webSocketHandler);
 
-            Spark.post("/user/register", service::userRegister);
-            Spark.post("/user/login", service::userLogin);
-            Spark.post("/user/logout", service::userLogout);
-            Spark.post("/clear", service::databaseClear);
-            Spark.post("/games/create", service::gameCreate);
-            Spark.post("/games/join", service::gameJoin);
-            Spark.get("/games/list", service::gameList);
+            Spark.post("/user", service::userRegister);
+            Spark.post("/session", service::userLogin);
+            Spark.delete("/session", service::userLogout);
+            Spark.get("/game", service::gameList);
+            Spark.post("/game", service::gameCreate);
+            Spark.put("/game", service::gameJoin);
+            Spark.delete("/db", service::databaseClear);
 
-            Spark.exception(Exception.class, Server::errorHandler);
+            Spark.exception(Exception.class, this::errorHandler);
             Spark.notFound((req, res) -> {
                 var msg = String.format("[%s] %s not found", req.requestMethod(), req.pathInfo());
                 return errorHandler(new Exception(msg), req, res);
             });
-        } catch (Exception ex) {
+        } catch (
+                Exception ex) {
             System.out.printf("Unable to start server: %s", ex.getMessage());
             System.exit(1);
         }
     }
 
-    public static Object errorHandler(Exception e, Request req, Response res) {
+    public Object errorHandler(Exception e, Request req, Response res) {
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         res.type("application/json");
         res.status(500);

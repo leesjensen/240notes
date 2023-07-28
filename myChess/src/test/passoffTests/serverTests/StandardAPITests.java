@@ -1,13 +1,11 @@
 package passoffTests.serverTests;
 
-import org.junit.jupiter.api.*;
-import passoffTests.TestFactory;
 import passoffTests.testClasses.TestModels;
+import passoffTests.obfuscatedTestClasses.TestServerFacade;
+import passoffTests.TestFactory;
+import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.*;
 
 import static chess.ChessGame.TeamColor.BLACK;
 import static chess.ChessGame.TeamColor.WHITE;
@@ -407,7 +405,7 @@ public class StandardAPITests {
 
     @Test
     @Order(16)
-    @DisplayName("Join nonexisent game")
+    @DisplayName("Join nonexistent game")
     public void badGameIDJoin() {
         //create game
         TestModels.TestCreateRequest createRequest = new TestModels.TestCreateRequest();
