@@ -2,6 +2,8 @@ import java.util.ArrayList;
 
 public class GenericExample {
     public static void main(String[] args) {
+
+        // Generic
         var intList = new ArrayList<Integer>();
         var stringList = new ArrayList<String>();
 
@@ -11,6 +13,7 @@ public class GenericExample {
         Integer integerItem = intList.get(0);
         String stringItem = stringList.get(0);
 
+        // Non-generic
         var list = new ArrayList();
         list.add(3);
         list.add("cow");

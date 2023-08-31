@@ -12,23 +12,8 @@
 - `Option-Option-down/up arrow`: Select multiple lines with cursors:
 - `Ctrl-G`: Select same text multiple cursors
 - `CMD-B`: Goto definition
-
-## Curl
-
-Allocated time: 20 minutes
-https://docs.google.com/presentation/d/1pM_tUVD7c6kWpHkEwuRpbWmoBFss3GuK
-
-## Git/GitHub
-
-Allocated time: 70 minutes
-
-## MySQL
-
-Allocated time: 45 minutes
-
-## WebSocket
-
-Allocated time: 70 minutes
+- `Shift-Shift`: command window
+- `CMD-:`: Opens project settings
 
 # All things Java
 
@@ -89,8 +74,9 @@ alias idea='open -na "IntelliJ IDEA CE.app" --args '
     ```
 - **9**: more stream and collection functions. HTTP client
 - **13**: Unicode 12.1 support, new switch syntax, multiline string with `"""` syntax
-- **14**: Records
+- **16**: Records
 - **18**: UTF-8 is default. jwebserver HTTP server
+- **20**: HTTP/3 support
 
 ## Configure IntelliJ
 
@@ -129,7 +115,7 @@ It is interesting that you can pass a method to the `iterate` function and it us
 
 ## Method reference
 
-You can use a method reference as a more concise representation. This is useful in places like lambda functions or in a switch statement.
+You can use a method reference for any parameter, that is expecting a `Functional Interface`, as a more concise representation. This is useful in places like lambda functions or in a switch statement.
 
 ```java
   Spark.post("/user/register", (r, s) -> service.userRegister(r, s));
@@ -139,7 +125,7 @@ You can use a method reference as a more concise representation. This is useful 
 # Implementing SpellChecker
 
 1. You have four hours to complete the exam. There are three tries with decreasing max value (100, 80, 60). Save 30 minutes to upload your artifacts.
-1. Download the two zip files
+1. Clone the repository
 1. Create a project named SpellCorrector
 1. Move the source code into `src/spell`
 1. Move the tests into `src/passoff`
@@ -155,7 +141,7 @@ You can use a method reference as a more concise representation. This is useful 
    1. `toString` must return a new line separated list of words.
    1. `hashCode` must not use any of the automatic hashing functions.
    1. `equals` must not use hashCode or toString
-1. Add `SpellCorrector` to main class
+1. Add creation of `SpellCorrector` to main class
 1. Run `TrieTest` and fix until they all pass
    1. Most of the code is in Trie. These are just recursive functions for manipulating INode.
    1. I started with the generated functions for `toString`, `hashCode`, and `equals` and then tweaked them to work.
@@ -173,7 +159,7 @@ You can use a method reference as a more concise representation. This is useful 
           }
       }
       ```
-1. Just remember `File` and `Scanner` and that it users `hasNext` and `next` to iterate.
+1. Just remember `File` and `Scanner` and that it uses `hasNext` and `next` to iterate.
 1. Make sure you lowercase the words passed to `suggestSimilarWord`.
 1. All of the edit functions take a form of two substrings being combined in some way.
    ```java
