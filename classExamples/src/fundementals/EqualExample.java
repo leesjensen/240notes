@@ -8,11 +8,11 @@ public class EqualExample {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof EqualExample cmp) {
-            return value.equals(cmp.value);
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EqualExample that = (EqualExample) o;
+        return value.equals(that.value);
     }
 
     public static void main(String[] args) {

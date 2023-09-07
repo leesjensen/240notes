@@ -82,11 +82,6 @@ alias idea='open -na "IntelliJ IDEA CE.app" --args '
 
 - Added `Reformat code` action on Save in the Tools settings
 
-## Notes of things to fix.
-
-- `Installing Java` video references Android Studio for IDE.
-- `JavaDoc` references API 16. 17 was the last LTS, 20 is latest
-
 ## Building
 
 To run from the console use:
