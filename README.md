@@ -25,7 +25,7 @@
 
 - 1996: Version 1 released.
 - 2000: I started using Java with version 3.
-- 2006: Sun starts (OpenJDK](http://openjdk.java.net/projects/jdk/) under a GPL license. OpenJDK become the reference implementation.
+- 2006: Sun starts [OpenJDK](http://openjdk.java.net/projects/jdk/) under a GPL license. OpenJDK become the reference implementation.
 - 2010: Oracle acquires Sun and Java
 - 2019 (JDK8) OracleJDK requires license for production deployment. OpenJDK gains steam.
 - 2021 Oracle relents and makes it open again with option for paid support.
