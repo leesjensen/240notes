@@ -28,44 +28,29 @@ public class RookMoveTests {
     @DisplayName("Move Until Edge")
     public void emptyBoard() {
 
-        /*
-        | | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | |R| | | | | |
-		| | | | | | | | |
-         */
+        var boardText = """
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | |R| | | | | |
+                | | | | | | | | |
+                """;
 
         rook = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
         position = TestFactory.getNewPosition(2, 3);
         board.addPiece(position, rook);
 
         //up
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 4), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 5), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 6), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 7), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 8), null));
+        var moveCords = new int[][]{
+                {2, 4}, {2, 5}, {2, 6}, {2, 7}, {2, 8},
+                {2, 2}, {2, 1},
+                {1, 3},
+                {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3},
+        };
 
-        //down
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 2), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 1), null));
-
-        //left
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(1, 3), null));
-
-        //right
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(3, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(5, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(6, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(7, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(8, 3), null));
-
-        //check
         Set<ChessMove> pieceMoves = new HashSet<>(rook.pieceMoves(board, position));
         Assertions.assertEquals(validMoves, pieceMoves,
                 "ChessPiece pieceMoves did not return the correct moves");
