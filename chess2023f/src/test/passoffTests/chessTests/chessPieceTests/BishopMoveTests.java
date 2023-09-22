@@ -8,64 +8,39 @@ import org.junit.jupiter.api.Test;
 import passoffTests.TestFactory;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class BishopMoveTests {
-
-    private ChessBoard board;
-    private ChessPiece bishop;
-    private ChessPosition position;
-    private Set<ChessMove> validMoves;
-
-    @BeforeEach
-    public void setup() {
-        board = TestFactory.getNewBoard();
-        validMoves = new HashSet<>();
-    }
-
 
     @Test
     @DisplayName("Move Until Edge")
     public void bishopEmptyBoard() {
 
-        /*
-        | | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | |B| | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-         */
+        var boardText = """
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | |B| | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                """;
 
-        position = TestFactory.getNewPosition(5, 4);
-        bishop = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
-        board.addPiece(position, bishop);
+        var moveCords = new int[][]{
+                {4, 3}, {3, 2}, {2, 1},            // - -
+                {6, 3}, {7, 2}, {8, 1},            // + -
+                {4, 5}, {3, 6}, {2, 7}, {1, 8},    // - +
+                {6, 5}, {7, 6}, {8, 7},            // + +
+        };
 
-        //- -
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(3, 2), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 1), null));
+        var board = TestFactory.loadBoard(boardText);
+        var bishop = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+        var position = TestFactory.getNewPosition(5, 4);
+        var validMoves = TestFactory.loadMoves(position, moveCords);
 
-        // + -
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(6, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(7, 2), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(8, 1), null));
-
-        // - +
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 5), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(3, 6), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 7), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(1, 8), null));
-
-        // + +
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(6, 5), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(7, 6), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(8, 7), null));
-
-
-        //check
+        // validate moves
         Set<ChessMove> pieceMoves = new HashSet<>(bishop.pieceMoves(board, position));
         Assertions.assertEquals(validMoves, pieceMoves,
                 "ChessPiece pieceMoves did not return the correct moves");
@@ -76,70 +51,31 @@ public class BishopMoveTests {
     @DisplayName("Capture Enemy Pieces")
     public void bishopCapture() {
 
-        /*
-        | | | | | | | | |
-		| | | |Q| | | | |
-		| | | | | | | | |
-		| |b| | | | | | |
-		|r| | | | | | | |
-		| | | | | | | | |
-		| | | | |P| | | |
-		| | | | | | | | |
-         */
+        var boardText = """
+                | | | | | | | | |
+                | | | |Q| | | | |
+                | | | | | | | | |
+                | |b| | | | | | |
+                |r| | | | | | | |
+                | | | | | | | | |
+                | | | | |P| | | |
+                | | | | | | | | |
+                """;
 
-        position = TestFactory.getNewPosition(5, 2);
-        bishop = TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
-        board.addPiece(position, bishop);
+        var moveCords = new int[][]{
+                // - - none
+                {6, 1},                            // + -
+                {4, 3}, {3, 4}, {2, 5},            // - +
+                {6, 3}, {7, 4}                     // + +
+        };
 
-        //allied pieces
-        ChessPosition[] allyPiecePositions = {TestFactory.getNewPosition(4, 1)};
-        board.addPiece(allyPiecePositions[0],
-                TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+        var board = TestFactory.loadBoard(boardText);
+        var bishop = TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        var position = TestFactory.getNewPosition(5, 2);
+        var validMoves = TestFactory.loadMoves(position, moveCords);
 
-
-        //enemy pieces
-        ChessPosition[] enemyPiecePositions = {TestFactory.getNewPosition(2, 5), TestFactory.getNewPosition(7, 4)};
-        board.addPiece(enemyPiecePositions[0],
-                TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
-        board.addPiece(enemyPiecePositions[1],
-                TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
-
-
-        //Get moves for bishop
+        // validate moves
         Set<ChessMove> pieceMoves = new HashSet<>(bishop.pieceMoves(board, position));
-
-        //Cannot capture friendlies
-        for (ChessPosition allyPosition : allyPiecePositions) {
-            ChessMove badCapture = TestFactory.getNewMove(position, allyPosition, null);
-            Assertions.assertFalse(pieceMoves.contains(badCapture),
-                    "Piece moves contained move: " + badCapture + " that would capture a ally piece");
-        }
-
-        //Can capture unfriendlies
-        for (ChessPosition enemyPosition : enemyPiecePositions) {
-            ChessMove capture = TestFactory.getNewMove(position, enemyPosition, null);
-            Assertions.assertTrue(pieceMoves.contains(capture),
-                    "Piece moves did not contain valid move: " + capture + " that would capture an enemy piece");
-        }
-
-        // - - none
-
-        // + -
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(6, 1), null));
-
-
-        // - +
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(3, 4), null));
-        validMoves.add(TestFactory.getNewMove(position, enemyPiecePositions[0], null));
-
-
-        // + +
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(6, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, enemyPiecePositions[1], null));
-
-
-        //check
         Assertions.assertEquals(validMoves, pieceMoves,
                 "ChessPiece pieceMoves did not return the correct moves");
     }
@@ -149,28 +85,22 @@ public class BishopMoveTests {
     @DisplayName("Bishop Completely Blocked")
     public void stuck() {
 
-        /*
-        | | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | |R| |P| |
-		| | | | | |B| | |
-         */
+        var boardText = """
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | |R| |P| |
+                | | | | | |B| | |
+                """;
 
-        position = TestFactory.getNewPosition(1, 6);
-        bishop = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
-        board.addPiece(position, bishop);
+        var board = TestFactory.loadBoard(boardText);
+        var bishop = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+        var position = TestFactory.getNewPosition(1, 6);
 
-        //pieces in way
-        board.addPiece(TestFactory.getNewPosition(2, 7),
-                TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
-        board.addPiece(TestFactory.getNewPosition(2, 5),
-                TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
-
-        //make sure move list is empty
+        // make sure move list is empty
         Assertions.assertTrue(bishop.pieceMoves(board, position).isEmpty(),
                 "ChessPiece pieceMoves returned valid moves for a trapped piece");
     }
