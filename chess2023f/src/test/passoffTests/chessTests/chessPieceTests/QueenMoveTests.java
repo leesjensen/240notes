@@ -69,7 +69,5 @@ public class QueenMoveTests {
                 new int[]{1, 1},
                 new int[][]{}
         );
-
     }
-
 }
