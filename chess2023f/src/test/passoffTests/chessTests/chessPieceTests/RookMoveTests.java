@@ -2,8 +2,6 @@ package passoffTests.chessTests.chessPieceTests;
 
 import chess.*;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import passoffTests.TestFactory;
 
@@ -12,23 +10,10 @@ import java.util.Set;
 
 public class RookMoveTests {
 
-    private ChessBoard board;
-    private ChessPiece rook;
-    private ChessPosition position;
-    private Set<ChessMove> validMoves;
-
-    @BeforeEach
-    public void setup() {
-        board = TestFactory.getNewBoard();
-        validMoves = new HashSet<>();
-    }
-
-
     @Test
-    @DisplayName("Move Until Edge")
-    public void emptyBoard() {
+    public void rookMoveUntilEdge() {
 
-        var boardText = """
+        var board = TestFactory.loadBoard("""
                 | | | | | | | | |
                 | | | | | | | | |
                 | | | | | | | | |
@@ -37,20 +22,18 @@ public class RookMoveTests {
                 | | | | | | | | |
                 | | |R| | | | | |
                 | | | | | | | | |
-                """;
+                """);
 
-        rook = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
-        position = TestFactory.getNewPosition(2, 3);
-        board.addPiece(position, rook);
-
-        //up
-        var moveCords = new int[][]{
+        var rook = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        var position = TestFactory.getNewPosition(2, 3);
+        var validMoves = TestFactory.loadMoves(position, new int[][]{
                 {2, 4}, {2, 5}, {2, 6}, {2, 7}, {2, 8},
                 {2, 2}, {2, 1},
                 {1, 3},
                 {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3},
-        };
+        });
 
+        // validate moves
         Set<ChessMove> pieceMoves = new HashSet<>(rook.pieceMoves(board, position));
         Assertions.assertEquals(validMoves, pieceMoves,
                 "ChessPiece pieceMoves did not return the correct moves");
@@ -58,101 +41,48 @@ public class RookMoveTests {
 
 
     @Test
-    @DisplayName("Capture Enemy Pieces")
-    public void capture() {
+    public void bishopCaptureEnemy() {
+        var board = TestFactory.loadBoard("""
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                |N| | | | | | | |
+                |r| | | | |B| | |
+                | | | | | | | | |
+                |q| | | | | | | |
+                | | | | | | | | |
+                """);
 
-        /*
-        | | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		|N| | | | | | | |
-		|r| | | | |B| | |
-		| | | | | | | | |
-		|q| | | | | | | |
-		| | | | | | | | |
-         */
+        var rook = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        var position = TestFactory.getNewPosition(4, 1);
+        var validMoves = TestFactory.loadMoves(position, new int[][]{
+                {5, 1},
+                {3, 1},
+                {4, 2}, {4, 3}, {4, 4}, {4, 5}, {4, 6},
+        });
 
-        rook = TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
-        position = TestFactory.getNewPosition(4, 1);
-        board.addPiece(position, rook);
-
-        //allied pieces
-        ChessPosition[] allyPiecePositions = {TestFactory.getNewPosition(2, 1)};
-        board.addPiece(allyPiecePositions[0],
-                TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
-
-
-        //enemy pieces
-        ChessPosition[] enemyPiecePositions = {TestFactory.getNewPosition(4, 6), TestFactory.getNewPosition(5, 1)};
-        board.addPiece(enemyPiecePositions[0],
-                TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
-        board.addPiece(enemyPiecePositions[1],
-                TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
-
-
-        //Get moves for bishop
+        // validate moves
         Set<ChessMove> pieceMoves = new HashSet<>(rook.pieceMoves(board, position));
-
-        //Cannot capture friendlies
-        for (ChessPosition allyPosition : allyPiecePositions) {
-            ChessMove badCapture = TestFactory.getNewMove(position, allyPosition, null);
-            Assertions.assertFalse(pieceMoves.contains(badCapture),
-                    "Piece moves contained move: " + badCapture + " that would capture a ally piece");
-        }
-
-        //Can capture unfriendlies
-        for (ChessPosition enemyPosition : enemyPiecePositions) {
-            ChessMove capture = TestFactory.getNewMove(position, enemyPosition, null);
-            Assertions.assertTrue(pieceMoves.contains(capture),
-                    "Piece moves did not contain valid move: " + capture + " that would capture an enemy piece");
-        }
-
-        //left none
-
-        //up
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(5, 1), null));
-
-        //down
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(3, 1), null));
-
-        //right
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 2), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 3), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 4), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 5), null));
-        validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 6), null));
-
-
-        //check
         Assertions.assertEquals(validMoves, pieceMoves,
                 "ChessPiece pieceMoves did not return the correct moves");
     }
 
 
     @Test
-    @DisplayName("Rook Completely Blocked")
-    public void rookStuck() {
+    public void rookBlocked() {
+        var board = TestFactory.loadBoard("""
+                | | | | | | |n|r|
+                | | | | | | | |p|
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                | | | | | | | | |
+                """);
 
-        /*
-        | | | | | | |n|r|
-		| | | | | | | |p|
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-		| | | | | | | | |
-         */
-
-        position = TestFactory.getNewPosition(8, 8);
-        rook = TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
-        board.addPiece(position, rook);
-
-        //pieces in way
-        board.addPiece(TestFactory.getNewPosition(7, 8),
-                TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-        board.addPiece(TestFactory.getNewPosition(8, 7),
-                TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+        var rook = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        var position = TestFactory.getNewPosition(8, 8);
 
         //make sure move list is empty
         Assertions.assertTrue(rook.pieceMoves(board, position).isEmpty(),
