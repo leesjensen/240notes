@@ -1,8 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static chess.ChessPiece.*;
 import static chess.ChessGame.*;
@@ -84,5 +82,16 @@ public class BoardImpl implements ChessBoard {
         return pieceAt == null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardImpl board = (BoardImpl) o;
+        return Arrays.deepEquals(squares, board.squares);
+    }
 
+    @Override
+    public int hashCode() {
+        return 31 * Arrays.deepHashCode(squares);
+    }
 }
