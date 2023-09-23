@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import passoffTests.TestFactory;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class RookMoveTests {
 
@@ -33,10 +32,7 @@ public class RookMoveTests {
                 {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3},
         });
 
-        // validate moves
-        Set<ChessMove> pieceMoves = new HashSet<>(rook.pieceMoves(board, position));
-        Assertions.assertEquals(validMoves, pieceMoves,
-                "ChessPiece pieceMoves did not return the correct moves");
+        Assertions.assertEquals(validMoves, rook.pieceMoves(board, position), "Wrong moves");
     }
 
 
@@ -61,10 +57,7 @@ public class RookMoveTests {
                 {4, 2}, {4, 3}, {4, 4}, {4, 5}, {4, 6},
         });
 
-        // validate moves
-        Set<ChessMove> pieceMoves = new HashSet<>(rook.pieceMoves(board, position));
-        Assertions.assertEquals(validMoves, pieceMoves,
-                "ChessPiece pieceMoves did not return the correct moves");
+        Assertions.assertEquals(validMoves, rook.pieceMoves(board, position), "Wrong moves");
     }
 
 
@@ -84,9 +77,7 @@ public class RookMoveTests {
         var rook = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
         var position = TestFactory.getNewPosition(8, 8);
 
-        //make sure move list is empty
-        Assertions.assertTrue(rook.pieceMoves(board, position).isEmpty(),
-                "ChessPiece pieceMoves returned valid moves for a trapped piece");
+        Assertions.assertEquals(new HashSet<>(), rook.pieceMoves(board, position), "Wrong moves");
     }
 
 }
