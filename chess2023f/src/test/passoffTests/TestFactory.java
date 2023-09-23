@@ -42,7 +42,7 @@ public class TestFactory {
     //------------------------------------------------------------------------------------------------------------------
 
 
-    //Server API's
+    //Server APIs
     //------------------------------------------------------------------------------------------------------------------
     public static String getServerPort() {
         return "8080";
@@ -64,13 +64,13 @@ public class TestFactory {
     //------------------------------------------------------------------------------------------------------------------
 
 
-    static public void validateMoves(String boardText, int[] testCoordinates, int[][] moves) {
+    static public void validateMoves(String boardText, int[] startPosition, int[][] moves) {
         var board = loadBoard(boardText);
-        var position = getNewPosition(testCoordinates[0], testCoordinates[1]);
-        var testPiece = board.getPiece(position);
-        var validMoves = loadMoves(position, moves);
+        var start = getNewPosition(startPosition[0], startPosition[1]);
+        var testPiece = board.getPiece(start);
+        var validMoves = loadMoves(start, moves);
 
-        Assertions.assertEquals(validMoves, testPiece.pieceMoves(board, position), "Wrong moves");
+        Assertions.assertEquals(validMoves, testPiece.pieceMoves(board, start), "Wrong moves");
     }
 
     final static Map<Character, ChessPiece.PieceType> charToTypeMap = Map.of(
