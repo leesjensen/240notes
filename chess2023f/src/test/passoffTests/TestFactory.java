@@ -1,8 +1,8 @@
 package passoffTests;
 
 import chess.*;
+import org.junit.jupiter.api.Assertions;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +62,16 @@ public class TestFactory {
         return 3000L;
     }
     //------------------------------------------------------------------------------------------------------------------
+
+
+    static public void validateMoves(String boardText, int[] testCoordinates, int[][] moves) {
+        var board = loadBoard(boardText);
+        var position = getNewPosition(testCoordinates[0], testCoordinates[1]);
+        var testPiece = board.getPiece(position);
+        var validMoves = loadMoves(position, moves);
+
+        Assertions.assertEquals(validMoves, testPiece.pieceMoves(board, position), "Wrong moves");
+    }
 
     final static Map<Character, ChessPiece.PieceType> charToTypeMap = Map.of(
             'p', ChessPiece.PieceType.PAWN,
