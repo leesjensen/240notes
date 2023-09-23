@@ -2,25 +2,24 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static chess.ChessPiece.*;
 import static chess.ChessGame.*;
 
 public class BoardImpl implements ChessBoard {
-
     final private ChessPiece[][] squares = new ChessPiece[8][8];
+    final private ArrayList<ChessMove> history = new ArrayList<>();
 
 
     public BoardImpl() {
     }
 
-    public BoardImpl(ChessBoard copy) {
-        if (copy instanceof BoardImpl c) {
-            for (var i = 0; i < 8; i++) {
-                System.arraycopy(c.squares[i], 0, squares[i], 0, 8);
-            }
-        }
+
+    public List<ChessMove> getHistory() {
+        return history;
     }
+
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
@@ -70,9 +69,20 @@ public class BoardImpl implements ChessBoard {
         return result;
     }
 
-    @Override
-    public boolean isAttacked(ChessPosition targetPos, ChessGame.TeamColor targetColor) {
-        return false;
-        //return !getAttackers(targetPos, targetColor).isEmpty();
+
+    public boolean isOriginalPosition(ChessPosition pos) {
+        for (var bh : getHistory()) {
+            if (bh.getStartPosition().equals(pos)) {
+                return false;
+            }
+        }
+        return true;
     }
+
+    static public boolean isSquareEmpty(ChessBoard board, int row, int col) {
+        var pieceAt = board.getPiece(new PositionImpl(row, col));
+        return pieceAt == null;
+    }
+
+
 }

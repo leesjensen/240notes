@@ -34,12 +34,6 @@ public interface ChessBoard {
      */
     void resetBoard();
 
-
-    /**
-     * Determines if the given position is being attacked
-     */
-    boolean isAttacked(ChessPosition targetPos, ChessGame.TeamColor targetColor);
-
     /**
      * Collection of all the pieces currently on the board.
      */
