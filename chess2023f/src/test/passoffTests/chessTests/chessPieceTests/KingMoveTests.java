@@ -71,8 +71,9 @@ public class KingMoveTests {
 
         var king = TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
         var position = TestFactory.getNewPosition(8, 8);
+        var validMoves = new HashSet<ChessMove>();
 
-        Assertions.assertEquals(new HashSet<>(), king.pieceMoves(board, position), "Wrong moves");
+        Assertions.assertEquals(validMoves, king.pieceMoves(board, position), "Wrong moves");
     }
 
 }

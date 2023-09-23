@@ -76,8 +76,10 @@ public class RookMoveTests {
 
         var rook = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
         var position = TestFactory.getNewPosition(8, 8);
+        var validMoves = new HashSet<ChessMove>();
 
-        Assertions.assertEquals(new HashSet<>(), rook.pieceMoves(board, position), "Wrong moves");
+
+        Assertions.assertEquals(validMoves, rook.pieceMoves(board, position), "Wrong moves");
     }
 
 }

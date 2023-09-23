@@ -76,8 +76,9 @@ public class BishopMoveTests {
 
         var bishop = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
         var position = TestFactory.getNewPosition(1, 6);
+        var validMoves = new HashSet<ChessMove>();
 
-        Assertions.assertEquals(new HashSet<>(), bishop.pieceMoves(board, position), "Wrong moves");
+        Assertions.assertEquals(validMoves, bishop.pieceMoves(board, position), "Wrong moves");
     }
 
 }
