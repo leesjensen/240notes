@@ -27,15 +27,25 @@ public interface ChessBoard {
      */
     ChessPiece getPiece(ChessPosition position);
 
-
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
     void resetBoard();
 
-    /**
-     * Collection of all the pieces currently on the board.
-     */
+    void movePiece(ChessMove move);
+
+    ChessPlacement getPlacement(ChessGame.TeamColor color, ChessPiece.PieceType type);
+    
+    boolean isAttacked(ChessPosition targetPos, ChessGame.TeamColor targetColor);
+
+    boolean isMoveLegal(ChessMove move);
+
+    boolean isOriginalPosition(ChessPosition pos);
+
+    boolean isSquareEmpty(int row, int col);
+
+    ChessMove getLastMove();
+
     Collection<ChessPlacement> collection();
 }

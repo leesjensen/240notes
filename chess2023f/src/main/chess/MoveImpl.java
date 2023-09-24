@@ -14,17 +14,17 @@ public class MoveImpl implements ChessMove {
 
     @Override
     public ChessPosition getStartPosition() {
-        return null;
+        return start;
     }
 
     @Override
     public ChessPosition getEndPosition() {
-        return null;
+        return end;
     }
 
     @Override
     public ChessPiece.PieceType getPromotionPiece() {
-        return null;
+        return promotionType;
     }
 
 

@@ -24,25 +24,23 @@ public class KingMovementRule extends MovementRule {
     }
 
 
-    void addCastleMoves(ChessBoard cBoard, ChessPosition pos, HashSet<ChessMove> moves) {
-        if (cBoard instanceof BoardImpl board) {
-            var king = board.getPiece(pos);
-            var color = king.getTeamColor();
-            var teamRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
+    void addCastleMoves(ChessBoard board, ChessPosition pos, HashSet<ChessMove> moves) {
+        var king = board.getPiece(pos);
+        var color = king.getTeamColor();
+        var teamRow = color == ChessGame.TeamColor.BLACK ? 8 : 1;
 
-            var kingPos = new PositionImpl(teamRow, 5);
-            if (king.equals(board.getPiece(kingPos)) && board.isOriginalPosition(kingPos)) {
-                if (board.isOriginalPosition(new PositionImpl(teamRow, 8)) &&
-                        BoardImpl.isSquareEmpty(board, teamRow, 6) &&
-                        BoardImpl.isSquareEmpty(board, teamRow, 7)) {
-                    moves.add(new MoveImpl(pos, new PositionImpl(teamRow, 7), null));
-                }
-                if (board.isOriginalPosition(new PositionImpl(teamRow, 1)) &&
-                        BoardImpl.isSquareEmpty(board, teamRow, 2) &&
-                        BoardImpl.isSquareEmpty(board, teamRow, 3) &&
-                        BoardImpl.isSquareEmpty(board, teamRow, 4)) {
-                    moves.add(new MoveImpl(pos, new PositionImpl(teamRow, 3), null));
-                }
+        var kingPos = new PositionImpl(teamRow, 5);
+        if (king.equals(board.getPiece(kingPos)) && board.isOriginalPosition(kingPos)) {
+            if (board.isOriginalPosition(new PositionImpl(teamRow, 8)) &&
+                    board.isSquareEmpty(teamRow, 6) &&
+                    board.isSquareEmpty(teamRow, 7)) {
+                moves.add(new MoveImpl(pos, new PositionImpl(teamRow, 7), null));
+            }
+            if (board.isOriginalPosition(new PositionImpl(teamRow, 1)) &&
+                    board.isSquareEmpty(teamRow, 2) &&
+                    board.isSquareEmpty(teamRow, 3) &&
+                    board.isSquareEmpty(teamRow, 4)) {
+                moves.add(new MoveImpl(pos, new PositionImpl(teamRow, 3), null));
             }
         }
     }

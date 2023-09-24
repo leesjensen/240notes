@@ -16,9 +16,10 @@ public class PawnMovementRule extends MovementRule {
         calculateMoves(board, pos, direction, 0, moves, false);
         calculateMoves(board, pos, direction, -1, moves, true);
         calculateMoves(board, pos, direction, 1, moves, true);
+        addEnPassantMoves(board, pos, moves);
 
         if (pieceColor == ChessGame.TeamColor.WHITE && pos.getRow() == 2 || pieceColor == ChessGame.TeamColor.BLACK && pos.getRow() == 7) {
-            if (BoardImpl.isSquareEmpty(board, pos.getRow() + direction, pos.getColumn()) && BoardImpl.isSquareEmpty(board, pos.getRow() + (direction * 2), pos.getColumn())) {
+            if (board.isSquareEmpty(pos.getRow() + direction, pos.getColumn()) && board.isSquareEmpty(pos.getRow() + (direction * 2), pos.getColumn())) {
                 moves.add(new MoveImpl(pos, new PositionImpl(pos.getRow() + (direction * 2), pos.getColumn()), null));
             }
         }
@@ -49,6 +50,30 @@ public class PawnMovementRule extends MovementRule {
             moves.add(new MoveImpl(pos, newPos, ChessPiece.PieceType.KNIGHT));
         } else {
             moves.add(new MoveImpl(pos, newPos, null));
+        }
+    }
+
+    private void addEnPassantMoves(ChessBoard board, ChessPosition pos, HashSet<ChessMove> moves) {
+        var pawn = board.getPiece(pos);
+        var color = pawn.getTeamColor();
+        var passantRow = color == ChessGame.TeamColor.BLACK ? 4 : 5;
+        var startRow = color == ChessGame.TeamColor.BLACK ? 2 : 7;
+        var attackRow = color == ChessGame.TeamColor.BLACK ? 3 : 6;
+
+        addPassant(pos.getColumn(), pos.getColumn() + 1, passantRow, startRow, attackRow, board, color, moves);
+        addPassant(pos.getColumn(), pos.getColumn() - 1, passantRow, startRow, attackRow, board, color, moves);
+    }
+
+    private void addPassant(int column, int passantColumn, int passantRow, int startRow, int attackRow, ChessBoard board, ChessGame.TeamColor color, HashSet<ChessMove> moves) {
+        if (passantColumn >= 1 && passantColumn <= 8) {
+            var passantMove = new MoveImpl(new PositionImpl(startRow, passantColumn), new PositionImpl(passantRow, passantColumn), null);
+            var candidate = board.getPiece(passantMove.getEndPosition());
+            if (candidate != null && candidate.getPieceType() == ChessPiece.PieceType.PAWN && candidate.getTeamColor() != color) {
+                var lastMove = board.getLastMove();
+                if (passantMove.equals(lastMove)) {
+                    moves.add(new MoveImpl(new PositionImpl(passantRow, column), new PositionImpl(attackRow, passantColumn), null));
+                }
+            }
         }
     }
 }
