@@ -1,13 +1,15 @@
 package passoffTests.chessTests.chessPieceTests;
 
 import org.junit.jupiter.api.Test;
-import passoffTests.TestFactory;
+
+import static passoffTests.TestFactory.*;
+
 
 public class KingMoveTests {
 
     @Test
     public void kingMoveUntilEdge() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | | | |
                         | | | | | | | | |
                         | | | | | | | | |
@@ -17,7 +19,7 @@ public class KingMoveTests {
                         | | | | | | | | |
                         | | | | | | | | |
                         """,
-                new int[]{3, 6},
+                getNewPosition(3, 6),
                 new int[][]{{4, 6}, {4, 7}, {3, 7}, {2, 7}, {2, 6}, {2, 5}, {3, 5}, {4, 5}}
         );
     }
@@ -25,7 +27,7 @@ public class KingMoveTests {
 
     @Test
     public void kingCaptureEnemy() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | | | |
                         | | | | | | | | |
                         | | | | | | | | |
@@ -35,7 +37,7 @@ public class KingMoveTests {
                         | | |P|b|p| | | |
                         | | | | | | | | |
                         """,
-                new int[]{3, 4},
+                getNewPosition(3, 4),
                 new int[][]{{4, 4}, {3, 5}, {2, 3}, {3, 3}, {4, 3}}
         );
     }
@@ -43,7 +45,7 @@ public class KingMoveTests {
 
     @Test
     public void kingBlocked() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | |r|k|
                         | | | | | | |p|p|
                         | | | | | | | | |
@@ -53,7 +55,7 @@ public class KingMoveTests {
                         | | | | | | | | |
                         | | | | | | | | |
                         """,
-                new int[]{8, 8},
+                getNewPosition(8, 8),
                 new int[][]{}
         );
     }

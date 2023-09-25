@@ -1,14 +1,15 @@
 package passoffTests.chessTests.chessPieceTests;
 
 import org.junit.jupiter.api.Test;
-import passoffTests.TestFactory;
+
+import static passoffTests.TestFactory.*;
 
 public class RookMoveTests {
 
     @Test
     public void rookMoveUntilEdge() {
 
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | | | |
                         | | | | | | | | |
                         | | | | | | | | |
@@ -18,7 +19,7 @@ public class RookMoveTests {
                         | | |R| | | | | |
                         | | | | | | | | |
                         """,
-                new int[]{2, 3},
+                getNewPosition(2, 3),
                 new int[][]{
                         {2, 4}, {2, 5}, {2, 6}, {2, 7}, {2, 8},
                         {2, 2}, {2, 1},
@@ -31,7 +32,7 @@ public class RookMoveTests {
 
     @Test
     public void bishopCaptureEnemy() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | | | |
                         | | | | | | | | |
                         | | | | | | | | |
@@ -41,7 +42,7 @@ public class RookMoveTests {
                         |q| | | | | | | |
                         | | | | | | | | |
                         """,
-                new int[]{4, 1},
+                getNewPosition(4, 1),
                 new int[][]{
                         {5, 1},
                         {3, 1},
@@ -53,7 +54,7 @@ public class RookMoveTests {
 
     @Test
     public void rookBlocked() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | |n|r|
                         | | | | | | | |p|
                         | | | | | | | | |
@@ -63,7 +64,7 @@ public class RookMoveTests {
                         | | | | | | | | |
                         | | | | | | | | |
                         """,
-                new int[]{8, 8},
+                getNewPosition(8, 8),
                 new int[][]{}
         );
     }

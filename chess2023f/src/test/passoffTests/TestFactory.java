@@ -64,13 +64,12 @@ public class TestFactory {
     //------------------------------------------------------------------------------------------------------------------
 
 
-    static public void validateMoves(String boardText, int[] startPosition, int[][] moves) {
+    static public void validateMoves(String boardText, ChessPosition startPosition, int[][] moves) {
         var board = loadBoard(boardText);
-        var start = getNewPosition(startPosition[0], startPosition[1]);
-        var testPiece = board.getPiece(start);
-        var validMoves = loadMoves(start, moves);
+        var testPiece = board.getPiece(startPosition);
+        var validMoves = loadMoves(startPosition, moves);
 
-        Assertions.assertEquals(validMoves, testPiece.pieceMoves(board, start), "Wrong moves");
+        Assertions.assertEquals(validMoves, testPiece.pieceMoves(board, startPosition), "Wrong moves");
     }
 
     final static Map<Character, ChessPiece.PieceType> charToTypeMap = Map.of(

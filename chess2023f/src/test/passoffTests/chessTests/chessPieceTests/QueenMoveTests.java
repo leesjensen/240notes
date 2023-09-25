@@ -1,12 +1,13 @@
 package passoffTests.chessTests.chessPieceTests;
 
 import org.junit.jupiter.api.Test;
-import passoffTests.TestFactory;
+
+import static passoffTests.TestFactory.*;
 
 public class QueenMoveTests {
     @Test
     public void queenMoveUntilEdge() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | | | |
                         | | | | | | |q| |
                         | | | | | | | | |
@@ -16,7 +17,7 @@ public class QueenMoveTests {
                         | | | | | | | | |
                         | | | | | | | | |
                         """,
-                new int[]{7, 7},
+                getNewPosition(7, 7),
                 new int[][]{
                         {8, 7},
                         {8, 8},
@@ -32,7 +33,7 @@ public class QueenMoveTests {
 
     @Test
     public void queenCaptureEnemy() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         |b| | | | | | | |
                         | | | | | | | | |
                         | | |R| | | | | |
@@ -42,7 +43,7 @@ public class QueenMoveTests {
                         |P| |n| | | | | |
                         | | | | | | | | |
                         """,
-                new int[]{4, 1},
+                getNewPosition(4, 1),
                 new int[][]{
                         {5, 1}, {6, 1}, {7, 1}, {8, 1},
                         {5, 2},
@@ -56,7 +57,7 @@ public class QueenMoveTests {
 
     @Test
     public void queenBlocked() {
-        TestFactory.validateMoves("""
+        validateMoves("""
                         | | | | | | | | |
                         | | | | | | | | |
                         | | | | | | | | |
@@ -66,7 +67,7 @@ public class QueenMoveTests {
                         |P|R| | | | | | |
                         |Q|K| | | | | | |
                         """,
-                new int[]{1, 1},
+                getNewPosition(1, 1),
                 new int[][]{}
         );
     }
