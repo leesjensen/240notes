@@ -1,4 +1,4 @@
-package general;
+package innerClasses;
 
 public class ClosureExample {
     public interface Speaker {
@@ -13,12 +13,10 @@ public class ClosureExample {
         System.out.printf("Spanish: %s\nGerman: %s", spanish.sayHello(), german.sayHello());
     }
 
-
     private static Speaker SpeakerFactory(String helloPhrase) {
-        var x = "fish";
         class InnerExample implements Speaker {
             public String sayHello() {
-                return x + helloPhrase;
+                return helloPhrase;
             }
         }
 

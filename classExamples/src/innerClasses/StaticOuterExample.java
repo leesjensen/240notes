@@ -1,4 +1,4 @@
-package general;
+package innerClasses;
 
 public class StaticOuterExample {
     public static void main(String[] args) {
