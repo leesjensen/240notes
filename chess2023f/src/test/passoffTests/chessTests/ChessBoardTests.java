@@ -1,14 +1,9 @@
 package passoffTests.chessTests;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import passoffTests.TestFactory;
+import chess.*;
+import org.junit.jupiter.api.*;
+
+import static passoffTests.TestFactory.*;
 
 public class ChessBoardTests {
 
@@ -16,15 +11,15 @@ public class ChessBoardTests {
 
     @BeforeEach
     public void setup() {
-        board = TestFactory.getNewBoard();
+        board = getNewBoard();
     }
 
 
     @Test
     @DisplayName("Add and Get Piece")
     public void getAddPiece() {
-        ChessPosition position = TestFactory.getNewPosition(4, 4);
-        ChessPiece piece = TestFactory.getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        ChessPosition position = getNewPosition(4, 4);
+        ChessPiece piece = getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
 
         board.addPiece(position, piece);
 
@@ -40,7 +35,7 @@ public class ChessBoardTests {
     @Test
     @DisplayName("Reset Board")
     public void defaultGameBoard() {
-        var expectedBoard = TestFactory.loadBoard("""
+        var expectedBoard = loadBoard("""
                 |r|n|b|q|k|b|n|r|
                 |p|p|p|p|p|p|p|p|
                 | | | | | | | | |
@@ -51,7 +46,7 @@ public class ChessBoardTests {
                 |R|N|B|Q|K|B|N|R|
                 """);
 
-        var actualBoard = TestFactory.getNewBoard();
+        var actualBoard = getNewBoard();
         actualBoard.resetBoard();
 
         Assertions.assertEquals(expectedBoard, actualBoard);
