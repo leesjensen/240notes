@@ -40,14 +40,23 @@ public class BoardImpl implements ChessBoard {
             castle(move);
         }
         // Handle en passant
-        else if ((piece.getPieceType() == PieceType.PAWN)) {
-            throw new RuntimeException("Implement en passant");
+        else if ((piece.getPieceType() == PieceType.PAWN) &&
+                (move.getStartPosition().getColumn() != move.getEndPosition().getColumn()) &&
+                (getPiece(move.getEndPosition()) == null)) {
+            enPassant(move);
         }
 
         removePiece(move.getStartPosition());
         addPiece(move.getEndPosition(), piece);
 
         history.add(move);
+    }
+
+    public void enPassant(ChessMove move) {
+        var killRow = move.getEndPosition().getRow() == 6 ? 5 : 4;
+        var killPosition = new PositionImpl(killRow, move.getEndPosition().getColumn());
+
+        removePiece(killPosition);
     }
 
     public void castle(ChessMove move) {
