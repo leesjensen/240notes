@@ -93,15 +93,15 @@ public class GsonAdapterAltExample {
             }
 
             @Override
-            public Animal read(JsonReader jsonReader) throws IOException {
+            public Animal read(JsonReader r) throws IOException {
                 Animal animal = null;
-                if (jsonReader.peek() == JsonToken.NULL) {
-                    jsonReader.nextNull();
+                if (r.peek() == JsonToken.NULL) {
+                    r.nextNull();
                 } else {
-                    jsonReader.beginObject();
-                    while (jsonReader.hasNext()) {
-                        var name = jsonReader.nextName();
-                        var value = jsonReader.nextString();
+                    r.beginObject();
+                    while (r.hasNext()) {
+                        var name = r.nextName();
+                        var value = r.nextString();
                         if (name.equals("species")) {
                             animal = switch (value) {
                                 case "Cow" -> new Cow();
@@ -110,7 +110,7 @@ public class GsonAdapterAltExample {
                             };
                         }
                     }
-                    jsonReader.endObject();
+                    r.endObject();
                 }
                 return animal;
             }

@@ -93,8 +93,8 @@ public class GsonAdapterExample {
             }
 
             @Override
-            public Animal read(JsonReader jsonReader) {
-                Animal animal = new Gson().fromJson(jsonReader, Animal.class);
+            public Animal read(JsonReader r) {
+                Animal animal = new Gson().fromJson(r, Animal.class);
                 if (animal != null) {
                     animal = switch (animal.species) {
                         case "Cow" -> new Cow();
