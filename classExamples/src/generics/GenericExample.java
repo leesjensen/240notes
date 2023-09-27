@@ -15,4 +15,9 @@ public class GenericExample {
             return items.get(i);
         }
     }
+
+    public static void main(String[] args) {
+        var intStorage = new Storage<Integer>();
+        var stringStorage = new Storage<String>();
+    }
 }
