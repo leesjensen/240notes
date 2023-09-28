@@ -8,12 +8,36 @@ public class LambdaExample {
     public static void main(String[] args) {
         var list = new ArrayList<>(List.of(1, 3));
 
-        withoutLambda(list);
-
-        withLambda(list);
+        localClass(list);
+        anonymousOutOfLineClass(list);
+        anonymousInlineClass(list);
+        lambda(list);
     }
 
-    private static void withoutLambda(List<Integer> list) {
+
+    private static void localClass(List<Integer> list) {
+        class LessThanTwoFilter implements Predicate<Integer> {
+            public boolean test(Integer n) {
+                return n > 2;
+            }
+        }
+
+        var lessThanTwo = new LessThanTwoFilter();
+
+        list.removeIf(lessThanTwo);
+    }
+
+    private static void anonymousOutOfLineClass(List<Integer> list) {
+        var lessThanTwo = new Predicate<Integer>() {
+            public boolean test(Integer n) {
+                return n > 2;
+            }
+        };
+
+        list.removeIf(lessThanTwo);
+    }
+
+    private static void anonymousInlineClass(List<Integer> list) {
         list.removeIf(new Predicate<Integer>() {
             public boolean test(Integer n) {
                 return n > 2;
@@ -21,7 +45,7 @@ public class LambdaExample {
         });
     }
 
-    private static void withLambda(List<Integer> list) {
+    private static void lambda(List<Integer> list) {
         list.removeIf(n -> n > 2);
     }
 

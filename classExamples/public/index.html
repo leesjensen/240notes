@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BYU CS 240</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+      main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        font-size: 3vw;
+        animation: fly-in 1s ease-out;
+      }
+
+      .large {
+        display: block;
+      }
+
+      p {
+        font-size: 2em;
+        display: flex;
+        color: #666;
+      }
+
+      .course {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .courseName {
+        margin: 0.25em;
+        font-size: 3em;
+        font-weight: bold;
+        color: #111;
+      }
+      .courseNum {
+        margin: 0.25em;
+        font-size: 3em;
+        color: #da9512;
+      }
+
+      a {
+        padding: 0 1em 0 0;
+        text-decoration: none;
+        color: #557aa0;
+      }
+
+      .small a {
+        color: #f3cf8c;
+      }
+
+      @keyframes fly-in {
+        0% {
+          transform: translateX(-200%);
+        }
+        80% {
+          transform: translateX(1%);
+        }
+        100% {
+          transform: translateX(0%);
+        }
+      }
+
+    </style>
+</head>
+
+<body>
+<main>
+    <div class="large">
+        <p>Welcome to</p>
+        <div class="course">
+            <div class="courseName">Advanced<br/>Software<br/>Construction</div>
+            <div class="courseNum">240</div>
+        </div>
+        <p id="serviceName">
+            <a href="https://github.com/softwareconstruction240">GitHub</a>
+        </p>
+    </div>
+</main>
+</body>
+</html>
+
