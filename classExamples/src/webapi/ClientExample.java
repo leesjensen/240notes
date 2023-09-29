@@ -9,8 +9,8 @@ import java.util.Map;
 public class ClientExample {
     public static void main(String[] args) throws Exception {
         // Specify the desired endpoint
-        URL url = new URL("http://localhost:8080/name");
-        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+        URI url = new URI("http://localhost:8080/name");
+        HttpURLConnection http = (HttpURLConnection) url.toURL().openConnection();
         http.setRequestMethod("GET");
 
         // Make the request
