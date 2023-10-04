@@ -15,6 +15,7 @@ public class ServerEchoExample {
     private void run() {
         Spark.port(8080);
         Spark.post("/echo", this::echoBody);
+        Spark.get("/echo", (req, res) -> req.url());
     }
 
     private Object echoBody(Request req, Response res) {
