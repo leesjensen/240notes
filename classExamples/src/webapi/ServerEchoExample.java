@@ -7,9 +7,9 @@ import spark.Spark;
 
 import java.util.Map;
 
-public class JsonRequestResponseExample {
+public class ServerEchoExample {
     public static void main(String[] args) {
-        new JsonRequestResponseExample().run();
+        new ServerEchoExample().run();
     }
 
     private void run() {
@@ -25,7 +25,8 @@ public class JsonRequestResponseExample {
     }
 
     private static <T> T getBody(Request request, Class<T> clazz) {
-        var body = new Gson().fromJson(request.body(), clazz);
+        var bodyText = request.body();
+        var body = new Gson().fromJson(bodyText, clazz);
         if (body == null) {
             throw new RuntimeException("missing required body");
         }

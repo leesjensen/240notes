@@ -20,19 +20,19 @@ public class ServerExample {
         Spark.externalStaticFileLocation("public");
 
         // Register handlers for each endpoint using the method reference syntax
+        Spark.post("/name/:name", this::addName);
         Spark.get("/name", this::listNames);
-        Spark.post("/name/:name", this::createName);
         Spark.delete("/name/:name", this::deleteName);
+    }
+
+    private Object addName(Request req, Response res) {
+        names.add(req.params(":name"));
+        return listNames(req, res);
     }
 
     private Object listNames(Request req, Response res) {
         res.type("application/json");
         return new Gson().toJson(Map.of("name", names));
-    }
-
-    private Object createName(Request req, Response res) {
-        names.add(req.params(":name"));
-        return listNames(req, res);
     }
 
 
