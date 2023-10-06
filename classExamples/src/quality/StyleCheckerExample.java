@@ -5,12 +5,8 @@ package quality;
 
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
 
 /**
  * Checks the style as an example
@@ -32,8 +28,8 @@ public class StyleCheckerExample {
         {
 
             var words = input.split(" ");
-        words = Arrays.stream(words).map(w -> {w = Character.toUpperCase(w.charAt(0)) + w.substring(1);return w;
-            }).toArray(String[]::new);
+        words = Arrays.stream(words).map(new Function<String, String>() { public String apply(String w) {w = Character.toUpperCase(w.charAt(0)) + w.substring(1);return w;
+            }}).toArray(String[]::new);
 
         input = String.join(" ", words);
         return input;
