@@ -34,6 +34,7 @@ public class StyleCheckerExample {
 return w;
         }});
 
-        String.join(" ", words);
+        input = String.join(" ", words);
+        return input;
         }
 }
