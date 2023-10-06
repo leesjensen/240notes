@@ -23,16 +23,17 @@ public class StyleCheckerExample {
     public static void main(String[] args)
     {
         var speaker = "james gosling";  var greeting =       "%s says hello!";
+        var title = String.format(greeting, speaker);
 
-        System.out.printf(greeting, speaker);
+        System.out.printf(title);
     }
 
-    String makeTitle(String     input     )
+    static String makeTitle(String     input     )
         {
-        var words = input.split(" ");
-        Arrays.stream(words).map(new Function<String, String>() { public String apply(String w) {w = Character.isUpperCase(w.charAt(0)) + w.substring(0);
-return w;
-        }});
+
+            var words = input.split(" ");
+        words = Arrays.stream(words).map(w -> {w = Character.toUpperCase(w.charAt(0)) + w.substring(1);return w;
+            }).toArray(String[]::new);
 
         input = String.join(" ", words);
         return input;
