@@ -2,8 +2,8 @@ package chess;
 
 public class PositionImpl implements ChessPosition {
 
-    private int row;
-    private int col;
+    private final int row;
+    private final int col;
 
     public PositionImpl(int row, int col) {
         this.row = row;

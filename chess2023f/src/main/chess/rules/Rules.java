@@ -5,7 +5,6 @@ import chess.ChessPiece;
 import java.util.HashMap;
 
 import static chess.ChessPiece.PieceType.*;
-import static chess.ChessPiece.PieceType.PAWN;
 
 public class Rules {
     static private final HashMap<ChessPiece.PieceType, MovementRule> rules = new HashMap<>();
