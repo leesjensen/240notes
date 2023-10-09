@@ -6,7 +6,7 @@ package quality;
  * details at the top, with increasing decomposition towards
  * the bottom.
  *
- * @see FibonacciGood for a real example
+ * @see GoodQualityExample for a real example
  */
 public class LayoutExample {
     /**

@@ -1,6 +1,6 @@
 package quality;
 
-public class FibonacciGood {
+public class GoodQualityExample {
     public static void main(String[] args) {
         if (args.length == 1) {
             try {
