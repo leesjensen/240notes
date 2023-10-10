@@ -3,7 +3,6 @@ package service;
 
 /**
  * Provides endpoints for administrating the application.
- * <p>
  * <p>[DELETE] /db - Clear application data.
  */
 public class AdminService {

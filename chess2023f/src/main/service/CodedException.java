@@ -1,5 +1,8 @@
 package service;
 
+/**
+ * Associates an HTTP status code with an exception message.
+ */
 public class CodedException extends Exception {
     final private int statusCode;
 

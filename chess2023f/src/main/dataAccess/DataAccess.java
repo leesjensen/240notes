@@ -47,7 +47,7 @@ public class DataAccess {
     /**
      * Persist the authorization token. If a token already exists in the database it is overwritten.
      *
-     * @param user
+     * @param user to persist.
      * @return The @AuthData for the user.
      * @throws DataAccessException for database or sql query violations.
      */
@@ -58,7 +58,7 @@ public class DataAccess {
     /**
      * Read a previously persisted authorization token.
      *
-     * @param authToken
+     * @param authToken for the @AuthData to retrieve.
      * @return The @AuthToken for the user or Null if it doesn't exist.
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
@@ -67,18 +67,18 @@ public class DataAccess {
     }
 
     /**
-     * Clears out an authorization token.
+     * Clears out an authorization token. This call is idempotent.
      *
-     * @param authToken
-     * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
+     * @param authData containing the authToken to delete.
+     * @throws DataAccessException for database or sql query violations.
      */
-    public void deleteAuth(AuthData authToken) throws DataAccessException {
+    public void deleteAuth(AuthData authData) throws DataAccessException {
     }
 
     /**
-     * Creates a new game.
+     * Creates a new game. A new gameID is assigned to the returned object.
      *
-     * @param game
+     * @param game to create
      * @throws DataAccessException for database or sql query violations.
      */
     public GameData newGame(GameData game) throws DataAccessException {
@@ -88,17 +88,18 @@ public class DataAccess {
     /**
      * Update an existing game.
      *
-     * @param gameData
+     * @param gameData to update
      * @return the @Game if it was updated, and null if there was no game with that ID.
      * @throws DataAccessException for database or sql query violations.
      */
-    public void updateGame(GameData gameData) throws DataAccessException {
+    public GameData updateGame(GameData gameData) throws DataAccessException {
+        return null;
     }
 
     /**
      * Read a previously persisted Game.
      *
-     * @param gameID
+     * @param gameID for the game to read
      * @return The requested Game or null if not found.
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */

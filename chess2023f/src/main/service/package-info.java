@@ -8,18 +8,22 @@
  * <a href="https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md"></a>Chess Requirements</a>.
  * <p>
  * <b>AdminService</b>
- * <p>[DELETE] /db - Clear application data
+ * <p><code>[DELETE] /db - Clear application data</code>
  * <p>
  * <b>UserService</b>
- * <p>[POST] /user - Register user
+ * <p><code>[POST] /user - Register user</code>
+ * <pre>{ "username":"", "password":"", "email":"" }</pre>
  * <p>
  * <b>AuthService</b>
- * <p>[POST] /session - Create session
- * <p>[DELETE] /session - Delete session
+ * <p><code>[POST] /session - Create session</code>
+ * <pre>{ "username":"", "password":"" }</pre>
+ * <p><code>[DELETE] /session - Delete session</code>
  * <p>
  * <b>GameService</b>
- * <p>[GET] /game - Lists games
- * <p>[POST] / game - Create game
- * <p>[PUT] / - Join game
+ * <p><code>[GET] /game - Lists games</code>
+ * <p><code>[POST] / game - Create game</code>
+ * <pre>{ "gameName":"" }</pre>
+ * <p><code>[PUT] / - Join game</code>
+ * <pre>{ "playerColor":"WHITE/BLACK", "gameID": 1234 }</pre>
  */
 package service;
