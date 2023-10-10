@@ -1,5 +1,8 @@
 package chess;
 
+/**
+ * Concrete implementation of the {@link ChessPosition} interface.
+ */
 public class PositionImpl implements ChessPosition {
 
     private final int row;

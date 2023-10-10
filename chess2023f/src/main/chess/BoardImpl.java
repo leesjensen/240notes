@@ -5,6 +5,11 @@ import java.util.*;
 import static chess.ChessPiece.*;
 import static chess.ChessGame.*;
 
+/**
+ * Concrete implementation of the {@link ChessBoard} interface.
+ * The board is backed by a two-dimensional array of ChessPieces
+ * that make it easy to calculate moves with simple math.
+ */
 public class BoardImpl implements ChessBoard {
     final private ChessPiece[][] squares = new ChessPiece[8][8];
     final private ArrayList<ChessMove> history = new ArrayList<>();

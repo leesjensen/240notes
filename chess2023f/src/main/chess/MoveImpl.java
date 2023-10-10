@@ -1,5 +1,8 @@
 package chess;
 
+/**
+ * Concrete implementation of the {@link ChessMove} interface.
+ */
 public class MoveImpl implements ChessMove {
 
     ChessPosition start;

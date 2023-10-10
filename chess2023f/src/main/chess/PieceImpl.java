@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 
+/**
+ * Concrete implementation of the {@link ChessPiece} interface.
+ */
 public class PieceImpl implements ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType pieceType;

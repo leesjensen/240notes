@@ -21,9 +21,9 @@
  * <p>
  * <b>GameService</b>
  * <p><code>[GET] /game - Lists games</code>
- * <p><code>[POST] / game - Create game</code>
+ * <p><code>[POST] /game - Create game</code>
  * <pre>{ "gameName":"" }</pre>
- * <p><code>[PUT] / - Join game</code>
+ * <p><code>[PUT] /game - Join game</code>
  * <pre>{ "playerColor":"WHITE/BLACK", "gameID": 1234 }</pre>
  */
 package service;

@@ -3,6 +3,11 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Concrete implementation of the {@link ChessGame} interface.
+ * The game is an aggregation of the physical board and the rules
+ * of chess.
+ */
 public class GameImpl implements ChessGame {
 
 
@@ -104,7 +109,7 @@ public class GameImpl implements ChessGame {
         // Does the player have any valid moves?
         for (var placement : board.collection()) {
             if (placement.getPiece().getTeamColor() == teamColor) {
-                if (validMoves(placement.getPos()).size() > 0) {
+                if (!validMoves(placement.getPos()).isEmpty()) {
                     return false;
                 }
             }

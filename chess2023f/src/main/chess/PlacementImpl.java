@@ -2,6 +2,9 @@ package chess;
 
 import java.util.Collection;
 
+/**
+ * Concrete implementation of the {@link ChessPlacement} interface.
+ */
 public class PlacementImpl implements ChessPlacement {
     private final ChessPiece piece;
     private final ChessPosition pos;

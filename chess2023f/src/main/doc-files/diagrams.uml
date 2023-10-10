@@ -1,0 +1,57 @@
+classDiagram
+
+    class HTTPServer {
+        [DELETE]/db
+        [POST]/user
+        [POST]/session
+        [DELETE]/session
+        [GET]/game
+        [POST]/game
+        [PUT]/game
+    }
+
+    class AdminService {
+        clearApplication()
+    }
+
+    class UserService {
+        registerUser()
+    }
+
+    class AuthService {
+        createSession()
+        deleteSession()
+    }
+
+
+    class GameService {
+        listGames()
+        createGame()
+        joinGame()
+    }
+
+    class DataAccess {
+        clear()
+        writeUser(userData)
+        readUser(userData)
+        readAuth(userData)
+        deleteAuth(authData)
+        newGame(gameData)
+        updateGame(gameData)
+        listGames():Collection~GameData~
+        readGame(gameID)
+    }
+
+    HTTPServer --> AdminService
+    HTTPServer --> AuthService
+    HTTPServer --> UserService
+    HTTPServer --> GameService
+
+    AdminService --> DataAccess
+    AuthService --> DataAccess
+    UserService --> DataAccess
+    GameService --> DataAccess
+
+
+
+
