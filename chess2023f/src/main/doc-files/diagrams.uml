@@ -31,6 +31,7 @@ classDiagram
     }
 
     class DataAccess {
+        <<Interface>>
         clear()
         writeUser(userData)
         readUser(userData)
@@ -38,7 +39,7 @@ classDiagram
         deleteAuth(authData)
         newGame(gameData)
         updateGame(gameData)
-        listGames():Collection~GameData~
+        listGames() Collection~GameData~
         readGame(gameID)
     }
 
@@ -52,6 +53,26 @@ classDiagram
     UserService --> DataAccess
     GameService --> DataAccess
 
+    DataAccess <|-- MySQLDataAccess
+    DataAccess <|-- MemoryDataAccess
 
+    class UserData {
+        username
+        password
+        email
+    }
+
+    class GameData {
+        gameID,
+        whiteUsername,
+        blackUsername,
+        gameName,
+        game
+    }
+
+    class AuthData {
+        authToken
+        userID
+    }
 
 

@@ -1,6 +1,7 @@
 package service;
 
 
+import dataAccess.DataAccess;
 import model.UserData;
 
 /**
@@ -9,6 +10,11 @@ import model.UserData;
  * <p>[DELETE] /session - Delete session
  */
 public class AuthService {
+
+    public AuthService(DataAccess dataAccess) {
+
+    }
+
     /**
      * Create a session for a user. If the user already has a session then
      * the previous session is invalidated.

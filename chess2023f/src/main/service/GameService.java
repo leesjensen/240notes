@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import dataAccess.DataAccess;
 import model.GameData;
 import model.UserData;
 
@@ -13,6 +14,11 @@ import java.util.Collection;
  * <p>[PUT] / - Join game
  */
 public class GameService {
+
+    public GameService(DataAccess dataAccess) {
+
+    }
+
     /**
      * List all the games. This includes pending, active and completed games.
      *

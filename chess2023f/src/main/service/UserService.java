@@ -1,5 +1,6 @@
 package service;
 
+import dataAccess.DataAccess;
 import model.UserData;
 
 /**
@@ -7,6 +8,11 @@ import model.UserData;
  * <p>[POST] /user - Register user
  */
 public class UserService {
+
+    public UserService(DataAccess dataAccess) {
+
+    }
+
     /**
      * Persistently registerUser.
      *
