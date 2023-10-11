@@ -26,8 +26,12 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     public UserData writeUser(UserData user) throws DataAccessException {
-        users.put(user.username(), user);
-        return user;
+        if (users.get(user.username()) == null) {
+            users.put(user.username(), user);
+            return user;
+        }
+
+        throw new DataAccessException("duplicate");
     }
 
     public UserData readUser(String userName) throws DataAccessException {

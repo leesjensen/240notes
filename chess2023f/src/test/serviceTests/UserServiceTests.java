@@ -25,6 +25,7 @@ public class UserServiceTests {
         var service = new UserService(new MemoryDataAccess());
         var user = new UserData("juan", "too many secrets", "juan@byu.edu");
 
+        Assertions.assertDoesNotThrow(() -> service.registerUser(user));
         Assertions.assertThrows(CodedException.class, () -> service.registerUser(user));
     }
 }
