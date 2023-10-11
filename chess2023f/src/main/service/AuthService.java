@@ -5,26 +5,16 @@ import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
-import spark.Request;
-import spark.Response;
 
 /**
  * Provides endpoints for authorizing access.
- * <p>[POST] /session - Create session
- * <p>[DELETE] /session - Delete session
  */
-public class AuthService extends Service {
+public class AuthService {
 
     private final DataAccess dataAccess;
 
     public AuthService(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
-    }
-
-    public Object createSession(Request req, Response ignore) throws CodedException {
-        var user = getBody(req, UserData.class);
-        var authData = createSession(user);
-        return send("username", user.username(), "authToken", authData.authToken());
     }
 
     /**
@@ -51,6 +41,19 @@ public class AuthService extends Service {
      *
      * @param authToken that currently represents a user.
      */
-    public void deleteSession(String authToken) {
+    public void deleteSession(String authToken) throws CodedException {
+        try {
+            dataAccess.deleteAuth(authToken);
+        } catch (DataAccessException ex) {
+            throw new CodedException(500, "Internal server error");
+        }
+    }
+
+    public AuthData getAuthData(String authToken) throws CodedException {
+        try {
+            return dataAccess.readAuth(authToken);
+        } catch (DataAccessException ignored) {
+            throw new CodedException(500, "Internal server error");
+        }
     }
 }

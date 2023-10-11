@@ -9,19 +9,12 @@ import spark.Response;
 
 /**
  * Provides endpoints for registering a user.
- * <p>[POST] /user - Register user
  */
-public class UserService extends Service {
+public class UserService {
     final private DataAccess dataAccess;
 
     public UserService(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
-    }
-
-    public Object registerUser(Request req, Response ignore) throws CodedException {
-        var user = getBody(req, UserData.class);
-        var authToken = registerUser(user);
-        return send("username", user.username(), "authToken", authToken.authToken());
     }
 
 

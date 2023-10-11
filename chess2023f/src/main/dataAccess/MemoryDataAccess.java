@@ -18,7 +18,7 @@ public class MemoryDataAccess implements DataAccess {
     final private Map<String, AuthData> auths = new HashMap<>();
     final private Map<Integer, GameData> games = new HashMap<>();
 
-    public MemoryDataAccess() throws DataAccessException {
+    public MemoryDataAccess() {
     }
 
     public void clear() throws DataAccessException {
@@ -44,8 +44,8 @@ public class MemoryDataAccess implements DataAccess {
         return auths.get(authToken);
     }
 
-    public void deleteAuth(AuthData authData) throws DataAccessException {
-        auths.remove(authData.authToken());
+    public void deleteAuth(String authToken) throws DataAccessException {
+        auths.remove(authToken);
     }
 
     public GameData newGame(GameData game) throws DataAccessException {

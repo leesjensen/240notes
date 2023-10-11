@@ -2,7 +2,6 @@ package service;
 
 import com.google.gson.Gson;
 import spark.Request;
-import spark.Response;
 
 import java.util.HashMap;
 import java.util.Map;

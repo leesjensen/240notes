@@ -55,10 +55,10 @@ public interface DataAccess {
     /**
      * Clears out an authorization token. This call is idempotent.
      *
-     * @param authData containing the authToken to delete.
+     * @param authToken to delete.
      * @throws DataAccessException for database or sql query violations.
      */
-    void deleteAuth(AuthData authData) throws DataAccessException;
+    void deleteAuth(String authToken) throws DataAccessException;
 
     /**
      * Creates a new game. A new gameID is assigned to the returned object.
