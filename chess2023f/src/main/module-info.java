@@ -26,4 +26,6 @@
  * @see service
  */
 module chess2023f {
+    requires spark.core;
+    requires com.google.gson;
 }

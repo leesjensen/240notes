@@ -10,4 +10,8 @@ public class CodedException extends Exception {
         super(message);
         this.statusCode = statusCode;
     }
+
+    public int statusCode() {
+        return statusCode;
+    }
 }

@@ -28,11 +28,11 @@ public interface DataAccess {
     /**
      * Read a previously persisted user.
      *
-     * @param user with either ID or username provided.
+     * @param userName for the desired user.
      * @return The requested @User
      * @throws DataAccessException for database or sql query violations (e.g. no error for not found).
      */
-    UserData readUser(UserData user) throws DataAccessException;
+    UserData readUser(String userName) throws DataAccessException;
 
     /**
      * Persist the authorization token. If a token already exists in the database it is overwritten.
@@ -71,11 +71,11 @@ public interface DataAccess {
     /**
      * Update an existing game.
      *
-     * @param gameData to update
+     * @param game to update
      * @return the @Game if it was updated, and null if there was no game with that ID.
      * @throws DataAccessException for database or sql query violations.
      */
-    GameData updateGame(GameData gameData) throws DataAccessException;
+    GameData updateGame(GameData game) throws DataAccessException;
 
     /**
      * Read a previously persisted Game.
