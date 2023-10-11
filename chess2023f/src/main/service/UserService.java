@@ -6,6 +6,7 @@ import model.AuthData;
 import model.UserData;
 import spark.Request;
 import spark.Response;
+import spark.utils.StringUtils;
 
 /**
  * Provides endpoints for registering a user.
@@ -26,6 +27,9 @@ public class UserService {
      * @throws CodedException if a user with the same username already exists
      */
     public AuthData registerUser(UserData user) throws CodedException {
+        if (StringUtils.isEmpty(user.username())) throw new CodedException(400, "missing username");
+        if (StringUtils.isEmpty(user.password())) throw new CodedException(400, "missing password");
+
         try {
             user = dataAccess.writeUser(user);
             return dataAccess.writeAuth(user);
