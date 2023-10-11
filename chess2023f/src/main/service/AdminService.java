@@ -2,6 +2,8 @@ package service;
 
 
 import dataAccess.DataAccess;
+import spark.Request;
+import spark.Response;
 
 /**
  * Provides endpoints for administrating the application.
@@ -9,8 +11,15 @@ import dataAccess.DataAccess;
  */
 public class AdminService {
 
-    public AdminService(DataAccess dataAccess) {
+    private final DataAccess dataAccess;
 
+    public AdminService(DataAccess dataAccess) {
+        this.dataAccess = dataAccess;
+    }
+
+    public Object clearApplication(Request ignoreReq, Response ignoreRes) {
+        clearApplication();
+        return null;
     }
 
     /**
@@ -19,5 +28,6 @@ public class AdminService {
      * called.
      */
     public void clearApplication() {
+
     }
 }

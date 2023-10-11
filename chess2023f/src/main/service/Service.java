@@ -21,7 +21,7 @@ public class Service {
         for (var i = 0; i + 1 < props.length; i = i + 2) {
             map.put(props[i], props[i + 1]);
         }
-        return send(map);
+        return new Gson().toJson(map);
     }
 
 }

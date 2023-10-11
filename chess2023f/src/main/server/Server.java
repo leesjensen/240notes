@@ -25,9 +25,12 @@ public class Server {
             Spark.port(8080);
             Spark.externalStaticFileLocation("web");
 
+            Spark.delete("/db", adminService::clearApplication);
             Spark.post("/user", userService::registerUser);
+            Spark.post("/session", authService::createSession);
 
             Spark.exception(CodedException.class, this::errorHandler);
+            Spark.exception(Exception.class, (e, req, res) -> errorHandler(new CodedException(500, e.getMessage()), req, res));
             Spark.notFound((req, res) -> {
                 var msg = String.format("[%s] %s not found", req.requestMethod(), req.pathInfo());
                 return errorHandler(new CodedException(404, msg), req, res);

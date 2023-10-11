@@ -18,7 +18,7 @@ public class UserService extends Service {
         this.dataAccess = dataAccess;
     }
 
-    public Object registerUser(Request req, Response res) throws CodedException {
+    public Object registerUser(Request req, Response ignore) throws CodedException {
         var user = getBody(req, UserData.class);
         var authToken = registerUser(user);
         return send("username", user.username(), "authToken", authToken.authToken());
