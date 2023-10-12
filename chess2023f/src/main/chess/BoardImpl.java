@@ -11,8 +11,8 @@ import static chess.ChessGame.*;
  * that make it easy to calculate moves with simple math.
  */
 public class BoardImpl implements ChessBoard {
-    final private ChessPiece[][] squares = new ChessPiece[8][8];
-    final private ArrayList<ChessMove> history = new ArrayList<>();
+    final public ChessPiece[][] squares = new ChessPiece[8][8];
+    final public ArrayList<ChessMove> history = new ArrayList<>();
 
 
     public BoardImpl() {

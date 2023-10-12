@@ -10,8 +10,8 @@ import java.util.Objects;
  * Concrete implementation of the {@link ChessPiece} interface.
  */
 public class PieceImpl implements ChessPiece {
-    private final ChessGame.TeamColor pieceColor;
-    private final ChessPiece.PieceType pieceType;
+    public final ChessGame.TeamColor pieceColor;
+    public final ChessPiece.PieceType pieceType;
 
 
     public PieceImpl(ChessGame.TeamColor pieceColor, ChessPiece.PieceType pieceType) {

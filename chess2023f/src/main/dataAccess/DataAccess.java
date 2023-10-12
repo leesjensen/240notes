@@ -63,10 +63,10 @@ public interface DataAccess {
     /**
      * Creates a new game. A new gameID is assigned to the returned object.
      *
-     * @param game to create
+     * @param gameName to create
      * @throws DataAccessException for database or sql query violations.
      */
-    GameData newGame(GameData game) throws DataAccessException;
+    GameData newGame(String gameName) throws DataAccessException;
 
     /**
      * Update an existing game.

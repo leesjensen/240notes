@@ -29,4 +29,6 @@ module chess2023f {
     requires spark.core;
     requires com.google.gson;
     exports model;
+    exports chess;
+    exports server;
 }

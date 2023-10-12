@@ -1,9 +1,11 @@
 package server;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.MemoryDataAccess;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import service.*;
 
@@ -70,9 +72,9 @@ public class Server {
     /**
      * Endpoint for [DELETE] /db
      */
-    public Object clearApplication(Request ignoreReq, Response ignoreRes) throws CodedException {
+    public Object clearApplication(Request ignoreReq, Response res) throws CodedException {
         adminService.clearApplication();
-        return null;
+        return send();
     }
 
     /**
@@ -99,9 +101,8 @@ public class Server {
      */
     public Object deleteSession(Request req, Response ignore) throws CodedException {
         var authData = throwIfUnauthorized(req);
-        var user = getBody(req, UserData.class);
         authService.deleteSession(authData.authToken());
-        return send("username", user.username(), "authToken", authData.authToken());
+        return send("username", authData.username(), "authToken", authData.authToken());
     }
 
 
@@ -110,7 +111,8 @@ public class Server {
      */
     public Object listGames(Request req, Response ignoreRes) throws CodedException {
         throwIfUnauthorized(req);
-        return null;
+        var games = gameService.listGames();
+        return send("games", games.toArray());
     }
 
     /**
@@ -118,15 +120,19 @@ public class Server {
      */
     public Object createGame(Request req, Response ignoreRes) throws CodedException {
         throwIfUnauthorized(req);
-        return null;
+        var gameData = getBody(req, GameData.class);
+        gameData = gameService.createGame(gameData.gameName());
+        return send("gameID", gameData.gameID());
     }
 
     /**
      * Endpoint for [PUT] /
      */
     public Object joinGame(Request req, Response ignoreRes) throws CodedException {
-        throwIfUnauthorized(req);
-        return null;
+        var authData = throwIfUnauthorized(req);
+        var joinReq = getBody(req, JoinRequest.class);
+        gameService.joinGame(authData.username(), joinReq.color(), joinReq.gameID());
+        return send("success", true);
     }
 
     private <T> T getBody(Request request, Class<T> clazz) throws CodedException {

@@ -11,8 +11,8 @@ import java.util.HashSet;
 public class GameImpl implements ChessGame {
 
 
-    private ChessBoard board;
-    private TeamColor turn;
+    public ChessBoard board;
+    public TeamColor turn;
 
 
     public GameImpl() {

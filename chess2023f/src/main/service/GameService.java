@@ -2,8 +2,8 @@ package service;
 
 import chess.ChessGame;
 import dataAccess.DataAccess;
+import dataAccess.DataAccessException;
 import model.GameData;
-import model.UserData;
 
 import java.util.Collection;
 
@@ -15,8 +15,10 @@ import java.util.Collection;
  */
 public class GameService {
 
-    public GameService(DataAccess dataAccess) {
+    private final DataAccess dataAccess;
 
+    public GameService(DataAccess dataAccess) {
+        this.dataAccess = dataAccess;
     }
 
     /**
@@ -24,8 +26,12 @@ public class GameService {
      *
      * @return the collection of games.
      */
-    public Collection<GameData> listGames() {
-        return null;
+    public Collection<GameData> listGames() throws CodedException {
+        try {
+            return dataAccess.listGames();
+        } catch (DataAccessException ex) {
+            throw new CodedException(500, "Server error");
+        }
     }
 
     /**
@@ -34,8 +40,12 @@ public class GameService {
      * @param gameName to create
      * @return the newly created game.
      */
-    public GameData createGame(String gameName) {
-        return null;
+    public GameData createGame(String gameName) throws CodedException {
+        try {
+            return dataAccess.newGame(gameName);
+        } catch (DataAccessException ex) {
+            throw new CodedException(500, "Server error");
+        }
     }
 
     /**
@@ -43,11 +53,38 @@ public class GameService {
      * adds the caller as the requested color to the game. If no color is specified
      * the user is joined as an observer. This request is idempotent.
      *
-     * @param user  joining the game.
-     * @param color to join the game as. If null then the user is joined as an observer.
+     * @param username joining the game.
+     * @param color    to join the game as. If null then the user is joined as an observer.
      * @return the updated game.
      */
-    public GameData joinGame(UserData user, ChessGame.TeamColor color, String gameID) {
-        return null;
+    public GameData joinGame(String username, ChessGame.TeamColor color, int gameID) throws CodedException {
+        try {
+            var gameData = dataAccess.readGame(gameID);
+            if (gameData == null) {
+                throw new CodedException(400, "Unknown game");
+            } else if (color == null) {
+                return gameData;
+            } else if (gameData.isGameOver()) {
+                throw new CodedException(403, "Game is over");
+            } else {
+                if (color == ChessGame.TeamColor.WHITE) {
+                    if (gameData.whiteUsername() == null || gameData.whiteUsername().equals(username)) {
+                        gameData = gameData.setWhite(username);
+                    } else {
+                        throw new CodedException(403, "Color taken");
+                    }
+                } else if (color == ChessGame.TeamColor.BLACK) {
+                    if (gameData.blackUsername() == null || gameData.blackUsername().equals(username)) {
+                        gameData.setBlack(username);
+                    } else {
+                        throw new CodedException(403, "Color taken");
+                    }
+                }
+                return dataAccess.updateGame(gameData);
+            }
+        } catch (DataAccessException ignored) {
+            throw new CodedException(500, "Server error");
+        }
     }
+
 }
