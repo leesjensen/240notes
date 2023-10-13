@@ -4,8 +4,6 @@ import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
-import spark.Request;
-import spark.Response;
 import spark.utils.StringUtils;
 
 /**

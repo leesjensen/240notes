@@ -1,6 +1,5 @@
 package server;
 
-import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.MemoryDataAccess;
@@ -15,11 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server {
-    DataAccess dataAccess;
-    UserService userService;
-    GameService gameService;
-    AdminService adminService;
-    AuthService authService;
+    final DataAccess dataAccess;
+    final UserService userService;
+    final GameService gameService;
+    final AdminService adminService;
+    final AuthService authService;
 
     public static void main(String[] args) {
         new Server(new MemoryDataAccess()).run();
@@ -79,6 +78,7 @@ public class Server {
 
     /**
      * Endpoint for [POST] /user - Register user
+     * <pre>{ "username":"", "password":"", "email":"" }</pre>
      */
     private Object registerUser(Request req, Response ignore) throws CodedException {
         var user = getBody(req, UserData.class);
@@ -89,6 +89,7 @@ public class Server {
 
     /**
      * Endpoint for [POST] /session
+     * <pre>{ "username":"", "password":"" }</pre>
      */
     public Object createSession(Request req, Response ignore) throws CodedException {
         var user = getBody(req, UserData.class);
@@ -98,6 +99,7 @@ public class Server {
 
     /**
      * Endpoint for [DELETE] /session
+     * Authorization header required.
      */
     public Object deleteSession(Request req, Response ignore) throws CodedException {
         var authData = throwIfUnauthorized(req);
@@ -108,6 +110,7 @@ public class Server {
 
     /**
      * Endpoint for [GET] /game
+     * Authorization header required.
      */
     public Object listGames(Request req, Response ignoreRes) throws CodedException {
         throwIfUnauthorized(req);
@@ -117,6 +120,7 @@ public class Server {
 
     /**
      * Endpoint for [POST] / game
+     * Authorization header required.
      */
     public Object createGame(Request req, Response ignoreRes) throws CodedException {
         throwIfUnauthorized(req);
@@ -127,12 +131,14 @@ public class Server {
 
     /**
      * Endpoint for [PUT] /
+     * Authorization header required.
+     * <pre>{ "playerColor":"WHITE/BLACK/empty", "gameID": 1234 }</pre>
      */
     public Object joinGame(Request req, Response ignoreRes) throws CodedException {
         var authData = throwIfUnauthorized(req);
         var joinReq = getBody(req, JoinRequest.class);
-        gameService.joinGame(authData.username(), joinReq.color(), joinReq.gameID());
-        return send("success", true);
+        var gameData = gameService.joinGame(authData.username(), joinReq.playerColor(), joinReq.gameID());
+        return send("game", gameData);
     }
 
     private <T> T getBody(Request request, Class<T> clazz) throws CodedException {

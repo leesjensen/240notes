@@ -5,9 +5,9 @@ package chess;
  */
 public class MoveImpl implements ChessMove {
 
-    ChessPosition start;
-    ChessPosition end;
-    ChessPiece.PieceType promotionType;
+    final ChessPosition start;
+    final ChessPosition end;
+    final ChessPiece.PieceType promotionType;
 
     public MoveImpl(ChessPosition start, ChessPosition end, ChessPiece.PieceType promotionPiece) {
         this.start = new PositionImpl(start.getRow(), start.getColumn());

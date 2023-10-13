@@ -75,7 +75,7 @@ public class GameService {
                     }
                 } else if (color == ChessGame.TeamColor.BLACK) {
                     if (gameData.blackUsername() == null || gameData.blackUsername().equals(username)) {
-                        gameData.setBlack(username);
+                        gameData = gameData.setBlack(username);
                     } else {
                         throw new CodedException(403, "Color taken");
                     }

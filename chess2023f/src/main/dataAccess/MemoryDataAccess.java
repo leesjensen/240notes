@@ -24,8 +24,10 @@ public class MemoryDataAccess implements DataAccess {
     public MemoryDataAccess() {
     }
 
-    public void clear() throws DataAccessException {
+    public void clear() {
         users.clear();
+        auths.clear();
+        games.clear();
     }
 
     public UserData writeUser(UserData user) throws DataAccessException {
@@ -37,25 +39,25 @@ public class MemoryDataAccess implements DataAccess {
         throw new DataAccessException("duplicate");
     }
 
-    public UserData readUser(String userName) throws DataAccessException {
+    public UserData readUser(String userName) {
         return users.get(userName);
     }
 
-    public AuthData writeAuth(UserData user) throws DataAccessException {
+    public AuthData writeAuth(UserData user) {
         var auth = new AuthData(AuthData.generateToken(), user.username());
         auths.put(auth.authToken(), auth);
         return auth;
     }
 
-    public AuthData readAuth(String authToken) throws DataAccessException {
+    public AuthData readAuth(String authToken) {
         return auths.get(authToken);
     }
 
-    public void deleteAuth(String authToken) throws DataAccessException {
+    public void deleteAuth(String authToken) {
         auths.remove(authToken);
     }
 
-    public GameData newGame(String gameName) throws DataAccessException {
+    public GameData newGame(String gameName) {
         var gameID = nextID++;
         var gameData = new GameData(gameID, null, null, gameName, new GameImpl(), GameData.State.UNDECIDED);
         games.put(gameData.gameID(), gameData);
@@ -64,16 +66,16 @@ public class MemoryDataAccess implements DataAccess {
         return gameData;
     }
 
-    public GameData updateGame(GameData game) throws DataAccessException {
+    public GameData updateGame(GameData game) {
         games.put(game.gameID(), game);
         return game;
     }
 
-    public GameData readGame(int gameID) throws DataAccessException {
+    public GameData readGame(int gameID) {
         return games.get(gameID);
     }
 
-    public Collection<GameData> listGames() throws DataAccessException {
+    public Collection<GameData> listGames() {
         return games.values();
     }
 }

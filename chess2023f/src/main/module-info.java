@@ -31,4 +31,6 @@ module chess2023f {
     exports model;
     exports chess;
     exports server;
+    exports service;
+    exports dataAccess;
 }
