@@ -6,6 +6,13 @@
 
 # Instruction
 
+## Ideas
+
+- What if we dropped spelling corrector and just used Phase one, or part of phase one as the gateway test?
+- What if we had a `Pet Shop` that was the example project used through the whole class. That would parallel the chess project, but not actually implement Chess for them.
+
+## Record of experience
+
 | Week | Day | Topics                                                                                      | Notes                                                                                                                                                                                                                                                                                                                                                   |
 | ---- | --- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1    | 1   | `Course Intro`, `Java Fundamentals`                                                         | This felt a bit rushed. I would rather have some assignment in the first week to build some deliverable. Perhaps if we dropped Spelling Corrector we could have a `phase -1` that introduced the Chess project, talked about Git, set up your Git repo, and created the intelliJ project. The deliverable would be their GitHub URL with a few commits. |
@@ -707,48 +714,48 @@ To set up the client WebSocket communication we use the JDK javax.websocket.endp
   "board": {
     "squares": [
       [
-        { "pieceColor": "WHITE", "type": "ROOK" },
-        { "pieceColor": "WHITE", "type": "KNIGHT" },
-        { "pieceColor": "WHITE", "type": "BISHOP" },
-        { "pieceColor": "WHITE", "type": "QUEEN" },
-        { "pieceColor": "WHITE", "type": "KING" },
-        { "pieceColor": "WHITE", "type": "BISHOP" },
-        { "pieceColor": "WHITE", "type": "KNIGHT" },
-        { "pieceColor": "WHITE", "type": "ROOK" }
+        {"pieceColor": "WHITE", "type": "ROOK"},
+        {"pieceColor": "WHITE", "type": "KNIGHT"},
+        {"pieceColor": "WHITE", "type": "BISHOP"},
+        {"pieceColor": "WHITE", "type": "QUEEN"},
+        {"pieceColor": "WHITE", "type": "KING"},
+        {"pieceColor": "WHITE", "type": "BISHOP"},
+        {"pieceColor": "WHITE", "type": "KNIGHT"},
+        {"pieceColor": "WHITE", "type": "ROOK"}
       ],
       [
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" }
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"}
       ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" }
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"}
       ],
       [
-        { "pieceColor": "BLACK", "type": "ROOK" },
-        { "pieceColor": "BLACK", "type": "KNIGHT" },
-        { "pieceColor": "BLACK", "type": "BISHOP" },
-        { "pieceColor": "BLACK", "type": "QUEEN" },
-        { "pieceColor": "BLACK", "type": "KING" },
-        { "pieceColor": "BLACK", "type": "BISHOP" },
-        { "pieceColor": "BLACK", "type": "KNIGHT" },
-        { "pieceColor": "BLACK", "type": "ROOK" }
+        {"pieceColor": "BLACK", "type": "ROOK"},
+        {"pieceColor": "BLACK", "type": "KNIGHT"},
+        {"pieceColor": "BLACK", "type": "BISHOP"},
+        {"pieceColor": "BLACK", "type": "QUEEN"},
+        {"pieceColor": "BLACK", "type": "KING"},
+        {"pieceColor": "BLACK", "type": "BISHOP"},
+        {"pieceColor": "BLACK", "type": "KNIGHT"},
+        {"pieceColor": "BLACK", "type": "ROOK"}
       ]
     ],
     "history": []
