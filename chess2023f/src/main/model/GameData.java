@@ -1,6 +1,7 @@
 package model;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 
 /**
  * Represents the serialization of a game. This includes who the players are, and the game itself.
@@ -24,5 +25,10 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
 
     public GameData setBlack(String userName) {
         return new GameData(this.gameID, this.whiteUsername, userName, this.gameName, this.game, this.state);
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

@@ -1,5 +1,7 @@
 package chess;
 
+import com.google.gson.Gson;
+
 import java.util.*;
 
 import static chess.ChessPiece.*;
@@ -240,5 +242,11 @@ public class BoardImpl implements ChessBoard {
     @Override
     public int hashCode() {
         return 31 * Arrays.deepHashCode(squares);
+    }
+
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

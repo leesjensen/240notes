@@ -39,12 +39,12 @@ public class MemoryDataAccess implements DataAccess {
         throw new DataAccessException("duplicate");
     }
 
-    public UserData readUser(String userName) {
-        return users.get(userName);
+    public UserData readUser(String username) {
+        return users.get(username);
     }
 
-    public AuthData writeAuth(UserData user) {
-        var auth = new AuthData(AuthData.generateToken(), user.username());
+    public AuthData writeAuth(String username) {
+        var auth = new AuthData(AuthData.generateToken(), username);
         auths.put(auth.authToken(), auth);
         return auth;
     }
@@ -66,9 +66,8 @@ public class MemoryDataAccess implements DataAccess {
         return gameData;
     }
 
-    public GameData updateGame(GameData game) {
+    public void updateGame(GameData game) {
         games.put(game.gameID(), game);
-        return game;
     }
 
     public GameData readGame(int gameID) {

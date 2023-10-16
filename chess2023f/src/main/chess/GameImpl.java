@@ -1,5 +1,12 @@
 package chess;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -18,6 +25,34 @@ public class GameImpl implements ChessGame {
     public GameImpl() {
         this.board = new BoardImpl();
         this.turn = TeamColor.WHITE;
+    }
+
+
+    private static class ChessBoardAdapter extends TypeAdapter<ChessBoard> {
+        public void write(JsonWriter out, ChessBoard value) {
+        }
+
+        public ChessBoard read(JsonReader in) throws IOException {
+            return new Gson().fromJson(in, BoardImpl.class);
+        }
+    }
+
+    private static class ChessPieceAdapter extends TypeAdapter<ChessPiece> {
+        public void write(JsonWriter out, ChessPiece value) {
+        }
+
+        public ChessPiece read(JsonReader in) throws IOException {
+            return new Gson().fromJson(in, PieceImpl.class);
+        }
+    }
+
+    public static GameImpl Create(String serializedGame) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
+        gsonBuilder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
+        Gson gson = gsonBuilder.create();
+
+        return gson.fromJson(serializedGame, GameImpl.class);
     }
 
 
@@ -125,5 +160,11 @@ public class GameImpl implements ChessGame {
     @Override
     public ChessBoard getBoard() {
         return board;
+    }
+
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

@@ -80,8 +80,9 @@ public class GameService {
                         throw new CodedException(403, "Color taken");
                     }
                 }
-                return dataAccess.updateGame(gameData);
+                dataAccess.updateGame(gameData);
             }
+            return gameData;
         } catch (DataAccessException ignored) {
             throw new CodedException(500, "Server error");
         }

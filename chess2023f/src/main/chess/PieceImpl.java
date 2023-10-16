@@ -1,6 +1,7 @@
 package chess;
 
 import chess.rules.Rules;
+import com.google.gson.Gson;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -51,5 +52,10 @@ public class PieceImpl implements ChessPiece {
     @Override
     public int hashCode() {
         return Objects.hash(pieceColor, pieceType);
+    }
+    
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

@@ -30,7 +30,7 @@ public class UserService {
 
         try {
             user = dataAccess.writeUser(user);
-            return dataAccess.writeAuth(user);
+            return dataAccess.writeAuth(user.username());
         } catch (DataAccessException ex) {
             throw new CodedException(403, "Unable to register user");
         }

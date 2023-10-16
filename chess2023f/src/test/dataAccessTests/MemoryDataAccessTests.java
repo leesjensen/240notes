@@ -24,7 +24,7 @@ public class MemoryDataAccessTests {
         var db = new MemoryDataAccess();
         var user = new UserData("juan", "too many secrets", "juan@byu.edu");
 
-        var authData = db.writeAuth(user);
+        var authData = db.writeAuth(user.username());
         Assertions.assertEquals(user.username(), authData.username());
         Assertions.assertFalse(authData.authToken().isEmpty());
 
@@ -32,7 +32,7 @@ public class MemoryDataAccessTests {
         Assertions.assertEquals(user.username(), returnedAuthData.username());
         Assertions.assertEquals(authData.authToken(), returnedAuthData.authToken());
 
-        var secondAuthData = db.writeAuth(user);
+        var secondAuthData = db.writeAuth(user.username());
         Assertions.assertEquals(user.username(), secondAuthData.username());
         Assertions.assertNotEquals(authData.authToken(), secondAuthData.authToken());
     }
@@ -43,14 +43,11 @@ public class MemoryDataAccessTests {
         var db = new MemoryDataAccess();
 
         var game = db.newGame("blitz");
-
-        game.setBlack("joe");
-
-        var updatedGame = db.updateGame(game);
-        Assertions.assertEquals(updatedGame.blackUsername(), game.blackUsername());
+        var updatedGame = game.setBlack("joe");
+        db.updateGame(updatedGame);
 
         var retrievedGame = db.readGame(game.gameID());
-        Assertions.assertEquals(retrievedGame, game);
+        Assertions.assertEquals(retrievedGame, updatedGame);
     }
 
 

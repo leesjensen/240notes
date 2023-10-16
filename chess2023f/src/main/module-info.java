@@ -11,7 +11,7 @@
  * <img alt="Top Level Design" src="doc-files/top-level-design.png" />
  * <p>The server is further decomposed into three distinct components.</p>
  * <ol>
- * <li><b>HTTPServer</b> - Handles incoming HTTP requests and routes to the services.</li>
+ * <li><b>{@link server Server}</b> - Handles incoming HTTP requests and routes to the services.</li>
  * <li><b>{@link service Services}</b> - Handles service endpoint requests by making database requests.</li>
  * <li><b>{@link dataAccess DataAccess}</b> - Handles database requests.</li>
  * <li><b>{@link model Model}</b> - All of the domain model objects. These are used for persisting data.</li>
@@ -28,6 +28,7 @@
 module chess2023f {
     requires spark.core;
     requires com.google.gson;
+    requires java.sql;
     exports model;
     exports chess;
     exports server;

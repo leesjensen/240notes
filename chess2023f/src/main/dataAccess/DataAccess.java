@@ -37,11 +37,11 @@ public interface DataAccess {
     /**
      * Persist the authorization token. If a token already exists in the database it is overwritten.
      *
-     * @param user to persist.
+     * @param username to persist.
      * @return The @AuthData for the user.
      * @throws DataAccessException for database or sql query violations.
      */
-    AuthData writeAuth(UserData user) throws DataAccessException;
+    AuthData writeAuth(String username) throws DataAccessException;
 
     /**
      * Read a previously persisted authorization token.
@@ -75,7 +75,7 @@ public interface DataAccess {
      * @return the @Game if it was updated, and null if there was no game with that ID.
      * @throws DataAccessException for database or sql query violations.
      */
-    GameData updateGame(GameData game) throws DataAccessException;
+    void updateGame(GameData game) throws DataAccessException;
 
     /**
      * Read a previously persisted Game.
