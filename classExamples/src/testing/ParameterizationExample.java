@@ -7,12 +7,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class ParameterizationExample {
 
     @ParameterizedTest
-    @ValueSource(classes = {ArrayList.class, LinkedList.class})
-    public void writeReadAuth(Class<? extends List> listClass) throws Exception {
+    @ValueSource(classes = {ArrayList.class, LinkedList.class, Stack.class})
+    public void addAndGetToList(Class<? extends List> listClass) throws Exception {
         var list = listClass.getDeclaredConstructor().newInstance();
         var expectedItem = "item";
 
