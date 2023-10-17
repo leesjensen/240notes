@@ -6,7 +6,6 @@ import model.GameData;
 import model.UserData;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,8 +42,8 @@ public class MySqlDataAccess implements DataAccess {
 
     public UserData readUser(String username) throws DataAccessException {
         var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement("SELECT userID, password, email from `user` WHERE username=?")) {
-            preparedStatement.setString(2, username);
+        try (var preparedStatement = conn.prepareStatement("SELECT password, email from `user` WHERE username=?")) {
+            preparedStatement.setString(1, username);
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
                     var password = rs.getString("password");
@@ -74,7 +73,7 @@ public class MySqlDataAccess implements DataAccess {
             preparedStatement.setString(1, authToken);
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    return new AuthData(rs.getString("username"), authToken);
+                    return new AuthData(authToken, rs.getString("username"));
                 }
             }
         } catch (Exception e) {
@@ -95,8 +94,8 @@ public class MySqlDataAccess implements DataAccess {
         var state = GameData.State.UNDECIDED;
         var ID = executeUpdate("INSERT INTO `game` (gameName, whitePlayerName, blackPlayerName, game, state) VALUES (?, ?, ?, ?, ?)",
                 gameName,
-                "",
-                "",
+                null,
+                null,
                 game.toString(),
                 state.toString());
         if (ID != 0) {
@@ -112,7 +111,7 @@ public class MySqlDataAccess implements DataAccess {
                 gameData.whiteUsername(),
                 gameData.blackUsername(),
                 gameData.game().toString(),
-                gameData.state(),
+                gameData.state().toString(),
                 gameData.gameID());
     }
 
@@ -213,7 +212,7 @@ public class MySqlDataAccess implements DataAccess {
         }
     }
 
-    private void createDatabase(Connection conn) throws SQLException, DataAccessException {
+    private void createDatabase(Connection conn) throws SQLException {
         try (var createStmt = conn.createStatement()) {
             createStmt.execute("CREATE DATABASE IF NOT EXISTS `" + Database.DB_NAME + "`");
         }
@@ -255,9 +254,6 @@ public class MySqlDataAccess implements DataAccess {
 
             return 0;
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                return 0;
-            }
             throw new DataAccessException(String.format("executeUpdate error: %s, %s", statement, e.getMessage()));
         } finally {
             db.returnConnection(conn);
