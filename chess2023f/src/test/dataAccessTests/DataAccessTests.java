@@ -1,27 +1,35 @@
 package dataAccessTests;
 
-import dataAccess.DataAccessException;
-import dataAccess.MemoryDataAccess;
+import dataAccess.*;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.*;
 
-public class MemoryDataAccessTests {
+public class DataAccessTests {
 
-    @Test
-    public void writeReadUser() throws DataAccessException {
-        var db = new MemoryDataAccess();
+    private DataAccess startDB(Class<? extends DataAccess> databaseClass) throws Exception {
+        DataAccess db = databaseClass.getDeclaredConstructor().newInstance();
+        db.clear();
+        return db;
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAccess.class, MemoryDataAccess.class})
+    public void writeReadUser(Class<? extends DataAccess> dbClass) throws Exception {
+        DataAccess db = startDB(dbClass);
         var user = new UserData("juan", "too many secrets", "juan@byu.edu");
 
         Assertions.assertEquals(user, db.writeUser(user));
         Assertions.assertEquals(user, db.readUser(user.username()));
     }
 
-    @Test
-    public void writeReadAuth() {
-        var db = new MemoryDataAccess();
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAccess.class, MemoryDataAccess.class})
+    public void writeReadAuth(Class<? extends DataAccess> dbClass) throws Exception {
+        DataAccess db = startDB(dbClass);
         var user = new UserData("juan", "too many secrets", "juan@byu.edu");
 
         var authData = db.writeAuth(user.username());
@@ -38,9 +46,10 @@ public class MemoryDataAccessTests {
     }
 
 
-    @Test
-    public void writeReadGame() {
-        var db = new MemoryDataAccess();
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAccess.class, MemoryDataAccess.class})
+    public void writeReadGame(Class<? extends DataAccess> dbClass) throws Exception {
+        DataAccess db = startDB(dbClass);
 
         var game = db.newGame("blitz");
         var updatedGame = game.setBlack("joe");
@@ -51,9 +60,10 @@ public class MemoryDataAccessTests {
     }
 
 
-    @Test
-    public void listGame() {
-        var db = new MemoryDataAccess();
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAccess.class, MemoryDataAccess.class})
+    public void listGame(Class<? extends DataAccess> dbClass) throws Exception {
+        DataAccess db = startDB(dbClass);
 
         var games = List.of(db.newGame("blitz"), db.newGame("fisher"), db.newGame("lightning"));
         var returnedGames = db.listGames();

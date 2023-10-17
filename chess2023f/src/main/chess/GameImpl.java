@@ -6,9 +6,9 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * Concrete implementation of the {@link ChessGame} interface.
@@ -27,24 +27,6 @@ public class GameImpl implements ChessGame {
         this.turn = TeamColor.WHITE;
     }
 
-
-    private static class ChessBoardAdapter extends TypeAdapter<ChessBoard> {
-        public void write(JsonWriter out, ChessBoard value) {
-        }
-
-        public ChessBoard read(JsonReader in) throws IOException {
-            return new Gson().fromJson(in, BoardImpl.class);
-        }
-    }
-
-    private static class ChessPieceAdapter extends TypeAdapter<ChessPiece> {
-        public void write(JsonWriter out, ChessPiece value) {
-        }
-
-        public ChessPiece read(JsonReader in) throws IOException {
-            return new Gson().fromJson(in, PieceImpl.class);
-        }
-    }
 
     public static GameImpl Create(String serializedGame) {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -162,6 +144,43 @@ public class GameImpl implements ChessGame {
         return board;
     }
 
+
+    private static class ChessBoardAdapter extends TypeAdapter<ChessBoard> {
+        public void write(JsonWriter out, ChessBoard value) {
+        }
+
+        public ChessBoard read(JsonReader in) {
+            return new Gson().fromJson(in, BoardImpl.class);
+        }
+    }
+
+    private static class ChessPieceAdapter extends TypeAdapter<ChessPiece> {
+        public void write(JsonWriter out, ChessPiece value) {
+        }
+
+        public ChessPiece read(JsonReader in) {
+            return new Gson().fromJson(in, PieceImpl.class);
+        }
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GameImpl game = (GameImpl) o;
+
+        if (!Objects.equals(board, game.board)) return false;
+        return turn == game.turn;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = board != null ? board.hashCode() : 0;
+        result = 31 * result + (turn != null ? turn.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {

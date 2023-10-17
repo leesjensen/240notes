@@ -99,7 +99,7 @@ public class MySqlDataAccess implements DataAccess {
                 game.toString(),
                 state.toString());
         if (ID != 0) {
-            return new GameData(ID, "", "", gameName, game, state);
+            return new GameData(ID, null, null, gameName, game, state);
         }
 
         return null;

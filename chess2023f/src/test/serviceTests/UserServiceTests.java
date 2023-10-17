@@ -2,7 +2,6 @@ package serviceTests;
 
 import dataAccess.DataAccessException;
 import dataAccess.MemoryDataAccess;
-import dataAccessTests.MemoryDataAccessTests;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,7 @@ import service.UserService;
 public class UserServiceTests {
 
     @Test
-    public void registerUser() throws DataAccessException {
+    public void registerUser() {
         var service = new UserService(new MemoryDataAccess());
         var user = new UserData("juan", "too many secrets", "juan@byu.edu");
 
@@ -21,7 +20,7 @@ public class UserServiceTests {
 
 
     @Test
-    public void registerUserDuplicate() throws DataAccessException {
+    public void registerUserDuplicate() {
         var service = new UserService(new MemoryDataAccess());
         var user = new UserData("juan", "too many secrets", "juan@byu.edu");
 
