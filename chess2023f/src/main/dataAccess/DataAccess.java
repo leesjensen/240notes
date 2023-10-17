@@ -72,7 +72,6 @@ public interface DataAccess {
      * Update an existing game.
      *
      * @param game to update
-     * @return the @Game if it was updated, and null if there was no game with that ID.
      * @throws DataAccessException for database or sql query violations.
      */
     void updateGame(GameData game) throws DataAccessException;

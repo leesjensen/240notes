@@ -27,7 +27,7 @@
 |      | 10  | `Web API Implementation (SparkJava)`                                                        | This seems like it should go after introducing phase #3. I covered both the client and server using SparkJava within the allotted time. But had a bit of trouble fitting error and exception handling on the server. This is named really strangely. Isn't it really `implementing client and server HTTP`?                                             |
 | 6    | 11  | `Chess #2`, `Chess #3`                                                                      | I would have liked more time on this. I went in deep on different options for the objects that get passed between http/service/db. I also went deep on where is the proper level to test at. We should have instruction for JavaDocs that describes the basics.                                                                                         |
 |      | 12  | `Writing Quality Code Style Checker (e.g., CheckStyle)`                                     | This fit well. I actually did quality before I introduced `phase 2` and `phase 3`. That was probably a mistake since they only have 5 days to complete `phase 2`. The main thing to teach here is that quality style changes with time, and we need to focus on 1-did I meet the customer need, 2-is the code maintainable and extensible.              |
-| 7    | 13  | Unit Testing Code Coverage / Coverage tools                                                 |                                                                                                                                                                                                                                                                                                                                                         |
+| 7    | 13  | `Unit Testing Code Coverage / Coverage tools`                                               | Plenty of time to cover this. I talked about TDD from the instruction and then switched to the chess tests as examples. I then went to my code and wrote some tests and show how the coverage worked. Also demonstrated parameterization with the Database Memory and SQL implementation.                                                               |
 |      | 14  | Relational Databases Relational Databases                                                   |                                                                                                                                                                                                                                                                                                                                                         |
 | 8    | 15  | Relational Databases Relational Databases                                                   |                                                                                                                                                                                                                                                                                                                                                         |
 |      | 16  | MySQL Project Design (Database)                                                             |                                                                                                                                                                                                                                                                                                                                                         |
@@ -714,48 +714,48 @@ To set up the client WebSocket communication we use the JDK javax.websocket.endp
   "board": {
     "squares": [
       [
-        {"pieceColor": "WHITE", "type": "ROOK"},
-        {"pieceColor": "WHITE", "type": "KNIGHT"},
-        {"pieceColor": "WHITE", "type": "BISHOP"},
-        {"pieceColor": "WHITE", "type": "QUEEN"},
-        {"pieceColor": "WHITE", "type": "KING"},
-        {"pieceColor": "WHITE", "type": "BISHOP"},
-        {"pieceColor": "WHITE", "type": "KNIGHT"},
-        {"pieceColor": "WHITE", "type": "ROOK"}
+        { "pieceColor": "WHITE", "type": "ROOK" },
+        { "pieceColor": "WHITE", "type": "KNIGHT" },
+        { "pieceColor": "WHITE", "type": "BISHOP" },
+        { "pieceColor": "WHITE", "type": "QUEEN" },
+        { "pieceColor": "WHITE", "type": "KING" },
+        { "pieceColor": "WHITE", "type": "BISHOP" },
+        { "pieceColor": "WHITE", "type": "KNIGHT" },
+        { "pieceColor": "WHITE", "type": "ROOK" }
       ],
       [
-        {"pieceColor": "WHITE", "type": "PAWN"},
-        {"pieceColor": "WHITE", "type": "PAWN"},
-        {"pieceColor": "WHITE", "type": "PAWN"},
-        {"pieceColor": "WHITE", "type": "PAWN"},
-        {"pieceColor": "WHITE", "type": "PAWN"},
-        {"pieceColor": "WHITE", "type": "PAWN"},
-        {"pieceColor": "WHITE", "type": "PAWN"},
-        {"pieceColor": "WHITE", "type": "PAWN"}
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" },
+        { "pieceColor": "WHITE", "type": "PAWN" }
       ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [
-        {"pieceColor": "BLACK", "type": "PAWN"},
-        {"pieceColor": "BLACK", "type": "PAWN"},
-        {"pieceColor": "BLACK", "type": "PAWN"},
-        {"pieceColor": "BLACK", "type": "PAWN"},
-        {"pieceColor": "BLACK", "type": "PAWN"},
-        {"pieceColor": "BLACK", "type": "PAWN"},
-        {"pieceColor": "BLACK", "type": "PAWN"},
-        {"pieceColor": "BLACK", "type": "PAWN"}
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" },
+        { "pieceColor": "BLACK", "type": "PAWN" }
       ],
       [
-        {"pieceColor": "BLACK", "type": "ROOK"},
-        {"pieceColor": "BLACK", "type": "KNIGHT"},
-        {"pieceColor": "BLACK", "type": "BISHOP"},
-        {"pieceColor": "BLACK", "type": "QUEEN"},
-        {"pieceColor": "BLACK", "type": "KING"},
-        {"pieceColor": "BLACK", "type": "BISHOP"},
-        {"pieceColor": "BLACK", "type": "KNIGHT"},
-        {"pieceColor": "BLACK", "type": "ROOK"}
+        { "pieceColor": "BLACK", "type": "ROOK" },
+        { "pieceColor": "BLACK", "type": "KNIGHT" },
+        { "pieceColor": "BLACK", "type": "BISHOP" },
+        { "pieceColor": "BLACK", "type": "QUEEN" },
+        { "pieceColor": "BLACK", "type": "KING" },
+        { "pieceColor": "BLACK", "type": "BISHOP" },
+        { "pieceColor": "BLACK", "type": "KNIGHT" },
+        { "pieceColor": "BLACK", "type": "ROOK" }
       ]
     ],
     "history": []
