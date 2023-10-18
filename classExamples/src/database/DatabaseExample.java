@@ -1,13 +1,10 @@
 package database;
 
-import org.eclipse.jetty.util.StringUtil;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
 
 public class DatabaseExample {
 
@@ -22,14 +19,10 @@ public class DatabaseExample {
             db.insertPet(conn, "Puddles", "cat");
             db.insertPet(conn, "Spot", "dog");
 
-            db.sqlInjection(conn, "; DROP TABLE users --", "type=%27");
-
-//            db.sqlInjection(conn, "joe','die');SELECT CONCAT('stinky", "tuna");
-
-//            db.sqlInjection(conn, "joe','cat');INSERT INTO pet (name, type) VALUES('die','frog');INSERT INTO pet (name, type) VALUES('sally", "tuna");
-//            db.sqlInjection(conn, "joe','cat');DROP TABLE pet;INSERT INTO pet (name, type) VALUES('sally", "tuna");
-
             db.queryPets(conn);
+
+            db.sqlInjection("joe");
+            db.sqlInjection("joe'); DROP TABLE pet; -- ");
         }
     }
 
@@ -47,8 +40,8 @@ public class DatabaseExample {
             var createPetTable = """
                     CREATE TABLE  IF NOT EXISTS pet (
                         id INT NOT NULL AUTO_INCREMENT,
-                        name VARCHAR(255) NOT NULL,
-                        type VARCHAR(255) NOT NULL,
+                        name VARCHAR(255) DEFAULT NULL,
+                        type VARCHAR(255) DEFAULT NULL,
                         PRIMARY KEY (id)
                     )""";
 
@@ -91,9 +84,11 @@ public class DatabaseExample {
         }
     }
 
-    void sqlInjection(Connection conn, String name, String type) throws SQLException {
-        name = "x', 'y'); DROP TABLE pet; --";
-        var statement = "INSERT INTO pet (name, type) VALUES('" + name + "','" + type + "')";
+    void sqlInjection(String name) throws SQLException {
+        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306?allowMultiQueries=true", "root", "monkeypie");
+        conn.setCatalog("pet_store");
+
+        var statement = "INSERT INTO pet (name) VALUES('" + name + "')";
         System.out.println(statement);
         try (var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
