@@ -17,9 +17,16 @@ public class DatabaseExample {
 
             db.insertPet(conn, "Fluffy", "bird");
             db.insertPet(conn, "Puddles", "cat");
-            db.insertPet(conn, "Spot", "dog");
+            db.insertPet(conn, "Harry", "cat");
+            int spotID = db.insertPet(conn, "Spot", "dog");
 
-            db.queryPets(conn);
+            db.updatePet(conn, spotID, "Flaky");
+            db.deletePet(conn, spotID);
+
+            db.queryPets(conn, "cat");
+
+            db.sqlInjectionFoiled("joe");
+            db.sqlInjectionFoiled("joe'); DROP TABLE pet; -- ");
 
             db.sqlInjection("joe");
             db.sqlInjection("joe'); DROP TABLE pet; -- ");
@@ -70,8 +77,18 @@ public class DatabaseExample {
         }
     }
 
-    void queryPets(Connection conn) throws SQLException {
-        try (var preparedStatement = conn.prepareStatement("SELECT id, name, type from pet")) {
+    void updatePet(Connection conn, int petID, String name) throws SQLException {
+        try (var preparedStatement = conn.prepareStatement("UPDATE pet SET name=? WHERE id=?")) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, petID);
+
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    void queryPets(Connection conn, String findType) throws SQLException {
+        try (var preparedStatement = conn.prepareStatement("SELECT id, name, type FROM pet WHERE type=?")) {
+            preparedStatement.setString(1, findType);
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
                     var id = rs.getInt("id");
@@ -81,6 +98,13 @@ public class DatabaseExample {
                     System.out.printf("id: %d, name: %s, type: %s%n", id, name, type);
                 }
             }
+        }
+    }
+
+    void deletePet(Connection conn, int petID) throws SQLException {
+        try (var preparedStatement = conn.prepareStatement("DELETE FROM pet WHERE id=?")) {
+            preparedStatement.setInt(1, petID);
+            preparedStatement.executeUpdate();
         }
     }
 
@@ -95,4 +119,17 @@ public class DatabaseExample {
         }
     }
 
+
+    void sqlInjectionFoiled(String name) throws SQLException {
+        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "monkeypie");
+        conn.setCatalog("pet_store");
+
+        if (name.matches("[a-zA-Z]+")) {
+            var statement = "INSERT INTO pet (name) VALUES(?)";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, name);
+                preparedStatement.executeUpdate();
+            }
+        }
+    }
 }
