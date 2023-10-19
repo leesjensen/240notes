@@ -2,12 +2,12 @@ package database;
 
 import com.google.gson.*;
 
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class AdapterSerializationExample {
@@ -34,7 +34,8 @@ public class AdapterSerializationExample {
     }
 
 
-    record Pet(String name, String type, List friends) {}
+    record Pet(String name, String type, List friends) {
+    }
 
     void insertPet(Connection conn, Pet pet) throws SQLException {
         try (var preparedStatement = conn.prepareStatement("INSERT INTO pet (name, type, friends) VALUES(?, ?, ?)")) {
@@ -60,9 +61,7 @@ public class AdapterSerializationExample {
                     // Read and deserialize the friend JSON.
                     var json = rs.getString("friends");
                     var builder = new GsonBuilder();
-                     builder.registerTypeAdapter(List.class,
-                       (JsonDeserializer<ArrayList>) (el, t, ctx) -> new Gson().fromJson(el, ArrayList.class));
-
+                    builder.registerTypeAdapter(List.class, new ListAdapter());
                     var friends = builder.create().fromJson(json, List.class);
 
                     pets.add(new Pet(name, type, friends));
@@ -70,6 +69,12 @@ public class AdapterSerializationExample {
             }
         }
         return pets;
+    }
+
+    static class ListAdapter implements JsonDeserializer<ArrayList> {
+        public ArrayList deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            return new Gson().fromJson(el, ArrayList.class);
+        }
     }
 
     Connection getConnection() throws SQLException {
@@ -87,8 +92,7 @@ public class AdapterSerializationExample {
                     CREATE TABLE  IF NOT EXISTS pet (
                         name VARCHAR(255) DEFAULT NULL,
                         type VARCHAR(255) DEFAULT NULL,
-                        friends longtext NOT NULL,                        
-                        PRIMARY KEY (id)
+                        friends longtext NOT NULL
                     )""";
 
 
