@@ -109,8 +109,7 @@ public class DatabaseExample {
     }
 
     void sqlInjection(String name) throws SQLException {
-        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306?allowMultiQueries=true", "root", "monkeypie");
-        conn.setCatalog("pet_store");
+        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pet_store?allowMultiQueries=true", "root", "monkeypie");
 
         var statement = "INSERT INTO pet (name) VALUES('" + name + "')";
         System.out.println(statement);
@@ -121,8 +120,7 @@ public class DatabaseExample {
 
 
     void sqlInjectionFoiled(String name) throws SQLException {
-        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "monkeypie");
-        conn.setCatalog("pet_store");
+        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pet_store", "root", "monkeypie");
 
         if (name.matches("[a-zA-Z]+")) {
             var statement = "INSERT INTO pet (name) VALUES(?)";
