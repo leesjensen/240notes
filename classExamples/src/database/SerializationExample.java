@@ -7,21 +7,27 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
-public class AdapterSerializationExample {
+/**
+ * This demonstrates how you can serialize data into and out of a field in a database.
+ * <p>
+ * The example uses a pet that can have a friend list. The friend list can be variable length, and so we can't just
+ * stick it into a database field. Instead, we serialize it to JSON and put it in a database field and
+ * then deserialize it when we read it back out of the database.
+ */
+public class SerializationExample {
+
 
     public static void main(String[] args) throws Exception {
-        var db = new AdapterSerializationExample();
+        var db = new SerializationExample();
         db.configureDatabase();
 
         try (var conn = db.getConnection()) {
             conn.setCatalog("pet_store");
 
-            var fluffy = new Pet("Fluffy", "bird", List.of());
-            var puddles = new Pet("Puddles", "cat", List.of("Harry"));
-            var harry = new Pet("Harry", "cat", List.of("Puddles"));
+            var fluffy = new Pet("Fluffy", "bird", new String[]{});
+            var puddles = new Pet("Puddles", "cat", new String[]{"Harry"});
+            var harry = new Pet("Harry", "cat", new String[]{"Puddles"});
 
             db.insertPet(conn, fluffy);
             db.insertPet(conn, puddles);
@@ -34,7 +40,7 @@ public class AdapterSerializationExample {
     }
 
 
-    record Pet(String name, String type, List friends) {}
+    record Pet(String name, String type, String[] friends) {}
 
     void insertPet(Connection conn, Pet pet) throws SQLException {
         try (var preparedStatement = conn.prepareStatement("INSERT INTO pet (name, type, friends) VALUES(?, ?, ?)")) {
@@ -59,11 +65,7 @@ public class AdapterSerializationExample {
 
                     // Read and deserialize the friend JSON.
                     var json = rs.getString("friends");
-                    var builder = new GsonBuilder();
-                     builder.registerTypeAdapter(List.class,
-                       (JsonDeserializer<ArrayList>) (el, t, ctx) -> new Gson().fromJson(el, ArrayList.class));
-
-                    var friends = builder.create().fromJson(json, List.class);
+                    var friends = new Gson().fromJson(json, String[].class);
 
                     pets.add(new Pet(name, type, friends));
                 }
