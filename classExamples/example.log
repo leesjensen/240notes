@@ -1,0 +1,248 @@
+Oct 23, 2023 4:35:54 PM logging.LoggingExample main
+INFO: This is an INFO message.fsdfdsfsd
+Oct 23, 2023 4:36:23 PM logging.LoggingExample main
+INFO: This is an INFO message.fsdfdsfsd
+Oct 23, 2023 4:36:36 PM logging.LoggingExample main
+INFO: This is an INFO message. Taco
+Oct 24, 2023 1:07:10 PM logging.LoggingExample main
+INFO: Look mom! I can log!
+Oct 24, 2023 1:08:13 PM logging.LoggingExample main
+INFO: Look mom! I can log!
+Oct 25, 2023 9:23:53 AM logging.LoggingExample main
+INFO: Look mom! I can log!
+Oct 25, 2023 9:23:53 AM logging.LoggingExample main
+INFO: [GET] /user/emily
+Oct 25, 2023 9:24:31 AM logging.LoggingExample main
+INFO: Look mom! I can log!
+Oct 25, 2023 9:24:31 AM logging.LoggingExample main
+INFO: [GET] /user/emily
+Oct 25, 2023 9:24:31 AM logging.LoggingExample main
+INFO: [GET] /user/emily
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-25T15:40:20.657905Z</date>
+  <millis>1698248420657</millis>
+  <nanos>905000</nanos>
+  <sequence>0</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+<record>
+  <date>2023-10-25T15:40:20.687724Z</date>
+  <millis>1698248420687</millis>
+  <nanos>724000</nanos>
+  <sequence>1</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-25T15:41:02.124537Z</date>
+  <millis>1698248462124</millis>
+  <nanos>537000</nanos>
+  <sequence>0</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+<record>
+  <date>2023-10-25T15:41:02.152753Z</date>
+  <millis>1698248462152</millis>
+  <nanos>753000</nanos>
+  <sequence>1</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-25T15:42:37.792853Z</date>
+  <millis>1698248557792</millis>
+  <nanos>853000</nanos>
+  <sequence>0</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>This will be logged</message>
+</record>
+<record>
+  <date>2023-10-25T15:42:37.821400Z</date>
+  <millis>1698248557821</millis>
+  <nanos>400000</nanos>
+  <sequence>1</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+<record>
+  <date>2023-10-25T15:42:37.821777Z</date>
+  <millis>1698248557821</millis>
+  <nanos>777000</nanos>
+  <sequence>2</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-25T15:46:58.188381Z</date>
+  <millis>1698248818188</millis>
+  <nanos>381000</nanos>
+  <sequence>0</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>This will be logged</message>
+</record>
+<record>
+  <date>2023-10-25T15:46:58.222974Z</date>
+  <millis>1698248818222</millis>
+  <nanos>974000</nanos>
+  <sequence>1</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+<record>
+  <date>2023-10-25T15:46:58.223457Z</date>
+  <millis>1698248818223</millis>
+  <nanos>457000</nanos>
+  <sequence>2</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-25T15:47:24.160475Z</date>
+  <millis>1698248844160</millis>
+  <nanos>475000</nanos>
+  <sequence>0</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>This will be logged</message>
+</record>
+<record>
+  <date>2023-10-25T15:47:33.449264Z</date>
+  <millis>1698248853449</millis>
+  <nanos>264000</nanos>
+  <sequence>1</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+<record>
+  <date>2023-10-25T15:47:41.235172Z</date>
+  <millis>1698248861235</millis>
+  <nanos>172000</nanos>
+  <sequence>2</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-25T15:48:47.529987Z</date>
+  <millis>1698248927529</millis>
+  <nanos>987000</nanos>
+  <sequence>0</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>This will be logged</message>
+</record>
+<record>
+  <date>2023-10-25T15:49:54.055683Z</date>
+  <millis>1698248994055</millis>
+  <nanos>683000</nanos>
+  <sequence>1</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+<record>
+  <date>2023-10-25T15:49:54.056353Z</date>
+  <millis>1698248994056</millis>
+  <nanos>353000</nanos>
+  <sequence>2</sequence>
+  <logger>myLogger</logger>
+  <level>INFO</level>
+  <class>logging.LoggingExample</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>[GET] /user/emily</message>
+</record>
+</log>
