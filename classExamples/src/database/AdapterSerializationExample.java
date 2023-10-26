@@ -19,9 +19,12 @@ public class AdapterSerializationExample {
         try (var conn = db.getConnection()) {
             conn.setCatalog("pet_store");
 
-            var fluffy = new Pet("Fluffy", "bird", List.of());
-            var puddles = new Pet("Puddles", "cat", List.of("Harry"));
-            var harry = new Pet("Harry", "cat", List.of("Puddles"));
+            var puddlesFriends = new ArrayFriendList().add("Harry");
+            var harryFriends = new ArrayFriendList().add("Pudddles").add("Fluffy");
+
+            var fluffy = new Pet("Fluffy", "bird", null);
+            var puddles = new Pet("Puddles", "cat", puddlesFriends);
+            var harry = new Pet("Harry", "cat", harryFriends);
 
             db.insertPet(conn, fluffy);
             db.insertPet(conn, puddles);
@@ -33,8 +36,23 @@ public class AdapterSerializationExample {
         }
     }
 
+    interface FriendList {
+        FriendList add(String friend);
+    }
 
-    record Pet(String name, String type, List friends) {
+    static class ArrayFriendList implements FriendList {
+        private ArrayList list = new ArrayList();
+
+        public FriendList add(String friend) {
+            list.add(friend);
+            return this;
+        }
+    }
+
+    record Pet(String name, String type, FriendList friends) {
+        public String toString() {
+            return new Gson().toJson(this);
+        }
     }
 
     void insertPet(Connection conn, Pet pet) throws SQLException {
@@ -61,11 +79,11 @@ public class AdapterSerializationExample {
                     // Read and deserialize the friend JSON.
                     var json = rs.getString("friends");
 
-                    var friends = new Gson().fromJson(json, List.class);
+//                    var friends = new Gson().fromJson(json, FriendList.class);
 
-//                    var builder = new GsonBuilder();
-//                    builder.registerTypeAdapter(List.class, new ListAdapter());
-//                    var friends = builder.create().fromJson(json, List.class);
+                    var builder = new GsonBuilder();
+                    builder.registerTypeAdapter(FriendList.class, new ListAdapter());
+                    var friends = builder.create().fromJson(json, FriendList.class);
 
                     pets.add(new Pet(name, type, friends));
                 }
@@ -74,9 +92,9 @@ public class AdapterSerializationExample {
         return pets;
     }
 
-    static class ListAdapter implements JsonDeserializer<ArrayList> {
-        public ArrayList deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
-            return new Gson().fromJson(el, ArrayList.class);
+    static class ListAdapter implements JsonDeserializer<FriendList> {
+        public FriendList deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            return new Gson().fromJson(el, ArrayFriendList.class);
         }
     }
 
@@ -95,7 +113,7 @@ public class AdapterSerializationExample {
                     CREATE TABLE  IF NOT EXISTS pet (
                         name VARCHAR(255) DEFAULT NULL,
                         type VARCHAR(255) DEFAULT NULL,
-                        friends longtext NOT NULL
+                        friends text NOT NULL
                     )""";
 
 
