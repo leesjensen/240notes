@@ -60,9 +60,12 @@ public class AdapterSerializationExample {
 
                     // Read and deserialize the friend JSON.
                     var json = rs.getString("friends");
-                    var builder = new GsonBuilder();
-                    builder.registerTypeAdapter(List.class, new ListAdapter());
-                    var friends = builder.create().fromJson(json, List.class);
+
+                    var friends = new Gson().fromJson(json, List.class);
+
+//                    var builder = new GsonBuilder();
+//                    builder.registerTypeAdapter(List.class, new ListAdapter());
+//                    var friends = builder.create().fromJson(json, List.class);
 
                     pets.add(new Pet(name, type, friends));
                 }

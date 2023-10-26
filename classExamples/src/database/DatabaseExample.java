@@ -24,12 +24,6 @@ public class DatabaseExample {
             db.deletePet(conn, spotID);
 
             db.queryPets(conn, "cat");
-
-            db.sqlInjectionFoiled("joe");
-            db.sqlInjectionFoiled("joe'); DROP TABLE pet; -- ");
-
-            db.sqlInjection("joe");
-            db.sqlInjection("joe'); DROP TABLE pet; -- ");
         }
     }
 
@@ -39,8 +33,9 @@ public class DatabaseExample {
 
     void configureDatabase() throws SQLException {
         try (var conn = getConnection()) {
-            var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS pet_store");
-            createDbStatement.executeUpdate();
+            try (var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS pet_store")) {
+                createDbStatement.executeUpdate();
+            }
 
             conn.setCatalog("pet_store");
 
@@ -108,26 +103,4 @@ public class DatabaseExample {
         }
     }
 
-    void sqlInjection(String name) throws SQLException {
-        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pet_store?allowMultiQueries=true", "root", "monkeypie");
-
-        var statement = "INSERT INTO pet (name) VALUES('" + name + "')";
-        System.out.println(statement);
-        try (var preparedStatement = conn.prepareStatement(statement)) {
-            preparedStatement.executeUpdate();
-        }
-    }
-
-
-    void sqlInjectionFoiled(String name) throws SQLException {
-        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pet_store", "root", "monkeypie");
-
-        if (name.matches("[a-zA-Z]+")) {
-            var statement = "INSERT INTO pet (name) VALUES(?)";
-            try (var preparedStatement = conn.prepareStatement(statement)) {
-                preparedStatement.setString(1, name);
-                preparedStatement.executeUpdate();
-            }
-        }
-    }
 }
