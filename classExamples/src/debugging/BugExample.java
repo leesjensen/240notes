@@ -1,7 +1,6 @@
 package debugging;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BugExample {
     public static void main(String[] args) {
@@ -11,7 +10,7 @@ public class BugExample {
         // Expecting: cattle, appalachian
     }
 
-    static List<String> filterToCWordsAnyLengthAndAWordsGreaterThanFive(List<String> words) {
+    static Collection<String> filterToCWordsAnyLengthAndAWordsGreaterThanFive(List<String> words) {
         var result = new ArrayList<String>();
         try {
             for (var i = words.size() - 1; i >= 0; i--) {

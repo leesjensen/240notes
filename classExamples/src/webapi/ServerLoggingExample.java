@@ -1,11 +1,9 @@
 package webapi;
 
-import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 import static logging.DatabaseHandlerExample.*;
