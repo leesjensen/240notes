@@ -25,13 +25,3 @@
  * @see model
  * @see service
  */
-module chess2023f {
-    requires spark.core;
-    requires com.google.gson;
-    requires java.sql;
-    exports model;
-    exports chess;
-    exports server;
-    exports service;
-    exports dataAccess;
-}
