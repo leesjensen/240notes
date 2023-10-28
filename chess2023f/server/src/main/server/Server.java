@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
+import dataAccess.MemoryDataAccess;
 import dataAccess.MySqlDataAccess;
 import model.AuthData;
 import model.GameData;
@@ -21,8 +22,8 @@ public class Server {
     final AuthService authService;
 
     public static void main(String[] args) throws Exception {
-        new Server(new MySqlDataAccess()).run();
-//        new Server(new MemoryDataAccess()).run();
+//        new Server(new MySqlDataAccess()).run();
+        new Server(new MemoryDataAccess()).run();
     }
 
     public Server(DataAccess dataAccess) {
