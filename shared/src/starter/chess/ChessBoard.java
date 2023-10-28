@@ -36,7 +36,7 @@ public interface ChessBoard {
     void movePiece(ChessMove move);
 
     ChessPlacement getPlacement(ChessGame.TeamColor color, ChessPiece.PieceType type);
-    
+
     boolean isAttacked(ChessPosition targetPos, ChessGame.TeamColor targetColor);
 
     boolean isMoveLegal(ChessMove move);
@@ -48,4 +48,6 @@ public interface ChessBoard {
     ChessMove getLastMove();
 
     Collection<ChessPlacement> collection();
+
+    String toString(ChessGame.TeamColor playerColor);
 }
