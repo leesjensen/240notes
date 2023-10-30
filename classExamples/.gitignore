@@ -1,6 +1,6 @@
 ### IntelliJ IDEA ###
 out/
-
+src/example.log
 
 ### VS Code ###
 .vscode/
