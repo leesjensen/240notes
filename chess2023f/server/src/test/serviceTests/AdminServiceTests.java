@@ -24,7 +24,7 @@ public class AdminServiceTests {
 
         var authService = new AuthService(memoryDataAccess);
         Assertions.assertThrows(CodedException.class, () -> authService.createSession(user));
-        Assertions.assertThrows(CodedException.class, () -> authService.getAuthData(authData.authToken()));
+        Assertions.assertNull(authService.getAuthData(authData.authToken()));
 
         var games = gameService.listGames();
         Assertions.assertEquals(0, games.size());
