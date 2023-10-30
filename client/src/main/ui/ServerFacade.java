@@ -4,7 +4,6 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
-import model.UserData;
 import server.JoinRequest;
 import server.ListGamesResponse;
 import util.ResponseException;
@@ -15,14 +14,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
-public class ServiceFacade {
+public class ServerFacade {
 
     private final String serverUrl;
 
-    public ServiceFacade(String url) {
+    public ServerFacade(String url) {
         serverUrl = url;
     }
 
@@ -33,7 +31,7 @@ public class ServiceFacade {
 
     public AuthData register(String username, String password, String email) throws ResponseException {
         var request = Map.of("username", username, "password", password, "email", email);
-        return this.makeRequest("POST", "/user/register", request, null, AuthData.class);
+        return this.makeRequest("POST", "/user", request, null, AuthData.class);
     }
 
     public AuthData login(String username, String password) throws ResponseException {

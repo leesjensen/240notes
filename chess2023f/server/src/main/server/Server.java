@@ -22,7 +22,8 @@ public class Server {
 
     public static void main(String[] args) throws Exception {
 //        new Server(new MySqlDataAccess()).run();
-        new Server(new MemoryDataAccess()).run();
+        var port = new Server(new MemoryDataAccess()).run(8080);
+        System.out.printf("Running server on port %d\n", port);
     }
 
     public Server(DataAccess dataAccess) {
@@ -33,9 +34,9 @@ public class Server {
         authService = new AuthService(dataAccess);
     }
 
-    private void run() {
+    public int run(int port) {
         try {
-            Spark.port(8080);
+            Spark.port(port);
             Spark.externalStaticFileLocation("web");
 
             Spark.delete("/db", this::clearApplication);
@@ -58,8 +59,15 @@ public class Server {
             System.out.printf("Unable to start server: %s", ex.getMessage());
             System.exit(1);
         }
+
+        Spark.awaitInitialization();
+        return Spark.port();
     }
 
+
+    public void stop() {
+        Spark.stop();
+    }
 
     public Object errorHandler(CodedException e, Request req, Response res) {
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));

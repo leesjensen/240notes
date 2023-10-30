@@ -2,6 +2,8 @@ package ui;
 
 import java.util.Scanner;
 
+import static util.EscapeSequences.RESET_TEXT_COLOR;
+
 public class Main {
     public static void main(String[] args) {
         try {
@@ -9,12 +11,14 @@ public class Main {
             Scanner scanner = new Scanner(System.in);
             ChessClient client = new ChessClient();
 
-            while (true) {
+            var result = "";
+            while (!result.equals("quit")) {
                 client.printPrompt();
                 String input = scanner.nextLine();
 
                 try {
-                    client.eval(input);
+                    result = client.eval(input);
+                    System.out.print(RESET_TEXT_COLOR + result);
                 } catch (Throwable e) {
                     System.out.println(e.getMessage());
                 }

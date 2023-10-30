@@ -1,8 +1,6 @@
 package ui;
 
-import chess.BoardImpl;
 import chess.ChessGame;
-import chess.GameImpl;
 import chess.MoveImpl;
 import com.google.gson.Gson;
 import model.GameData;
@@ -21,11 +19,11 @@ public class ChessClient implements DisplayHandler {
     private State state = State.LOGGED_OUT;
     private String authToken;
     private GameData gameData;
-    final private ServiceFacade server;
+    final private ServerFacade server;
 
 
     public ChessClient() throws Exception {
-        server = new ServiceFacade("http://localhost:8080");
+        server = new ServerFacade("http://localhost:8080");
     }
 
     public String eval(String input) throws Exception {
@@ -48,7 +46,6 @@ public class ChessClient implements DisplayHandler {
             var root = ExceptionUtil.getRoot(e);
             result = String.format("Error: %s", root.getMessage());
         }
-        System.out.print(RESET_TEXT_COLOR + result);
         return result;
     }
 
@@ -73,7 +70,6 @@ public class ChessClient implements DisplayHandler {
     }
 
     private String quit(String[] params) {
-        System.exit(0);
         return "quit";
     }
 
