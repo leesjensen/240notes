@@ -118,8 +118,8 @@ public class ChessClient implements DisplayHandler {
 
     private String list(String[] params) throws ResponseException {
         verifyAuth();
-        var response = server.listGames(authToken);
-        return new Gson().toJson(response.games());
+        var games = server.listGames(authToken);
+        return new Gson().toJson(games);
     }
 
 

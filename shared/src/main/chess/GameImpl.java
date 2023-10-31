@@ -28,13 +28,23 @@ public class GameImpl implements ChessGame {
     }
 
 
-    public static GameImpl Create(String serializedGame) {
+    public static GameImpl create(String serializedGame) {
+        return serializer().fromJson(serializedGame, GameImpl.class);
+    }
+
+    static final Gson serializer;
+
+    static {
         GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(ChessGame.class, new ChessGameAdapter());
         gsonBuilder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
         gsonBuilder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
-        Gson gson = gsonBuilder.create();
+        serializer = gsonBuilder.create();
 
-        return gson.fromJson(serializedGame, GameImpl.class);
+    }
+
+    public static Gson serializer() {
+        return serializer;
     }
 
 
@@ -145,12 +155,21 @@ public class GameImpl implements ChessGame {
     }
 
 
+    private static class ChessGameAdapter extends TypeAdapter<ChessGame> {
+        public void write(JsonWriter out, ChessGame value) {
+        }
+
+        public ChessGame read(JsonReader in) {
+            return serializer().fromJson(in, GameImpl.class);
+        }
+    }
+
     private static class ChessBoardAdapter extends TypeAdapter<ChessBoard> {
         public void write(JsonWriter out, ChessBoard value) {
         }
 
         public ChessBoard read(JsonReader in) {
-            return new Gson().fromJson(in, BoardImpl.class);
+            return serializer().fromJson(in, BoardImpl.class);
         }
     }
 
@@ -159,7 +178,7 @@ public class GameImpl implements ChessGame {
         }
 
         public ChessPiece read(JsonReader in) {
-            return new Gson().fromJson(in, PieceImpl.class);
+            return serializer().fromJson(in, PieceImpl.class);
         }
     }
 

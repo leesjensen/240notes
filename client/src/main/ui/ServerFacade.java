@@ -1,11 +1,11 @@
 package ui;
 
 import chess.ChessGame;
+import chess.GameImpl;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 import server.JoinRequest;
-import server.ListGamesResponse;
 import util.ResponseException;
 
 import java.io.InputStream;
@@ -26,7 +26,7 @@ public class ServerFacade {
 
 
     public void clear() throws ResponseException {
-        var r = this.makeRequest("POST", "/clear", null, null, Map.class);
+        var r = this.makeRequest("DELETE", "/db", null, null, Map.class);
     }
 
     public AuthData register(String username, String password, String email) throws ResponseException {
@@ -36,25 +36,28 @@ public class ServerFacade {
 
     public AuthData login(String username, String password) throws ResponseException {
         var request = Map.of("username", username, "password", password);
-        return this.makeRequest("POST", "/user/login", request, null, AuthData.class);
+        return this.makeRequest("POST", "/session", request, null, AuthData.class);
     }
 
     public void logout(String authToken) throws ResponseException {
-        this.makeRequest("POST", "/user/logout", null, authToken, null);
+        this.makeRequest("DELETE", "/session", null, authToken, null);
     }
 
     public GameData createGame(String authToken, String gameName) throws ResponseException {
         var request = Map.of("gameName", gameName);
-        return this.makeRequest("POST", "/games/create", request, authToken, GameData.class);
+        return this.makeRequest("POST", "/game", request, authToken, GameData.class);
     }
 
-    public ListGamesResponse listGames(String authToken) throws ResponseException {
-        return this.makeRequest("GET", "/games/list", null, authToken, ListGamesResponse.class);
+    public GameData[] listGames(String authToken) throws ResponseException {
+        record Response(GameData[] games) {
+        }
+        var response = this.makeRequest("GET", "/game", null, authToken, Response.class);
+        return response.games;
     }
 
     public void joinGame(String authToken, int gameID, ChessGame.TeamColor color) throws ResponseException {
         var request = new JoinRequest(color, gameID);
-        this.makeRequest("POST", "/games/join", request, authToken, null);
+        this.makeRequest("PUT", "/game", request, authToken, null);
     }
 
     private <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> clazz) throws ResponseException {
@@ -82,7 +85,8 @@ public class ServerFacade {
                 InputStreamReader reader = new InputStreamReader(respBody);
                 if (http.getResponseCode() == 200) {
                     if (clazz != null) {
-                        return new Gson().fromJson(reader, clazz);
+                        var serializer = GameImpl.serializer();
+                        return serializer.fromJson(reader, clazz);
                     }
                     return null;
                 }

@@ -159,7 +159,7 @@ public class MySqlDataAccess implements DataAccess {
         var gameName = rs.getString("gameName");
         var whitePlayerName = rs.getString("whitePlayerName");
         var blackPlayerName = rs.getString("blackPlayerName");
-        var game = chess.GameImpl.Create(gs);
+        var game = chess.GameImpl.create(gs);
         var state = GameData.State.valueOf(rs.getString("state"));
 
         return new GameData(gameID, whitePlayerName, blackPlayerName, gameName, game, state);
