@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.logging.*;
 
 public class LoggingExample {
-    static Logger logger = Logger.getLogger("myLogger");
+    public static Logger logger = Logger.getLogger("myLogger");
 
     public static void main(String[] args) throws IOException {
 
