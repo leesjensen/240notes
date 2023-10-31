@@ -14,7 +14,7 @@
 ## Record of experience
 
 | Week | Day | Topics                                                                                      | Notes                                                                                                                                                                                                                                                                                                                                                   |
-| ---- | --- | ------------------------------------------------------------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---- | --- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1    | 1   | `Course Intro`, `Java Fundamentals`                                                         | This felt a bit rushed. I would rather have some assignment in the first week to build some deliverable. Perhaps if we dropped Spelling Corrector we could have a `phase -1` that introduced the Chess project, talked about Git, set up your Git repo, and created the intelliJ project. The deliverable would be their GitHub URL with a few commits. |
 |      | 2   | `Java Fundamentals`, `Spelling Corrector`                                                   | This felt a bit rushed. But with their background of C++ I think they all got it pretty well. Here you could teach `phase 0` which is just the chess moves. `Phase 1` would then be game tests and include en passant and castling.                                                                                                                     |
 | 2    | 3   | `Objects & Classes`, `Java Inheritance`, `Spelling Corrector`                               | This was fine. inheritance goes well when discussing the Java `Object` class as the base for all objects with its inherited methods.                                                                                                                                                                                                                    |
@@ -31,8 +31,8 @@
 |      | 14  | `Relational Databases`, `MySQL`                                                             | This was a bit light, but I filled it with discussions about designing schemas.                                                                                                                                                                                                                                                                         |
 | 8    | 15  | `SQL`, `JDBC` (moved to next lecture)                                                       | I took the whole day talking about SQL and that seemed about right. I did cover joins and so that took a bit extra. I am planning on doing JDBC and `phase 3` in the next lecture.                                                                                                                                                                      |
 |      | 16  | `MySQL Project Design (Database)`                                                           | I spend most of the time talking about JDBC and about 10 minutes talking about the project. The adapter is a significant complexity that the project introduces. It might be better to move the discussion on Serialization later in the class. Or at least have some sort of review about Gson adapters.                                               |
-| 9    | 17  | Logging, Debugging <FLEX>                                                                   | Debugging should be early in the course.                                                                                                                                                                                                                                                                                                                |
-|      | 18  | Defensive Programming <FLEX>                                                                |                                                                                                                                                                                                                                                                                                                                                         |
+| 9    | 17  | `Logging, Debugging <FLEX>`                                                                 | Debugging should be early in the course. Doing both debugging and logging just barely fit in to one class. I never got to defensive programming, but I think we could just drop this.                                                                                                                                                                   |
+|      | 18  | `Defensive Programming <FLEX>`                                                              | I cancelled class for this and just used it as a study period. I think we can skip this topic.                                                                                                                                                                                                                                                          |
 | 10   | 19  | Project Design (Pre Game) Console UI (draw board)                                           |                                                                                                                                                                                                                                                                                                                                                         |
 |      | 20  | Web Sockets (Spark for Java)                                                                |                                                                                                                                                                                                                                                                                                                                                         |
 | 11   | 21  | Security (crypto, hashes, digital signatures, secure password storage)                      |                                                                                                                                                                                                                                                                                                                                                         |
@@ -714,48 +714,48 @@ To set up the client WebSocket communication we use the JDK javax.websocket.endp
   "board": {
     "squares": [
       [
-        { "pieceColor": "WHITE", "type": "ROOK" },
-        { "pieceColor": "WHITE", "type": "KNIGHT" },
-        { "pieceColor": "WHITE", "type": "BISHOP" },
-        { "pieceColor": "WHITE", "type": "QUEEN" },
-        { "pieceColor": "WHITE", "type": "KING" },
-        { "pieceColor": "WHITE", "type": "BISHOP" },
-        { "pieceColor": "WHITE", "type": "KNIGHT" },
-        { "pieceColor": "WHITE", "type": "ROOK" }
+        {"pieceColor": "WHITE", "type": "ROOK"},
+        {"pieceColor": "WHITE", "type": "KNIGHT"},
+        {"pieceColor": "WHITE", "type": "BISHOP"},
+        {"pieceColor": "WHITE", "type": "QUEEN"},
+        {"pieceColor": "WHITE", "type": "KING"},
+        {"pieceColor": "WHITE", "type": "BISHOP"},
+        {"pieceColor": "WHITE", "type": "KNIGHT"},
+        {"pieceColor": "WHITE", "type": "ROOK"}
       ],
       [
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" }
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"}
       ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" }
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"}
       ],
       [
-        { "pieceColor": "BLACK", "type": "ROOK" },
-        { "pieceColor": "BLACK", "type": "KNIGHT" },
-        { "pieceColor": "BLACK", "type": "BISHOP" },
-        { "pieceColor": "BLACK", "type": "QUEEN" },
-        { "pieceColor": "BLACK", "type": "KING" },
-        { "pieceColor": "BLACK", "type": "BISHOP" },
-        { "pieceColor": "BLACK", "type": "KNIGHT" },
-        { "pieceColor": "BLACK", "type": "ROOK" }
+        {"pieceColor": "BLACK", "type": "ROOK"},
+        {"pieceColor": "BLACK", "type": "KNIGHT"},
+        {"pieceColor": "BLACK", "type": "BISHOP"},
+        {"pieceColor": "BLACK", "type": "QUEEN"},
+        {"pieceColor": "BLACK", "type": "KING"},
+        {"pieceColor": "BLACK", "type": "BISHOP"},
+        {"pieceColor": "BLACK", "type": "KNIGHT"},
+        {"pieceColor": "BLACK", "type": "ROOK"}
       ]
     ],
     "history": []
