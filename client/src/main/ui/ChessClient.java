@@ -110,7 +110,7 @@ public class ChessClient implements DisplayHandler {
         verifyAuth();
 
         if (params.length == 1 && state == State.LOGGED_IN) {
-            var response = server.createGame(authToken, params[0]);
+            server.createGame(authToken, params[0]);
             return "Success";
         }
         return "Failure";
@@ -129,8 +129,11 @@ public class ChessClient implements DisplayHandler {
             if (params.length == 2 && (params[1].equalsIgnoreCase("WHITE") || params[1].equalsIgnoreCase("BLACK"))) {
                 var gameID = Integer.parseInt(params[0]);
                 var color = ChessGame.TeamColor.valueOf(params[1].toUpperCase());
-                server.joinGame(authToken, gameID, color);
+                gameData = server.joinGame(authToken, gameID, color);
                 state = (params[1].equalsIgnoreCase("WHITE") ? State.WHITE : State.BLACK);
+
+                printGame(ChessGame.TeamColor.WHITE);
+                printGame(ChessGame.TeamColor.BLACK);
                 return "Success";
             }
         }
@@ -144,7 +147,7 @@ public class ChessClient implements DisplayHandler {
         if (state == State.LOGGED_IN) {
             if (params.length == 1) {
                 var gameID = Integer.parseInt(params[0]);
-                server.joinGame(authToken, gameID, null);
+                gameData = server.joinGame(authToken, gameID, null);
                 state = State.OBSERVING;
                 return "Success";
             }
@@ -195,10 +198,14 @@ public class ChessClient implements DisplayHandler {
     }
 
     private void printGame() {
+        var color = state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+        printGame(color);
+    }
+
+    private void printGame(ChessGame.TeamColor color) {
         System.out.println("\n");
-        System.out.print((gameData.game().getBoard()).toString(state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK));
+        System.out.print((gameData.game().getBoard()).toString(color));
         System.out.println();
-        printPrompt();
     }
 
     public void printPrompt() {

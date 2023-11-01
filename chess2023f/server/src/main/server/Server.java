@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccess;
 import dataAccess.MemoryDataAccess;
+import dataAccess.MySqlDataAccess;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -21,8 +22,13 @@ public class Server {
     final AuthService authService;
 
     public static void main(String[] args) throws Exception {
-//        new Server(new MySqlDataAccess()).run();
-        var port = new Server(new MemoryDataAccess()).run(8080);
+        DataAccess access;
+        if (args.length > 0 && args[0].equalsIgnoreCase("sql")) {
+            access = new MySqlDataAccess();
+        } else {
+            access = new MemoryDataAccess();
+        }
+        var port = new Server(access).run(8080);
         System.out.printf("Running server on port %d\n", port);
     }
 
@@ -113,7 +119,7 @@ public class Server {
     public Object deleteSession(Request req, Response ignore) throws CodedException {
         var authData = throwIfUnauthorized(req);
         authService.deleteSession(authData.authToken());
-        return send("username", authData.username(), "authToken", authData.authToken());
+        return send();
     }
 
 
@@ -146,8 +152,8 @@ public class Server {
     public Object joinGame(Request req, Response ignoreRes) throws CodedException {
         var authData = throwIfUnauthorized(req);
         var joinReq = getBody(req, JoinRequest.class);
-        var gameData = gameService.joinGame(authData.username(), joinReq.playerColor(), joinReq.gameID());
-        return send("game", gameData);
+        gameService.joinGame(authData.username(), joinReq.playerColor(), joinReq.gameID());
+        return send();
     }
 
     private <T> T getBody(Request request, Class<T> clazz) throws CodedException {

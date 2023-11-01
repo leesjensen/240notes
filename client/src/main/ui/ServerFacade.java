@@ -8,9 +8,7 @@ import model.GameData;
 import server.JoinRequest;
 import util.ResponseException;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -52,12 +50,23 @@ public class ServerFacade {
         record Response(GameData[] games) {
         }
         var response = this.makeRequest("GET", "/game", null, authToken, Response.class);
-        return response.games;
+        return (response != null ? response.games : new GameData[0]);
     }
 
-    public void joinGame(String authToken, int gameID, ChessGame.TeamColor color) throws ResponseException {
+    public GameData joinGame(String authToken, int gameID, ChessGame.TeamColor color) throws ResponseException {
         var request = new JoinRequest(color, gameID);
-        this.makeRequest("PUT", "/game", request, authToken, null);
+        this.makeRequest("PUT", "/game", request, authToken, GameData.class);
+        return getGame(authToken, gameID);
+    }
+
+    private GameData getGame(String authToken, int gameID) throws ResponseException {
+        var games = listGames(authToken);
+        for (var game : games) {
+            if (game.gameID() == gameID) {
+                return game;
+            }
+        }
+        throw new ResponseException(404, "Missing game");
     }
 
     private <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> clazz) throws ResponseException {
@@ -79,7 +88,6 @@ public class ServerFacade {
                 }
             }
             http.connect();
-//        System.out.println(String.format(("Status %d returned from [%s] %s"), http.getResponseCode(), method, path));
 
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader reader = new InputStreamReader(respBody);
@@ -97,5 +105,4 @@ public class ServerFacade {
             throw new ResponseException(500, ex.getMessage());
         }
     }
-
 }

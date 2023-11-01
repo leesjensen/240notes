@@ -91,6 +91,7 @@ public class MySqlDataAccess implements DataAccess {
 
     public GameData newGame(String gameName) throws DataAccessException {
         var game = new GameImpl();
+        game.board.resetBoard();
         var state = GameData.State.UNDECIDED;
         var ID = executeUpdate("INSERT INTO `game` (gameName, whitePlayerName, blackPlayerName, game, state) VALUES (?, ?, ?, ?, ?)",
                 gameName,

@@ -1,6 +1,6 @@
 package ui;
 
-import chess.ChessGame;
+import chess.*;
 import dataAccess.MemoryDataAccess;
 import org.junit.jupiter.api.*;
 
@@ -48,6 +48,18 @@ class ServerFacadeTest {
 
         var loginAuthData = facade.login("joe", "password");
         facade.listGames(loginAuthData.authToken());
+    }
+
+
+    @Test
+    void createGame() throws Exception {
+        var authData = facade.register("joe", "password", "joe@email.com");
+
+        var game = facade.createGame(authData.authToken(), "blitz");
+
+        assertTrue(game.gameID() > 0);
+        game = facade.joinGame(authData.authToken(), game.gameID(), ChessGame.TeamColor.WHITE);
+        assertEquals(new PieceImpl(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK), game.game().getBoard().getPiece(new PositionImpl(1, 1)));
     }
 
 

@@ -1,6 +1,7 @@
 package model;
 
 import chess.ChessGame;
+import chess.GameImpl;
 import com.google.gson.Gson;
 
 /**
@@ -14,6 +15,11 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
         DRAW,
         UNDECIDED
     }
+
+    public static GameData create(String serializedGame) {
+        return GameImpl.serializer().fromJson(serializedGame, GameData.class);
+    }
+
 
     public boolean isGameOver() {
         return state != State.UNDECIDED;

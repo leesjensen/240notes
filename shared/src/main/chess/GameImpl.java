@@ -1,11 +1,10 @@
 package chess;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -31,22 +30,6 @@ public class GameImpl implements ChessGame {
     public static GameImpl create(String serializedGame) {
         return serializer().fromJson(serializedGame, GameImpl.class);
     }
-
-    static final Gson serializer;
-
-    static {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(ChessGame.class, new ChessGameAdapter());
-        gsonBuilder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
-        gsonBuilder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
-        serializer = gsonBuilder.create();
-
-    }
-
-    public static Gson serializer() {
-        return serializer;
-    }
-
 
     @Override
     public TeamColor getTeamTurn() {
@@ -155,30 +138,34 @@ public class GameImpl implements ChessGame {
     }
 
 
-    private static class ChessGameAdapter extends TypeAdapter<ChessGame> {
-        public void write(JsonWriter out, ChessGame value) {
-        }
+    public static Gson serializer() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(ChessGame.class, new ChessGameAdapter());
+        gsonBuilder.registerTypeAdapter(GameImpl.class, new ChessGameAdapter());
+        return gsonBuilder.create();
+    }
 
-        public ChessGame read(JsonReader in) {
-            return serializer().fromJson(in, GameImpl.class);
+    public static class ChessGameAdapter implements JsonDeserializer<ChessGame> {
+        public ChessGame deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
+            var serializer = gsonBuilder.create();
+            return serializer.fromJson(el, GameImpl.class);
         }
     }
 
-    private static class ChessBoardAdapter extends TypeAdapter<ChessBoard> {
-        public void write(JsonWriter out, ChessBoard value) {
-        }
-
-        public ChessBoard read(JsonReader in) {
-            return serializer().fromJson(in, BoardImpl.class);
+    public static class ChessBoardAdapter implements JsonDeserializer<ChessBoard> {
+        public ChessBoard deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
+            var serializer = gsonBuilder.create();
+            return serializer.fromJson(el, BoardImpl.class);
         }
     }
 
-    private static class ChessPieceAdapter extends TypeAdapter<ChessPiece> {
-        public void write(JsonWriter out, ChessPiece value) {
-        }
-
-        public ChessPiece read(JsonReader in) {
-            return serializer().fromJson(in, PieceImpl.class);
+    public static class ChessPieceAdapter implements JsonDeserializer<ChessPiece> {
+        public ChessPiece deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            return new Gson().fromJson(el, PieceImpl.class);
         }
     }
 
