@@ -13,6 +13,7 @@ import spark.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Server {
     final DataAccess dataAccess;
@@ -21,13 +22,16 @@ public class Server {
     final AdminService adminService;
     final AuthService authService;
 
+    public static final Logger log = Logger.getLogger("chess");
+
     public static void main(String[] args) throws Exception {
         DataAccess access;
-        if (args.length > 0 && args[0].equalsIgnoreCase("sql")) {
-            access = new MySqlDataAccess();
-        } else {
+        if (args.length > 0 && args[0].equalsIgnoreCase("memory")) {
             access = new MemoryDataAccess();
+        } else {
+            access = new MySqlDataAccess();
         }
+        log.info(access.description());
         var port = new Server(access).run(8080);
         System.out.printf("Running server on port %d\n", port);
     }
@@ -52,6 +56,7 @@ public class Server {
             Spark.get("/game", this::listGames);
             Spark.post("/game", this::createGame);
             Spark.put("/game", this::joinGame);
+            Spark.afterAfter(this::log);
 
 
             Spark.exception(CodedException.class, this::errorHandler);
@@ -81,6 +86,10 @@ public class Server {
         res.status(e.statusCode());
         res.body(body);
         return body;
+    }
+
+    private void log(Request req, Response res) {
+        log.info(String.format("[%s] %s - %s", req.requestMethod(), req.pathInfo(), res.status()));
     }
 
     /**

@@ -153,6 +153,9 @@ public class MySqlDataAccess implements DataAccess {
         return result;
     }
 
+    public String description() {
+        return String.format("MySQL - %s", Database.DB_NAME);
+    }
 
     private GameData readGameData(ResultSet rs) throws SQLException {
         var gs = rs.getString("game");

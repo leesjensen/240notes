@@ -33,6 +33,10 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
         return new GameData(this.gameID, this.whiteUsername, userName, this.gameName, this.game, this.state);
     }
 
+    public GameData clearBoard() {
+        return new GameData(this.gameID, this.whiteUsername, this.blackUsername, this.gameName, null, this.state);
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);

@@ -75,5 +75,10 @@ public class MemoryDataAccess implements DataAccess {
     public Collection<GameData> listGames() {
         return games.values();
     }
+
+
+    public String description() {
+        return "Memory Database";
+    }
 }
 

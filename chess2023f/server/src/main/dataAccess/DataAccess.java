@@ -92,5 +92,7 @@ public interface DataAccess {
      * @throws DataAccessException for database or sql query violations.
      */
     Collection<GameData> listGames() throws DataAccessException;
+
+    String description();
 }
 

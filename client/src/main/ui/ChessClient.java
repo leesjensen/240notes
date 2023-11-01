@@ -22,11 +22,11 @@ public class ChessClient implements DisplayHandler {
     final private ServerFacade server;
 
 
-    public ChessClient() throws Exception {
+    public ChessClient() {
         server = new ServerFacade("http://localhost:8080");
     }
 
-    public String eval(String input) throws Exception {
+    public String eval(String input) {
 
         var result = "Error with command. Try: Help";
         try {
@@ -57,7 +57,7 @@ public class ChessClient implements DisplayHandler {
         clear();
         state = State.LOGGED_OUT;
         gameData = null;
-        return "Success";
+        return "Cleared the world";
     }
 
     private String help(String[] params) {
@@ -79,7 +79,7 @@ public class ChessClient implements DisplayHandler {
             var response = server.login(params[0], params[1]);
             authToken = response.authToken();
             state = State.LOGGED_IN;
-            return "Success";
+            return String.format("Logged in as %s", params[0]);
         }
         return "Failure";
     }
@@ -89,7 +89,7 @@ public class ChessClient implements DisplayHandler {
             var response = server.register(params[0], params[1], params[2]);
             authToken = response.authToken();
             state = State.LOGGED_IN;
-            return "Success";
+            return String.format("Logged in as %s", params[0]);
         }
         return "Failure";
     }
@@ -101,7 +101,7 @@ public class ChessClient implements DisplayHandler {
             server.logout(authToken);
             state = State.LOGGED_OUT;
             authToken = null;
-            return "Success";
+            return "Logged out";
         }
         return "Failure";
     }
@@ -110,8 +110,8 @@ public class ChessClient implements DisplayHandler {
         verifyAuth();
 
         if (params.length == 1 && state == State.LOGGED_IN) {
-            server.createGame(authToken, params[0]);
-            return "Success";
+            var gameData = server.createGame(authToken, params[0]);
+            return String.format("Create %d", gameData.gameID());
         }
         return "Failure";
     }
@@ -119,7 +119,12 @@ public class ChessClient implements DisplayHandler {
     private String list(String[] params) throws ResponseException {
         verifyAuth();
         var games = server.listGames(authToken);
-        return new Gson().toJson(games);
+        var deserializer = new Gson();
+        StringBuilder buf = new StringBuilder();
+        for (var game : games) {
+            buf.append(deserializer.toJson(game.clearBoard())).append("\n");
+        }
+        return buf.toString();
     }
 
 
@@ -131,10 +136,9 @@ public class ChessClient implements DisplayHandler {
                 var color = ChessGame.TeamColor.valueOf(params[1].toUpperCase());
                 gameData = server.joinGame(authToken, gameID, color);
                 state = (params[1].equalsIgnoreCase("WHITE") ? State.WHITE : State.BLACK);
-
                 printGame(ChessGame.TeamColor.WHITE);
                 printGame(ChessGame.TeamColor.BLACK);
-                return "Success";
+                return String.format("Joined %d as %s", gameData.gameID(), color);
             }
         }
 
@@ -149,7 +153,8 @@ public class ChessClient implements DisplayHandler {
                 var gameID = Integer.parseInt(params[0]);
                 gameData = server.joinGame(authToken, gameID, null);
                 state = State.OBSERVING;
-                return "Success";
+                printGame(ChessGame.TeamColor.WHITE);
+                return String.format("Joined %d as observer", gameData.gameID());
             }
         }
 
@@ -159,7 +164,7 @@ public class ChessClient implements DisplayHandler {
     private String redraw(String[] params) {
         if (isPlaying() || isObserving()) {
             printGame();
-            return "Success";
+            return "";
         }
         return "Failure";
     }
@@ -179,20 +184,20 @@ public class ChessClient implements DisplayHandler {
         return "Failure";
     }
 
-    private String leave(String[] params) throws Exception {
+    private String leave(String[] params) {
         if (isPlaying() || isObserving()) {
             state = State.LOGGED_IN;
             gameData = null;
-            return "Success";
+            return "Left game";
         }
         return "Failure";
     }
 
-    private String resign(String[] params) throws Exception {
+    private String resign(String[] params) {
         if (isPlaying()) {
             state = State.LOGGED_IN;
             gameData = null;
-            return "Success";
+            return "Resigned";
         }
         return "Failure";
     }
@@ -254,7 +259,7 @@ public class ChessClient implements DisplayHandler {
     /**
      * Representation of all the possible client commands.
      */
-    private static record Help(String cmd, String description) {
+    private record Help(String cmd, String description) {
     }
 
     static final List<Help> loggedOutHelp = List.of(
