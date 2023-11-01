@@ -13,6 +13,7 @@
 - Several students had a hard time trying to understand how to get started with phase 3. What if instead of JavaDocs we had them write a sequence diagram for each of the endpoints. Then they would create an HTTP server that stubs out each of the endpoints.
 - Fix test server facade to handle not having a body in some of the responses. Those HTTP endpoints should be returning no content 204. Or we should change the spec to return an empty object.
 - Type adapter is problematic and confusion. We could drop the use of interfaces for anything but the database access, or we need to figure out how to teach it better.
+- If we have an endpoint for getting valid moves we can drop the shared code because the client will no longer need to know how pieces move. This will make it easy to write an Web version of the client. This will also reduce complexity on the project configuration front.
 
 ## Record of experience
 
