@@ -25,6 +25,7 @@ public class ServerErrorsExample {
             return errorHandler(new Exception(msg), req, res);
         });
 
+        System.out.println("listening on port 8080");
     }
 
     private Object throwError(Request req, Response res) {

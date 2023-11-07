@@ -23,6 +23,8 @@ public class ServerExample {
         Spark.post("/name/:name", this::addName);
         Spark.get("/name", this::listNames);
         Spark.delete("/name/:name", this::deleteName);
+
+        System.out.println("listening on port 8080");
     }
 
     private Object addName(Request req, Response res) {

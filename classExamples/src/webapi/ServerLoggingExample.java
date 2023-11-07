@@ -22,6 +22,8 @@ public class ServerLoggingExample {
 
         Spark.get("/*", (req, res) -> "<p>OK</p>");
         Spark.after(this::log);
+
+        System.out.println("listening on port 8080");
     }
 
     private void log(Request req, Response res) {

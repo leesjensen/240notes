@@ -16,6 +16,8 @@ public class ServerEchoExample {
         Spark.port(8080);
         Spark.post("/echo", this::echoBody);
         Spark.get("/echo", (req, res) -> req.url());
+
+        System.out.println("listening on port 8080");
     }
 
     private Object echoBody(Request req, Response res) {
