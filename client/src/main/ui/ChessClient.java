@@ -272,7 +272,7 @@ public class ChessClient implements DisplayHandler {
     static final List<Help> loggedInHelp = List.of(
             new Help("create <NAME>", "a game"),
             new Help("list", "games"),
-            new Help("join <ID> [WHITE|BLACK|<empty>]", "a game"),
+            new Help("join <ID> [WHITE|BLACK]", "a game"),
             new Help("observe <ID>", "a game"),
             new Help("logout", "when you are done"),
             new Help("quit", "playing chess"),
