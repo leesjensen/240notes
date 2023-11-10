@@ -1,8 +1,6 @@
 package chess;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -147,25 +145,7 @@ public class GameImpl implements ChessGame {
 
     public static class ChessGameAdapter implements JsonDeserializer<ChessGame> {
         public ChessGame deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
-            var serializer = gsonBuilder.create();
-            return serializer.fromJson(el, GameImpl.class);
-        }
-    }
-
-    public static class ChessBoardAdapter implements JsonDeserializer<ChessBoard> {
-        public ChessBoard deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
-            var serializer = gsonBuilder.create();
-            return serializer.fromJson(el, BoardImpl.class);
-        }
-    }
-
-    public static class ChessPieceAdapter implements JsonDeserializer<ChessPiece> {
-        public ChessPiece deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
-            return new Gson().fromJson(el, PieceImpl.class);
+            return ctx.deserialize(el, GameImpl.class);
         }
     }
 
