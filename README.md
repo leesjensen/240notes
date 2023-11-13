@@ -17,6 +17,17 @@
 - A lot of students are using ChatGPT and totally getting confused by just pasting it into their code.
 - Use the deliverable overview graph at the beginning of the class to help describe the 10k view.
 
+## Future work for chess
+
+- remove database.java
+- remove interfaces
+- use interfaces for data access
+
+## Work to do now
+
+- write final %5
+- bonus for survey 5%
+
 ## Record of experience
 
 | Week | Day | Topics                                                                                      | Notes                                                                                                                                                                                                                                                                                                                                                   |
@@ -720,48 +731,48 @@ To set up the client WebSocket communication we use the JDK javax.websocket.endp
   "board": {
     "squares": [
       [
-        { "pieceColor": "WHITE", "type": "ROOK" },
-        { "pieceColor": "WHITE", "type": "KNIGHT" },
-        { "pieceColor": "WHITE", "type": "BISHOP" },
-        { "pieceColor": "WHITE", "type": "QUEEN" },
-        { "pieceColor": "WHITE", "type": "KING" },
-        { "pieceColor": "WHITE", "type": "BISHOP" },
-        { "pieceColor": "WHITE", "type": "KNIGHT" },
-        { "pieceColor": "WHITE", "type": "ROOK" }
+        {"pieceColor": "WHITE", "type": "ROOK"},
+        {"pieceColor": "WHITE", "type": "KNIGHT"},
+        {"pieceColor": "WHITE", "type": "BISHOP"},
+        {"pieceColor": "WHITE", "type": "QUEEN"},
+        {"pieceColor": "WHITE", "type": "KING"},
+        {"pieceColor": "WHITE", "type": "BISHOP"},
+        {"pieceColor": "WHITE", "type": "KNIGHT"},
+        {"pieceColor": "WHITE", "type": "ROOK"}
       ],
       [
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" },
-        { "pieceColor": "WHITE", "type": "PAWN" }
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"},
+        {"pieceColor": "WHITE", "type": "PAWN"}
       ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" },
-        { "pieceColor": "BLACK", "type": "PAWN" }
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"},
+        {"pieceColor": "BLACK", "type": "PAWN"}
       ],
       [
-        { "pieceColor": "BLACK", "type": "ROOK" },
-        { "pieceColor": "BLACK", "type": "KNIGHT" },
-        { "pieceColor": "BLACK", "type": "BISHOP" },
-        { "pieceColor": "BLACK", "type": "QUEEN" },
-        { "pieceColor": "BLACK", "type": "KING" },
-        { "pieceColor": "BLACK", "type": "BISHOP" },
-        { "pieceColor": "BLACK", "type": "KNIGHT" },
-        { "pieceColor": "BLACK", "type": "ROOK" }
+        {"pieceColor": "BLACK", "type": "ROOK"},
+        {"pieceColor": "BLACK", "type": "KNIGHT"},
+        {"pieceColor": "BLACK", "type": "BISHOP"},
+        {"pieceColor": "BLACK", "type": "QUEEN"},
+        {"pieceColor": "BLACK", "type": "KING"},
+        {"pieceColor": "BLACK", "type": "BISHOP"},
+        {"pieceColor": "BLACK", "type": "KNIGHT"},
+        {"pieceColor": "BLACK", "type": "ROOK"}
       ]
     ],
     "history": []
