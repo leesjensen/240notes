@@ -11,7 +11,7 @@ public class HashExample {
                 "Fox",
                 "Fox",
                 "The red fox jumps over the blue dog",
-                "The red fox jumps ouer the blue dog",
+                "The red fox jumps oѵer the blue dog",
         };
 
         for (String input : allInputs) {
