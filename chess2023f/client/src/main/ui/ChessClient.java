@@ -135,9 +135,8 @@ public class ChessClient implements DisplayHandler {
                 var gameID = Integer.parseInt(params[0]);
                 var color = ChessGame.TeamColor.valueOf(params[1].toUpperCase());
                 gameData = server.joinGame(authToken, gameID, color);
-                state = (params[1].equalsIgnoreCase("WHITE") ? State.WHITE : State.BLACK);
-                printGame(ChessGame.TeamColor.WHITE);
-                printGame(ChessGame.TeamColor.BLACK);
+                state = (color == ChessGame.TeamColor.WHITE ? State.WHITE : State.BLACK);
+                printGame(color);
                 return String.format("Joined %d as %s", gameData.gameID(), color);
             }
         }
