@@ -287,11 +287,11 @@ public class ChessClient implements DisplayHandler {
     );
 
     static final List<Help> playingHelp = List.of(
-            new Help("move <rc-rc>", "a piece"),
-            new Help("legal", "moves for the current board"),
             new Help("redraw", "the board"),
             new Help("leave", "the game"),
+            new Help("move <rc-rc>", "a piece"),
             new Help("resign", "the game without leaving it"),
+            new Help("legal", "moves for the current board"),
             new Help("quit", "playing chess"),
             new Help("help", "with possible commands")
     );
