@@ -2,7 +2,6 @@ package chess;
 
 import com.google.gson.*;
 
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -138,17 +137,11 @@ public class GameImpl implements ChessGame {
 
     public static Gson serializer() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(ChessGame.class, new ChessGameAdapter());
-        gsonBuilder.registerTypeAdapter(GameImpl.class, new ChessGameAdapter());
+        gsonBuilder.registerTypeAdapter(ChessGame.class, (JsonDeserializer<ChessGame>) (el, type, ctx) -> ctx.deserialize(el, GameImpl.class));
+        gsonBuilder.registerTypeAdapter(ChessBoard.class, (JsonDeserializer<ChessBoard>) (el, type, ctx) -> ctx.deserialize(el, BoardImpl.class));
+        gsonBuilder.registerTypeAdapter(ChessPiece.class, (JsonDeserializer<ChessPiece>) (el, type, ctx) -> ctx.deserialize(el, PieceImpl.class));
         return gsonBuilder.create();
     }
-
-    public static class ChessGameAdapter implements JsonDeserializer<ChessGame> {
-        public ChessGame deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
-            return ctx.deserialize(el, GameImpl.class);
-        }
-    }
-
 
     @Override
     public boolean equals(Object o) {
