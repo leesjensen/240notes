@@ -37,6 +37,11 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
         return new GameData(this.gameID, this.whiteUsername, this.blackUsername, this.gameName, null, this.state);
     }
 
+    public GameData resign(ChessGame.TeamColor color) {
+        var state = color == ChessGame.TeamColor.WHITE ? State.BLACK : State.WHITE;
+        return new GameData(this.gameID, this.whiteUsername, this.blackUsername, this.gameName, this.game, state);
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);

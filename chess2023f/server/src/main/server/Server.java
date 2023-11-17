@@ -15,12 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static spark.Spark.webSocket;
+
 public class Server {
     final DataAccess dataAccess;
     final UserService userService;
     final GameService gameService;
     final AdminService adminService;
     final AuthService authService;
+    final WebSocketHandler webSocketHandler;
 
     public static final Logger log = Logger.getLogger("chess");
 
@@ -42,6 +45,7 @@ public class Server {
         gameService = new GameService(dataAccess);
         adminService = new AdminService(dataAccess);
         authService = new AuthService(dataAccess);
+        webSocketHandler = new WebSocketHandler(dataAccess);
     }
 
     public int run(int port) {
@@ -49,6 +53,8 @@ public class Server {
             Spark.port(port);
             Spark.externalStaticFileLocation("web");
 
+            webSocket("/connect", webSocketHandler);
+            
             Spark.delete("/db", this::clearApplication);
             Spark.post("/user", this::registerUser);
             Spark.post("/session", this::createSession);

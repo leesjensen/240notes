@@ -6,6 +6,10 @@ import com.google.gson.Gson;
 import model.GameData;
 import util.ExceptionUtil;
 import util.ResponseException;
+import webSocketMessages.userCommands.GameCommand;
+import webSocketMessages.userCommands.JoinPlayerCommand;
+import webSocketMessages.userCommands.MoveCommand;
+import webSocketMessages.userCommands.UserGameCommand;
 
 
 import java.util.Arrays;
@@ -20,10 +24,12 @@ public class ChessClient implements DisplayHandler {
     private String authToken;
     private GameData gameData;
     final private ServerFacade server;
+    final private WebSocketFacade webSocket;
 
 
-    public ChessClient() {
+    public ChessClient() throws Exception {
         server = new ServerFacade("http://localhost:8080");
+        webSocket = new WebSocketFacade("ws://localhost:8080/connect", this);
     }
 
     public String eval(String input) {
@@ -136,7 +142,7 @@ public class ChessClient implements DisplayHandler {
                 var color = ChessGame.TeamColor.valueOf(params[1].toUpperCase());
                 gameData = server.joinGame(authToken, gameID, color);
                 state = (color == ChessGame.TeamColor.WHITE ? State.WHITE : State.BLACK);
-                printGame(color);
+                webSocket.sendCommand(new JoinPlayerCommand(authToken, gameID, color));
                 return String.format("Joined %d as %s", gameData.gameID(), color);
             }
         }
@@ -152,7 +158,7 @@ public class ChessClient implements DisplayHandler {
                 var gameID = Integer.parseInt(params[0]);
                 gameData = server.joinGame(authToken, gameID, null);
                 state = State.OBSERVING;
-                printGame(ChessGame.TeamColor.WHITE);
+                webSocket.sendCommand(new GameCommand(UserGameCommand.CommandType.JOIN_OBSERVER, authToken, gameID));
                 return String.format("Joined %d as observer", gameData.gameID());
             }
         }
@@ -176,24 +182,27 @@ public class ChessClient implements DisplayHandler {
         verifyAuth();
         if (params.length == 1) {
             var move = new MoveImpl(params[0]);
-            if (isTurn() && isMoveLegal(move)) {
+            if (isMoveLegal(move)) {
+                webSocket.sendCommand(new MoveCommand(authToken, gameData.gameID(), move));
                 return "Success";
             }
         }
         return "Failure";
     }
 
-    private String leave(String[] params) {
+    private String leave(String[] params) throws Exception {
         if (isPlaying() || isObserving()) {
             state = State.LOGGED_IN;
+            webSocket.sendCommand(new GameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameData.gameID()));
             gameData = null;
             return "Left game";
         }
         return "Failure";
     }
 
-    private String resign(String[] params) {
+    private String resign(String[] params) throws Exception {
         if (isPlaying()) {
+            webSocket.sendCommand(new GameCommand(GameCommand.CommandType.RESIGN, authToken, gameData.gameID()));
             state = State.LOGGED_IN;
             gameData = null;
             return "Resigned";
@@ -202,7 +211,7 @@ public class ChessClient implements DisplayHandler {
     }
 
     private void printGame() {
-        var color = state == State.WHITE ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+        var color = state == State.BLACK ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
         printGame(color);
     }
 
@@ -217,7 +226,17 @@ public class ChessClient implements DisplayHandler {
     }
 
     public boolean isMoveLegal(MoveImpl move) {
-        return (gameData.game().getBoard()).isMoveLegal(move);
+        if (isTurn()) {
+            var board = gameData.game().getBoard();
+            var piece = board.getPiece(move.getStartPosition());
+            if (piece != null) {
+                var validMoves = piece.pieceMoves(board, move.getStartPosition());
+                if (validMoves.contains(move)) {
+                    return board.isMoveLegal(move);
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isPlaying() {
@@ -241,6 +260,7 @@ public class ChessClient implements DisplayHandler {
     public void updateBoard(GameData game) {
         this.gameData = game;
         printGame();
+        printPrompt();
     }
 
     @Override
@@ -252,7 +272,10 @@ public class ChessClient implements DisplayHandler {
 
     @Override
     public void error(String message) {
-        System.out.println(message);
+        System.out.println();
+        System.out.println(SET_TEXT_COLOR_RED + "NOTIFY: " + message);
+        printPrompt();
+
     }
 
     /**
@@ -289,7 +312,7 @@ public class ChessClient implements DisplayHandler {
     static final List<Help> playingHelp = List.of(
             new Help("redraw", "the board"),
             new Help("leave", "the game"),
-            new Help("move <rc-rc>", "a piece"),
+            new Help("move <rcrc> [promote]", "a piece"),
             new Help("resign", "the game without leaving it"),
             new Help("legal", "moves for the current board"),
             new Help("quit", "playing chess"),

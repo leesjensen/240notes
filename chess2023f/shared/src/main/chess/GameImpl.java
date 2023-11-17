@@ -140,6 +140,8 @@ public class GameImpl implements ChessGame {
         gsonBuilder.registerTypeAdapter(ChessGame.class, (JsonDeserializer<ChessGame>) (el, type, ctx) -> ctx.deserialize(el, GameImpl.class));
         gsonBuilder.registerTypeAdapter(ChessBoard.class, (JsonDeserializer<ChessBoard>) (el, type, ctx) -> ctx.deserialize(el, BoardImpl.class));
         gsonBuilder.registerTypeAdapter(ChessPiece.class, (JsonDeserializer<ChessPiece>) (el, type, ctx) -> ctx.deserialize(el, PieceImpl.class));
+        gsonBuilder.registerTypeAdapter(ChessMove.class, (JsonDeserializer<ChessMove>) (el, type, ctx) -> ctx.deserialize(el, MoveImpl.class));
+        gsonBuilder.registerTypeAdapter(ChessPosition.class, (JsonDeserializer<ChessPosition>) (el, type, ctx) -> ctx.deserialize(el, PositionImpl.class));
         return gsonBuilder.create();
     }
 

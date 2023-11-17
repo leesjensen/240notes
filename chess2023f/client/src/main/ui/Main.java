@@ -7,9 +7,9 @@ import static util.EscapeSequences.RESET_TEXT_COLOR;
 public class Main {
     public static void main(String[] args) {
         try {
+            ChessClient client = new ChessClient();
             System.out.println("👑 Welcome to 240 chess. Type Help to get started. 👑");
             Scanner scanner = new Scanner(System.in);
-            ChessClient client = new ChessClient();
 
             var result = "";
             while (!result.equals("quit")) {
