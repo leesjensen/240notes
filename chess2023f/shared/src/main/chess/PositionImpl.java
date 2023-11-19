@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Locale;
+
 /**
  * Concrete implementation of the {@link ChessPosition} interface.
  */
@@ -12,6 +14,17 @@ public class PositionImpl implements ChessPosition {
         this.row = row;
         this.col = col;
     }
+
+    public PositionImpl(String notation) throws Exception {
+        notation = notation.toLowerCase(Locale.ROOT);
+        if (notation.length() == 2) {
+            col = notation.charAt(0) - 'a' + 1;
+            row = notation.charAt(1) - '1' + 1;
+            return;
+        }
+        throw new Exception("Invalid notation");
+    }
+
 
     @Override
     public int getRow() {

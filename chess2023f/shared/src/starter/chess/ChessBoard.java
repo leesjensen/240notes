@@ -49,5 +49,5 @@ public interface ChessBoard {
 
     Collection<ChessPlacement> collection();
 
-    String toString(ChessGame.TeamColor playerColor);
+    String toString(ChessGame.TeamColor playerColor, Collection<ChessPosition> highlights);
 }

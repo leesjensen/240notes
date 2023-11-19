@@ -1,7 +1,9 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessPosition;
 import chess.MoveImpl;
+import chess.PositionImpl;
 import com.google.gson.Gson;
 import model.GameData;
 import util.ExceptionUtil;
@@ -12,7 +14,9 @@ import webSocketMessages.userCommands.MoveCommand;
 import webSocketMessages.userCommands.UserGameCommand;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static util.EscapeSequences.*;
@@ -166,7 +170,8 @@ public class ChessClient implements DisplayHandler {
         return "Failure";
     }
 
-    private String redraw(String[] params) {
+    private String redraw(String[] params) throws Exception {
+        verifyAuth();
         if (isPlaying() || isObserving()) {
             printGame();
             return "";
@@ -175,7 +180,21 @@ public class ChessClient implements DisplayHandler {
     }
 
     private String legal(String[] params) throws Exception {
-        throw new NoSuchMethodException();
+        verifyAuth();
+        if (isPlaying() || isObserving()) {
+            if (params.length == 1) {
+                var pos = new PositionImpl(params[0]);
+                var highlights = new ArrayList<ChessPosition>();
+                highlights.add(pos);
+                for (var move : gameData.game().validMoves(pos)) {
+                    highlights.add(move.getEndPosition());
+                }
+                var color = state == State.BLACK ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+                printGame(color, highlights);
+                return "";
+            }
+        }
+        return "Failure";
     }
 
     private String move(String[] params) throws Exception {
@@ -212,12 +231,12 @@ public class ChessClient implements DisplayHandler {
 
     private void printGame() {
         var color = state == State.BLACK ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
-        printGame(color);
+        printGame(color, null);
     }
 
-    private void printGame(ChessGame.TeamColor color) {
+    private void printGame(ChessGame.TeamColor color, Collection<ChessPosition> highlights) {
         System.out.println("\n");
-        System.out.print((gameData.game().getBoard()).toString(color));
+        System.out.print((gameData.game().getBoard()).toString(color, highlights));
         System.out.println();
     }
 
@@ -312,9 +331,9 @@ public class ChessClient implements DisplayHandler {
     static final List<Help> playingHelp = List.of(
             new Help("redraw", "the board"),
             new Help("leave", "the game"),
-            new Help("move <rcrc> [promote]", "a piece"),
+            new Help("move <crcr> [q|r|b|n]", "a piece with optional promotion"),
             new Help("resign", "the game without leaving it"),
-            new Help("legal", "moves for the current board"),
+            new Help("legal <cr>", "moves a given piece"),
             new Help("quit", "playing chess"),
             new Help("help", "with possible commands")
     );

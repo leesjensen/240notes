@@ -40,18 +40,18 @@ public class GameImpl implements ChessGame {
 
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        var piece = board.getPiece(startPosition);
-        var possibleMoves = piece.pieceMoves(board, startPosition);
-
         var validMoves = new HashSet<ChessMove>();
+        var piece = board.getPiece(startPosition);
+        if (piece != null) {
+            var possibleMoves = piece.pieceMoves(board, startPosition);
 
-        // Make sure none of the possible moves are illegal.
-        for (var move : possibleMoves) {
-            if (board.isMoveLegal(move)) {
-                validMoves.add(move);
+            // Make sure none of the possible moves are illegal.
+            for (var move : possibleMoves) {
+                if (board.isMoveLegal(move)) {
+                    validMoves.add(move);
+                }
             }
         }
-
         return validMoves;
     }
 

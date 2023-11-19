@@ -274,6 +274,7 @@ public class BoardImpl implements ChessBoard {
 
     private static final String BOARD_BLACK = color(WHITE, BLACK);
     private static final String BOARD_WHITE = color(BLACK, WHITE);
+    private static final String BOARD_HIGHLIGHT = color(GREEN, MAGENTA);
 
     private static final String BLACK_PIECE = color(RED);
     private static final String WHITE_PIECE = color(GREEN);
@@ -289,11 +290,11 @@ public class BoardImpl implements ChessBoard {
 
     @Override
     public String toString() {
-        return toString(ChessGame.TeamColor.WHITE);
+        return toString(ChessGame.TeamColor.WHITE, null);
     }
 
 
-    public String toString(ChessGame.TeamColor playerColor) {
+    public String toString(ChessGame.TeamColor playerColor, Collection<ChessPosition> highlights) {
         var sb = new StringBuilder();
         try {
             var currentSquare = BOARD_WHITE;
@@ -310,13 +311,17 @@ public class BoardImpl implements ChessBoard {
                 var row = " " + (i + 1) + " ";
                 sb.append(BORDER).append(row).append(COLOR_RESET);
                 for (var j : columns) {
+                    var squareColor = currentSquare;
+                    if (highlights != null && highlights.contains(new PositionImpl(i + 1, j + 1))) {
+                        squareColor = BOARD_HIGHLIGHT;
+                    }
                     var piece = squares[i][j];
                     if (piece != null) {
                         var color = (piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? WHITE_PIECE : BLACK_PIECE;
                         var p = pieceMap.get(piece.getPieceType());
-                        sb.append(currentSquare).append(color).append(" ").append(p).append(" ").append(COLOR_RESET);
+                        sb.append(squareColor).append(color).append(" ").append(p).append(" ").append(COLOR_RESET);
                     } else {
-                        sb.append(currentSquare).append("   ").append(COLOR_RESET);
+                        sb.append(squareColor).append("   ").append(COLOR_RESET);
                     }
                     currentSquare = currentSquare.equals(BOARD_BLACK) ? BOARD_WHITE : BOARD_BLACK;
                 }

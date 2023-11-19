@@ -17,7 +17,7 @@ public class MoveImpl implements ChessMove {
         this.promotionType = promotionPiece;
     }
 
-    public MoveImpl(String notation) {
+    public MoveImpl(String notation) throws Exception {
         notation = notation.toLowerCase(Locale.ROOT);
         if (notation.length() >= 4) {
             int colStart = notation.charAt(0) - 'a' + 1;
@@ -27,17 +27,18 @@ public class MoveImpl implements ChessMove {
 
             start = new PositionImpl(rowStart, colStart);
             end = new PositionImpl(rowEnd, colEnd);
+            if (notation.length() == 5) {
+                promotionType = switch (notation.charAt(4)) {
+                    case 'q' -> ChessPiece.PieceType.QUEEN;
+                    case 'b' -> ChessPiece.PieceType.BISHOP;
+                    case 'n' -> ChessPiece.PieceType.KNIGHT;
+                    case 'r' -> ChessPiece.PieceType.ROOK;
+                    default -> null;
+                };
+            }
+            return;
         }
-
-        if (notation.length() == 5) {
-            promotionType = switch (notation.charAt(4)) {
-                case 'q' -> ChessPiece.PieceType.QUEEN;
-                case 'b' -> ChessPiece.PieceType.BISHOP;
-                case 'n' -> ChessPiece.PieceType.KNIGHT;
-                case 'r' -> ChessPiece.PieceType.ROOK;
-                default -> null;
-            };
-        }
+        throw new Exception("Invalid notation");
     }
 
     @Override
