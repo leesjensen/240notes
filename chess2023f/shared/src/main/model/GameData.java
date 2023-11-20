@@ -37,8 +37,7 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
         return new GameData(this.gameID, this.whiteUsername, this.blackUsername, this.gameName, null, this.state);
     }
 
-    public GameData resign(ChessGame.TeamColor color) {
-        var state = color == ChessGame.TeamColor.WHITE ? State.BLACK : State.WHITE;
+    public GameData setState(State state) {
         return new GameData(this.gameID, this.whiteUsername, this.blackUsername, this.gameName, this.game, state);
     }
 

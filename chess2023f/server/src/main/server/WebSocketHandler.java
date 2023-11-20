@@ -19,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import util.StringUtil;
 
+import static chess.ChessGame.TeamColor.*;
+
 @WebSocket
 public class WebSocketHandler {
 
@@ -181,18 +183,20 @@ public class WebSocketHandler {
     private void move(Connection connection, MoveCommand command) throws Exception {
         var gameData = dataAccess.readGame(command.gameID);
         if (gameData != null) {
-            System.out.println(gameData.game().getBoard());
-            gameData.game().makeMove(command.move);
-            System.out.println(gameData.game().getBoard());
-            dataAccess.updateGame(gameData);
+            if (!gameData.isGameOver()) {
+                gameData.game().makeMove(command.move);
+                var notificationMsg = (new NotificationMessage(String.format("%s moved %s", connection.user.username(), command.move))).toString();
+                connections.broadcast(gameData.gameID(), connection.user.username(), notificationMsg);
 
-            connection.game = gameData;
+                gameData = handleGameStateChange(gameData);
+                dataAccess.updateGame(gameData);
+                connection.game = gameData;
 
-            var loadMsg = (new LoadMessage(gameData)).toString();
-            connections.broadcast(gameData.gameID(), "", loadMsg);
-
-            var notificationMsg = (new NotificationMessage(String.format("%s moved %s", connection.user.username(), command.move))).toString();
-            connections.broadcast(gameData.gameID(), connection.user.username(), notificationMsg);
+                var loadMsg = (new LoadMessage(gameData)).toString();
+                connections.broadcast(gameData.gameID(), "", loadMsg);
+            } else {
+                connection.sendError("game is over: " + gameData.state());
+            }
         } else {
             connection.sendError("unknown game");
         }
@@ -220,7 +224,8 @@ public class WebSocketHandler {
         if (gameData != null) {
             var color = getPlayerColor(gameData, connection.user.username());
             if (color != null) {
-                gameData = gameData.resign(color);
+                var state = color == ChessGame.TeamColor.WHITE ? GameData.State.BLACK : GameData.State.WHITE;
+                gameData = gameData.setState(state);
                 dataAccess.updateGame(gameData);
                 connection.game = gameData;
 
@@ -238,9 +243,33 @@ public class WebSocketHandler {
         if (StringUtil.isEqual(gameData.blackUsername(), username)) {
             return ChessGame.TeamColor.BLACK;
         } else if (StringUtil.isEqual(gameData.whiteUsername(), username)) {
-            return ChessGame.TeamColor.WHITE;
+            return WHITE;
         }
         return null;
+    }
+
+    private GameData handleGameStateChange(GameData gameData) throws Exception {
+        NotificationMessage notificationMsg = null;
+        var game = gameData.game();
+        if (game.isInCheck(WHITE)) {
+            notificationMsg = new NotificationMessage(String.format("White player, %s, is in check!", gameData.whiteUsername()));
+        } else if (game.isInCheck(BLACK)) {
+            notificationMsg = new NotificationMessage(String.format("Black player, %s, is in check!", gameData.blackUsername()));
+        } else if (game.isInStalemate(WHITE) || game.isInStalemate(BLACK)) {
+            gameData = gameData.setState(GameData.State.DRAW);
+            notificationMsg = new NotificationMessage("game is a draw");
+        } else if (game.isInCheckmate(WHITE)) {
+            gameData = gameData.setState(GameData.State.BLACK);
+            notificationMsg = new NotificationMessage(String.format("Black player, %s, wins!", gameData.blackUsername()));
+        } else if (game.isInCheckmate(BLACK)) {
+            gameData = gameData.setState(GameData.State.WHITE);
+            notificationMsg = new NotificationMessage(String.format("White player, %s, wins!", gameData.whiteUsername()));
+        }
+
+        if (notificationMsg != null) {
+            connections.broadcast(gameData.gameID(), "", notificationMsg.toString());
+        }
+        return gameData;
     }
 
 
