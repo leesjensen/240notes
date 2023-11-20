@@ -24,9 +24,10 @@ import static util.EscapeSequences.*;
 
 public class ChessClient implements DisplayHandler {
 
-    private State state = State.LOGGED_OUT;
+    private State userState = State.LOGGED_OUT;
     private String authToken;
     private GameData gameData;
+    private GameData[] games;
     final private ServerFacade server;
     final private WebSocketFacade webSocket;
 
@@ -65,13 +66,13 @@ public class ChessClient implements DisplayHandler {
 
     private String clear(String[] params) throws Exception {
         clear();
-        state = State.LOGGED_OUT;
+        userState = State.LOGGED_OUT;
         gameData = null;
         return "Cleared the world";
     }
 
     private String help(String[] params) {
-        return switch (state) {
+        return switch (userState) {
             case LOGGED_IN -> getHelp(loggedInHelp);
             case OBSERVING -> getHelp(ObservingHelp);
             case BLACK, WHITE -> getHelp(playingHelp);
@@ -85,31 +86,31 @@ public class ChessClient implements DisplayHandler {
 
 
     private String login(String[] params) throws ResponseException {
-        if (state == State.LOGGED_OUT && params.length == 2) {
+        if (userState == State.LOGGED_OUT && params.length == 2) {
             var response = server.login(params[0], params[1]);
             authToken = response.authToken();
-            state = State.LOGGED_IN;
+            userState = State.LOGGED_IN;
             return String.format("Logged in as %s", params[0]);
         }
         return "Failure";
     }
 
     private String register(String[] params) throws ResponseException {
-        if (state == State.LOGGED_OUT && params.length == 3) {
+        if (userState == State.LOGGED_OUT && params.length == 3) {
             var response = server.register(params[0], params[1], params[2]);
             authToken = response.authToken();
-            state = State.LOGGED_IN;
+            userState = State.LOGGED_IN;
             return String.format("Logged in as %s", params[0]);
         }
         return "Failure";
     }
 
-    private String logout(String[] params) throws ResponseException {
+    private String logout(String[] ignore) throws ResponseException {
         verifyAuth();
 
-        if (state != State.LOGGED_OUT) {
+        if (userState != State.LOGGED_OUT) {
             server.logout(authToken);
-            state = State.LOGGED_OUT;
+            userState = State.LOGGED_OUT;
             authToken = null;
             return "Logged out";
         }
@@ -119,20 +120,21 @@ public class ChessClient implements DisplayHandler {
     private String create(String[] params) throws ResponseException {
         verifyAuth();
 
-        if (params.length == 1 && state == State.LOGGED_IN) {
+        if (params.length == 1 && userState == State.LOGGED_IN) {
             var gameData = server.createGame(authToken, params[0]);
             return String.format("Create %d", gameData.gameID());
         }
         return "Failure";
     }
 
-    private String list(String[] params) throws ResponseException {
+    private String list(String[] ignore) throws ResponseException {
         verifyAuth();
-        var games = server.listGames(authToken);
-        var deserializer = new Gson();
+        games = server.listGames(authToken);
         StringBuilder buf = new StringBuilder();
-        for (var game : games) {
-            buf.append(deserializer.toJson(game.clearBoard())).append("\n");
+        for (var i = 0; i < games.length; i++) {
+            var game = games[i];
+            var gameText = String.format("%d. %s white:%s black:%s state: %s%n", i, game.gameName(), game.whiteUsername(), game.blackUsername(), game.state());
+            buf.append(gameText);
         }
         return buf.toString();
     }
@@ -140,14 +142,17 @@ public class ChessClient implements DisplayHandler {
 
     private String join(String[] params) throws Exception {
         verifyAuth();
-        if (state == State.LOGGED_IN) {
+        if (userState == State.LOGGED_IN) {
             if (params.length == 2 && (params[1].equalsIgnoreCase("WHITE") || params[1].equalsIgnoreCase("BLACK"))) {
-                var gameID = Integer.parseInt(params[0]);
-                var color = ChessGame.TeamColor.valueOf(params[1].toUpperCase());
-                gameData = server.joinGame(authToken, gameID, color);
-                state = (color == ChessGame.TeamColor.WHITE ? State.WHITE : State.BLACK);
-                webSocket.sendCommand(new JoinPlayerCommand(authToken, gameID, color));
-                return String.format("Joined %d as %s", gameData.gameID(), color);
+                var gamePos = Integer.parseInt(params[0]);
+                if (games != null && gamePos >= 0 && gamePos < games.length) {
+                    var gameID = games[gamePos].gameID();
+                    var color = ChessGame.TeamColor.valueOf(params[1].toUpperCase());
+                    gameData = server.joinGame(authToken, gameID, color);
+                    userState = (color == ChessGame.TeamColor.WHITE ? State.WHITE : State.BLACK);
+                    webSocket.sendCommand(new JoinPlayerCommand(authToken, gameID, color));
+                    return String.format("Joined %d as %s", gameData.gameID(), color);
+                }
             }
         }
 
@@ -157,11 +162,11 @@ public class ChessClient implements DisplayHandler {
 
     private String observe(String[] params) throws Exception {
         verifyAuth();
-        if (state == State.LOGGED_IN) {
+        if (userState == State.LOGGED_IN) {
             if (params.length == 1) {
                 var gameID = Integer.parseInt(params[0]);
                 gameData = server.joinGame(authToken, gameID, null);
-                state = State.OBSERVING;
+                userState = State.OBSERVING;
                 webSocket.sendCommand(new GameCommand(UserGameCommand.CommandType.JOIN_OBSERVER, authToken, gameID));
                 return String.format("Joined %d as observer", gameData.gameID());
             }
@@ -189,7 +194,7 @@ public class ChessClient implements DisplayHandler {
                 for (var move : gameData.game().validMoves(pos)) {
                     highlights.add(move.getEndPosition());
                 }
-                var color = state == State.BLACK ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+                var color = userState == State.BLACK ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
                 printGame(color, highlights);
                 return "";
             }
@@ -211,7 +216,7 @@ public class ChessClient implements DisplayHandler {
 
     private String leave(String[] params) throws Exception {
         if (isPlaying() || isObserving()) {
-            state = State.LOGGED_IN;
+            userState = State.LOGGED_IN;
             webSocket.sendCommand(new GameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameData.gameID()));
             gameData = null;
             return "Left game";
@@ -222,7 +227,7 @@ public class ChessClient implements DisplayHandler {
     private String resign(String[] params) throws Exception {
         if (isPlaying()) {
             webSocket.sendCommand(new GameCommand(GameCommand.CommandType.RESIGN, authToken, gameData.gameID()));
-            state = State.LOGGED_IN;
+            userState = State.LOGGED_IN;
             gameData = null;
             return "Resigned";
         }
@@ -230,7 +235,7 @@ public class ChessClient implements DisplayHandler {
     }
 
     private void printGame() {
-        var color = state == State.BLACK ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+        var color = userState == State.BLACK ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
         printGame(color, null);
     }
 
@@ -241,7 +246,16 @@ public class ChessClient implements DisplayHandler {
     }
 
     public void printPrompt() {
-        System.out.print(RESET_TEXT_COLOR + String.format("\n[%s] >>> ", state) + SET_TEXT_COLOR_GREEN);
+        String gameState = "Not playing";
+        if (gameData != null) {
+            gameState = switch (gameData.state()) {
+                case UNDECIDED -> String.format("%s's turn", gameData.game().getTeamTurn());
+                case DRAW -> "Draw";
+                case BLACK -> "Black won";
+                case WHITE -> "White Won";
+            };
+        }
+        System.out.print(RESET_TEXT_COLOR + String.format("\n[%s: %s] >>> ", userState, gameState) + SET_TEXT_COLOR_GREEN);
     }
 
     public boolean isMoveLegal(MoveImpl move) {
@@ -259,12 +273,12 @@ public class ChessClient implements DisplayHandler {
     }
 
     public boolean isPlaying() {
-        return (gameData != null && (state == State.WHITE || state == State.BLACK) && !isGameOver());
+        return (gameData != null && (userState == State.WHITE || userState == State.BLACK) && !isGameOver());
     }
 
 
     public boolean isObserving() {
-        return (gameData != null && (state == State.OBSERVING));
+        return (gameData != null && (userState == State.OBSERVING));
     }
 
     public boolean isGameOver() {
@@ -272,14 +286,20 @@ public class ChessClient implements DisplayHandler {
     }
 
     public boolean isTurn() {
-        return (isPlaying() && state.isTurn(gameData.game().getTeamTurn()));
+        return (isPlaying() && userState.isTurn(gameData.game().getTeamTurn()));
     }
 
     @Override
-    public void updateBoard(GameData game) {
-        this.gameData = game;
+    public void updateBoard(GameData newGameData) {
+        gameData = newGameData;
         printGame();
         printPrompt();
+
+        if (isGameOver()) {
+            userState = State.LOGGED_IN;
+            printPrompt();
+            gameData = null;
+        }
     }
 
     @Override

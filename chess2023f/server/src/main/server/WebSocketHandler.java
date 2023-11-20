@@ -251,11 +251,7 @@ public class WebSocketHandler {
     private GameData handleGameStateChange(GameData gameData) throws Exception {
         NotificationMessage notificationMsg = null;
         var game = gameData.game();
-        if (game.isInCheck(WHITE)) {
-            notificationMsg = new NotificationMessage(String.format("White player, %s, is in check!", gameData.whiteUsername()));
-        } else if (game.isInCheck(BLACK)) {
-            notificationMsg = new NotificationMessage(String.format("Black player, %s, is in check!", gameData.blackUsername()));
-        } else if (game.isInStalemate(WHITE) || game.isInStalemate(BLACK)) {
+        if (game.isInStalemate(WHITE) || game.isInStalemate(BLACK)) {
             gameData = gameData.setState(GameData.State.DRAW);
             notificationMsg = new NotificationMessage("game is a draw");
         } else if (game.isInCheckmate(WHITE)) {
@@ -264,8 +260,12 @@ public class WebSocketHandler {
         } else if (game.isInCheckmate(BLACK)) {
             gameData = gameData.setState(GameData.State.WHITE);
             notificationMsg = new NotificationMessage(String.format("White player, %s, wins!", gameData.whiteUsername()));
+        } else if (game.isInCheck(WHITE)) {
+            notificationMsg = new NotificationMessage(String.format("White player, %s, is in check!", gameData.whiteUsername()));
+        } else if (game.isInCheck(BLACK)) {
+            notificationMsg = new NotificationMessage(String.format("Black player, %s, is in check!", gameData.blackUsername()));
         }
-
+        
         if (notificationMsg != null) {
             connections.broadcast(gameData.gameID(), "", notificationMsg.toString());
         }
