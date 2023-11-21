@@ -4,27 +4,20 @@ public class ThreadExample {
 
     public static void main(String[] args) {
 
-        CountingThread joe = new CountingThread("Joe");
-        CountingThread sally = new CountingThread("Sally");
+        new CountingThread().start();
+        new CountingThread().start();
 
-        joe.start();
-        sally.start();
-
-        System.out.println("\nLeaving Main Thread");
+        System.out.println("\nExit Main Thread");
     }
 
 
     static class CountingThread extends Thread {
-        final String name;
-
-        CountingThread(String name) {
-            this.name = name;
-        }
-
         public void run() {
+            var id = this.threadId();
             for (int i = 0; i != 10; i++) {
-                System.out.printf("%s:%d ", name, i);
+                System.out.printf("%s:%d ", id, i);
             }
+            System.out.printf("%nExit thread %s%n", id);
         }
     }
 }
