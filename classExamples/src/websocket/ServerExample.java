@@ -16,7 +16,7 @@ public class ServerExample {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
-        System.out.printf("Received: %s", message);
+        System.out.printf("Received: %s%n", message);
         session.getRemote().sendString("WebSocket response: " + message);
     }
 }
