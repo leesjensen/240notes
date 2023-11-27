@@ -5,8 +5,8 @@ import spark.Spark;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-//    while true; do curl localhost:8080/add/1; print "\n"; done &
-//    while true; do curl localhost:8080/add/-1; print "\n"; done &
+//    while true; do curl localhost:8080/toggle; print "\n"; done &
+//    while true; do curl localhost:8080/toggle; print "\n"; done &
 //    wait
 
 public class AtomicServerExample {
@@ -15,9 +15,9 @@ public class AtomicServerExample {
     public static void main(String[] args) {
         Spark.port(8080);
         Spark.get("/toggle", (req, res) -> {
-            var v = value.compareAndExchange(true, false);
-            v = value.compareAndExchange(false, v);
-            return " " + !v;
+            value.compareAndExchange(true, false);
+            var v = value.compareAndExchange(false, true);
+            return " " + (v == false);
         });
     }
 }
