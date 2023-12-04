@@ -7,20 +7,13 @@ import static passoffTests.TestFactory.*;
 
 public class ChessBoardTests {
 
-    private ChessBoard board;
-
-    @BeforeEach
-    public void setup() {
-        board = getNewBoard();
-    }
-
-
     @Test
     @DisplayName("Add and Get Piece")
     public void getAddPiece() {
         ChessPosition position = getNewPosition(4, 4);
         ChessPiece piece = getNewPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
 
+        var board = getNewBoard();
         board.addPiece(position, piece);
 
         ChessPiece foundPiece = board.getPiece(position);

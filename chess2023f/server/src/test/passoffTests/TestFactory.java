@@ -63,11 +63,18 @@ public class TestFactory {
     }
     //------------------------------------------------------------------------------------------------------------------
 
+    static public ChessPosition startPosition(int row, int col) {
+        return getNewPosition(row, col);
+    }
 
-    static public void validateMoves(String boardText, ChessPosition startPosition, int[][] moves) {
+    static public int[][] endPositions(int[][] endPos) {
+        return endPos;
+    }
+
+    static public void validateMoves(String boardText, ChessPosition startPosition, int[][] endPositions) {
         var board = loadBoard(boardText);
         var testPiece = board.getPiece(startPosition);
-        var validMoves = loadMoves(startPosition, moves);
+        var validMoves = loadMoves(startPosition, endPositions);
 
         Assertions.assertEquals(validMoves, testPiece.pieceMoves(board, startPosition), "Wrong moves");
     }
