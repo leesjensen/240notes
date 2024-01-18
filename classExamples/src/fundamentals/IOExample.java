@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 import java.io.IOException;
 import java.io.LineNumberReader;

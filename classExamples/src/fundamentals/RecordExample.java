@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 import java.util.Objects;
 
@@ -10,11 +10,11 @@ public class RecordExample {
         System.out.println(new PetRecord(1, "Fido", "dog"));
     }
 
-        public record PetRecord(int id, String name, String type) {
-            PetRecord rename(String newName) {
-                return new PetRecord((id), newName, type);
-            }
+    public record PetRecord(int id, String name, String type) {
+        PetRecord rename(String newName) {
+            return new PetRecord((id), newName, type);
         }
+    }
 
     static public class PetClass {
         private final int id;

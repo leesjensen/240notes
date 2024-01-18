@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 import java.util.ArrayList;
 import java.util.HashMap;

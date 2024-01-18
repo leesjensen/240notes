@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 public class ThisExample {
     String value = "example";

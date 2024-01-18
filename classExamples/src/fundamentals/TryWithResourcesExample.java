@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 public class EqualExample {
     private String value;

@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 public class GetSetExample {
     public String getName() {

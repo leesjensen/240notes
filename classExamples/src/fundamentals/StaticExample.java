@@ -1,4 +1,4 @@
-package fundementals;
+package fundamentals;
 
 public class StaticExample {
     static int globalValue = 3;

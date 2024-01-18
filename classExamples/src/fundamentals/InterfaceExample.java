@@ -1,6 +1,4 @@
-package fundementals;
-
-import java.util.Iterator;
+package fundamentals;
 
 public class InterfaceExample {
 

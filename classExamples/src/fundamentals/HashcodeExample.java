@@ -1,6 +1,4 @@
-package fundementals;
-
-import java.util.Objects;
+package fundamentals;
 
 public class HashcodeExample {
     String value;
