@@ -17,7 +17,7 @@ public class ServerExample {
         Spark.port(8080);
 
         // Register a directory for hosting static files
-        Spark.externalStaticFileLocation("public");
+        Spark.staticFiles.location("public");
 
         // Register handlers for each endpoint using the method reference syntax
         Spark.post("/name/:name", this::addName);
