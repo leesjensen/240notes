@@ -1,16 +1,32 @@
 package quality;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class RefactorExample {
     public static void main(String[] args) {
-        // Here is our test
-        for (var i : Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7)) {
-            if (originalFibonacci(i) != refactoredFibonacci(i)) {
+        var source = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
+        var expected = Arrays.asList(0, 1, 2, 3, 5, 8, 13, 21);
+        originalTest(source, expected);
+        refactorTest(source, expected);
+    }
+
+    private static void originalTest(List<Integer> source, List<Integer> expected) {
+        for (var i : source) {
+            if (originalFibonacci(i) != expected.get(i)) {
                 System.out.println("Wrong result");
             }
         }
     }
+
+    private static void refactorTest(List<Integer> source, List<Integer> expected) {
+        for (var i : source) {
+            if (refactoredFibonacci(i) != expected.get(i)) {
+                System.out.println("Wrong result");
+            }
+        }
+    }
+
 
     // Original
     private static int originalFibonacci(int sequencePosition) {
