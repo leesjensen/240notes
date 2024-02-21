@@ -1,4 +1,4 @@
-package general;
+package testing;
 
 public class CodeCoverageExample {
     public static boolean branch(Boolean result) {

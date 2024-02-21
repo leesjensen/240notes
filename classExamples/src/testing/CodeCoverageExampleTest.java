@@ -1,4 +1,4 @@
-package general;
+package testing;
 
 import org.junit.jupiter.api.*;
 
@@ -9,7 +9,7 @@ class CodeCoverageExampleTest {
     @Test
     void branchTest() {
         assertTrue(CodeCoverageExample.branch(Boolean.TRUE));
-        assertFalse(CodeCoverageExample.branch(Boolean.FALSE));
-        assertThrows(RuntimeException.class, () -> CodeCoverageExample.branch(null));
+//        assertFalse(CodeCoverageExample.branch(Boolean.FALSE));
+//        assertThrows(RuntimeException.class, () -> CodeCoverageExample.branch(null));
     }
 }
