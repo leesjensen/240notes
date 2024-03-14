@@ -12,7 +12,7 @@ public class DatabaseHandlerExample {
     static Logger logger = Logger.getLogger("myLogger");
 
     public static void main(String[] args) throws Exception {
-        var config = new DatabaseConfig("jdbc:mysql://localhost:3306", "pet_store", "root", "monkeypie");
+        var config = new DatabaseConfig("jdbc:mysql://localhost:3306", "petshop", "root", "monkeypie");
         logger.addHandler(new DatabaseHandler(config));
 
         logger.log(Level.INFO, "This will be logged");
@@ -20,7 +20,7 @@ public class DatabaseHandlerExample {
     }
 
 
-    public static record DatabaseConfig(String url, String dbName, String user, String password) {
+    public record DatabaseConfig(String url, String dbName, String user, String password) {
     }
 
     public static class DatabaseHandler extends Handler {
