@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class PizzaSyncExample {
     final static ArrayList<String> orders = new ArrayList<>();
-    Object o;
 
     public static void main(String[] args) throws Exception {
         new Thread(() -> takeOrders()).start();

@@ -9,16 +9,13 @@ import spark.Spark;
 
 public class MultithreadedServerExample {
     static int sum = 0;
-//    static Object lock = new Object();
 
     public static void main(String[] args) {
         Spark.port(8080);
         Spark.get("/add/:value", (req, res) -> {
-            //           synchronized (lock) {
             var value = Integer.parseInt(req.params(":value"));
             sum += value;
             return " " + sum;
-            //          }
         });
     }
 }
