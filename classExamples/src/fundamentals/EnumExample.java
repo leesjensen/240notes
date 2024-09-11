@@ -1,6 +1,10 @@
 package fundamentals;
 
 public class EnumExample {
+    public enum Peak {
+        NEBO, PROVO, SANTAQUIN, TIMPANOGOS, CASCADE, SPANISH, LONE
+    }
+
     public static void main(String[] args) {
         try {
             var e = Enum.valueOf(Peak.class, args[0].toUpperCase());
@@ -11,9 +15,5 @@ public class EnumExample {
         } catch (IllegalArgumentException ex) {
             System.out.println("Unknown peak provided");
         }
-    }
-
-    public enum Peak {
-        NEBO, PROVO, SANTAQUIN, TIMPANOGOS, CASCADE, SPANISH, LONE
     }
 }
