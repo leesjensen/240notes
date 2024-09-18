@@ -18,6 +18,7 @@ public class CollectionsExample {
         }
 
         public void print() {
+            System.out.printf("There are %d mountains%n", mountains.size());
             for (var m : mountains) {
                 System.out.println(m);
             }
@@ -43,6 +44,7 @@ public class CollectionsExample {
         }
 
         public void print() {
+            System.out.printf("There are %d mountains%n", mountains.size());
             for (var m : mountains.entrySet()) {
                 System.out.printf("%s, height: %d%n", m.getKey(), m.getValue());
             }

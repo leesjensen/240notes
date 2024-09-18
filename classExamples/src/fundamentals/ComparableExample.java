@@ -26,6 +26,10 @@ public class ComparableExample implements Comparable<ComparableExample> {
                 new ComparableExample('b')
         };
 
+        var r = items[0].compareTo(items[1]);
+        var c = (r > 0 ? ">" : (r < 0 ? "<" : "="));
+        System.out.printf("%s %s %s", items[0], c, items[1]);
+
         Arrays.sort(items);
         for (var i : items) {
             System.out.println(i);
