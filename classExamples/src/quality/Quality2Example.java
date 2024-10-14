@@ -1,20 +1,14 @@
 package quality;
 
-public class GoodQualityExample {
+public class Quality2Example {
     public static void main(String[] args) {
-        if (args.length == 1) {
-            try {
-                var sequencePosition = Integer.parseInt(args[0]);
-                var fibonacciNumber = computeFibonacci(sequencePosition);
-
-                System.out.println(fibonacciNumber);
-                return;
-            } catch (NumberFormatException ignored) {
-            }
+        if (args.length != 1) {
+            System.out.println("Invalid input.\nSyntax: java Fibonacci <Sequence Position>");
+        } else {
+            var sequencePosition = Integer.parseInt(args[0]);
+            var fibonacciNumber = computeFibonacci(sequencePosition);
+            System.out.println(fibonacciNumber);
         }
-
-        System.out.println("Invalid input.\nSyntax: java Fibonacci <Sequence Position>");
-
     }
 
     /**
@@ -29,13 +23,13 @@ public class GoodQualityExample {
     private static int computeFibonacci(int sequencePosition) {
         var n2Value = 0;
         var n1Value = 0;
-        for (var currentPosition = 0; currentPosition < sequencePosition; currentPosition++) {
-            if (currentPosition == 1) {
+        for (var curPos = 0; curPos < sequencePosition; curPos++) {
+            if (curPos == 1) {
                 n1Value = 1;
             } else {
-                var currentValue = n2Value + n1Value;
+                var curValue = n2Value + n1Value;
                 n2Value = n1Value;
-                n1Value = currentValue;
+                n1Value = curValue;
             }
         }
         return n2Value + n1Value;

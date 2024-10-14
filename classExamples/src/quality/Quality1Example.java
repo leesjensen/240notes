@@ -1,6 +1,6 @@
 package quality;
 
-public class BadQualityExample {
+public class Quality1Example {
     public static void main(String[] args) {
         System.out.println(doIt(Integer.parseInt(args[0]), 0));
     }

@@ -6,7 +6,7 @@ package quality;
  * details at the top, with increasing decomposition towards
  * the bottom.
  *
- * @see GoodQualityExample for a real example
+ * @see Quality2Example for a real example
  */
 public class LayoutExample {
     /**
