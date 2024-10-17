@@ -10,6 +10,13 @@ import java.util.List;
 import java.util.Stack;
 
 public class ParameterizationExample {
+    static final List<String> validPets = List.of("cat", "dog", "rat");
+
+    @ParameterizedTest
+    @ValueSource(strings = {"cat", "dog"})
+    public void petTest(String pet) throws Exception {
+        Assertions.assertTrue(validPets.contains(pet));
+    }
 
     @ParameterizedTest
     @ValueSource(classes = {ArrayList.class, LinkedList.class, Stack.class})
