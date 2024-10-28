@@ -40,7 +40,12 @@ public class SerializationExample {
     }
 
 
-    record Pet(String name, String type, String[] friends) {}
+    record Pet(String name, String type, String[] friends) {
+        @Override
+        public String toString() {
+            return new Gson().toJson(this);
+        }
+    }
 
     void insertPet(Connection conn, Pet pet) throws SQLException {
         try (var preparedStatement = conn.prepareStatement("INSERT INTO pet (name, type, friends) VALUES(?, ?, ?)")) {
@@ -89,8 +94,7 @@ public class SerializationExample {
                     CREATE TABLE  IF NOT EXISTS pet (
                         name VARCHAR(255) DEFAULT NULL,
                         type VARCHAR(255) DEFAULT NULL,
-                        friends longtext NOT NULL,                        
-                        PRIMARY KEY (id)
+                        friends longtext NOT NULL
                     )""";
 
 
