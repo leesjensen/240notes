@@ -56,7 +56,7 @@ public class ServerExample {
 
     private static <T> T getBody(Request request, Class<T> clazz) {
         var bodyText = request.body();
-        var body = new Gson().fromJson(bodyText, clazz);
+        T body = new Gson().fromJson(bodyText, clazz);
         if (body == null) {
             throw new RuntimeException("missing required body");
         }
