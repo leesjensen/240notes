@@ -4,6 +4,11 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.*;
 import spark.Spark;
 
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 @WebSocket
 public class ServerExample {
     public static void main(String[] args) {
@@ -16,7 +21,19 @@ public class ServerExample {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
-        System.out.printf("Received: %s%n", message);
-        session.getRemote().sendString("WebSocket response: " + message);
+        session.getRemote().sendString("SERVER: " + message);
+
+    }
+
+    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    @OnWebSocketConnect
+    public void onConnect(Session session) {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                session.getRemote().sendString("SERVER: just saying hello");
+            } catch (IOException ignore) {
+            }
+        }, 0, 10, TimeUnit.SECONDS);
     }
 }
