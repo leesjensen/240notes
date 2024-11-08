@@ -24,6 +24,7 @@ public class ServerExample {
         Spark.put("/name", this::updateName);
         Spark.get("/name", this::listNames);
         Spark.delete("/name/:name", this::deleteName);
+        Spark.get("/error", this::error);
 
         System.out.println("listening on port 8080");
     }
@@ -51,6 +52,12 @@ public class ServerExample {
     private Object deleteName(Request req, Response res) {
         names.remove(req.params(":name"));
         return listNames(req, res);
+    }
+
+    private Object error(Request req, Response res) {
+        res.type("application/json");
+        res.status(400);
+        return new Gson().toJson(Map.of("msg", "unable to provide response"));
     }
 
 
