@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerExample {
     public static void main(String[] args) {
         Spark.port(8080);
-        Spark.webSocket("/connect", ServerExample.class);
+        Spark.webSocket("/ws", ServerExample.class);
         Spark.get("/echo/:msg", (req, res) -> "HTTP response: " + req.params(":msg"));
 
         System.out.println("listening on port 8080");
