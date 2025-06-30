@@ -3,7 +3,6 @@ package websocket;
 import io.javalin.Javalin;
 import io.javalin.websocket.WsContext;
 
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
