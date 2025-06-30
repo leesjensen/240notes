@@ -1,31 +1,28 @@
 package defensiveProgramming;
 
 import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
+import io.javalin.Javalin;
 
 import java.util.Map;
 
 public class DefensiveExample {
     public static void main(String[] args) {
-        Spark.get("/name/:name", DefensiveExample::getName);
-    }
+        Javalin.create().get("/name/{name}", (ctx) -> {
+            ctx.contentType("application/json");
 
-    private static Object getName(Request request, Response response) {
-        response.type("application/json");
-        var name = request.params(":name");
-        if (!name.matches("(\\w|\\d){3,64}")) {
-            response.status(400);
-            return new Gson().toJson(Map.of("error", "invalid parameter"));
-        }
-
-        name = normalize(name);
-
-        return new Gson().toJson(Map.of("result", name));
+            var name = ctx.pathParam("name");
+            if (!name.matches("(\\w|\\d){3,64}")) {
+                ctx.status(400);
+                ctx.result(new Gson().toJson(Map.of("error", "invalid parameter")));
+            } else {
+                name = normalize(name);
+                ctx.result(new Gson().toJson(Map.of("result", name)));
+            }
+        }).start(8080);
     }
 
     private static String normalize(String name) {
+        // You must provide the -ae parameter to the JVM to enable asserts
         assert !name.matches("\\d+") : "Numeric name provided";
 
         return name.toUpperCase();

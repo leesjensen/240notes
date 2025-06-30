@@ -1,38 +1,39 @@
 package websocket;
 
-import org.eclipse.jetty.websocket.api.annotations.*;
-import org.eclipse.jetty.websocket.api.*;
-import spark.Spark;
+import io.javalin.Javalin;
+import io.javalin.websocket.WsContext;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@WebSocket
 public class ServerExample {
     public static void main(String[] args) {
-        Spark.port(8080);
-        Spark.webSocket("/ws", ServerExample.class);
-        Spark.get("/echo/:msg", (req, res) -> "HTTP response: " + req.params(":msg"));
-
+        Javalin.create()
+                .get("/echo/{msg}", ctx -> ctx.result("HTTP response: " + ctx.pathParam("msg")))
+                .ws("/ws", ws -> {
+                    ws.onConnect(ctx -> {
+                        ctx.enableAutomaticPings();
+                        sendPeriodicMessages(ctx);
+                        System.out.println("Websocket connected");
+                    });
+                    ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
+                    ws.onClose(ctx -> System.out.println("Websocket closed"));
+                })
+                .start(8080);
         System.out.println("listening on port 8080");
     }
 
-    @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws Exception {
-        session.getRemote().sendString("SERVER: " + message);
+    static public void sendPeriodicMessages(WsContext ctx) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    }
-
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-    @OnWebSocketConnect
-    public void onConnect(Session session) {
         scheduler.scheduleAtFixedRate(() -> {
             try {
-                session.getRemote().sendString("SERVER: just saying hello");
-            } catch (IOException ignore) {
+                if (ctx.session.isOpen()) {
+                    ctx.send("SERVER: just saying hello");
+                }
+            } catch (Exception ignore) {
             }
         }, 0, 10, TimeUnit.SECONDS);
     }

@@ -41,7 +41,7 @@ public class AdapterSerializationExample {
     }
 
     static class ArrayFriendList implements FriendList {
-        private ArrayList list = new ArrayList();
+        private ArrayList<String> list = new ArrayList<>();
 
         public FriendList add(String friend) {
             list.add(friend);
@@ -99,7 +99,7 @@ public class AdapterSerializationExample {
     }
 
     Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "monkeypie");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306", "admin", "monkeypie");
     }
 
     void configureDatabase() throws SQLException {

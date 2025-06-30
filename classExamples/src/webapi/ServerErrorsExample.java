@@ -1,9 +1,8 @@
 package webapi;
 
 import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
+import io.javalin.Javalin;
+import io.javalin.http.Context;
 
 import java.util.Map;
 
@@ -13,31 +12,26 @@ public class ServerErrorsExample {
     }
 
     private void run() {
-        // Specify the port you want the server to listen on
-        Spark.port(8080);
-
-        // Register handlers for each endpoint using the method reference syntax
-        Spark.get("/error", this::throwError);
-
-        Spark.exception(Exception.class, this::errorHandler);
-        Spark.notFound((req, res) -> {
-            var msg = String.format("[%s] %s not found", req.requestMethod(), req.pathInfo());
-            return errorHandler(new Exception(msg), req, res);
-        });
-
-        System.out.println("listening on port 8080");
+        Javalin.create()
+                .get("/error", this::throwException)
+                .exception(Exception.class, this::exceptionHandler)
+                .error(404, this::notFound)
+                .start(8080);
     }
 
-    private Object throwError(Request req, Response res) {
-        throw new RuntimeException("Server on fire");
+    private void throwException(Context context) {
+        throw new RuntimeException("The server is on fire!");
     }
 
-    public Object errorHandler(Exception e, Request req, Response res) {
-        var msg = Map.of("message", String.format("Error: %s", e.getMessage()), "success", false);
-        var body = new Gson().toJson(msg);
-        res.type("application/json");
-        res.status(500);
-        res.body(body);
-        return body;
+    private void exceptionHandler(Exception e, Context context) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        context.status(500);
+        context.json(body);
+    }
+
+    private void notFound(Context context) {
+        String msg = String.format("[%s] %s not found", context.method(), context.path());
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", msg), "success", false));
+        context.json(body);
     }
 }

@@ -1,25 +1,38 @@
 package webapi;
 
-import com.google.gson.Gson;
-
-import java.io.*;
 import java.net.*;
-import java.util.Map;
+import java.net.http.*;
 
 public class ClientExample {
+
+    // Run ServerExample first
+
     public static void main(String[] args) throws Exception {
-        // Specify the desired endpoint
-        URI uri = new URI("http://localhost:8080/name");
-        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-        http.setRequestMethod("GET");
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            send(client, HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:8080/name/joe"))
+                    .POST(HttpRequest.BodyPublishers.noBody())
+                    .build());
 
-        // Make the request
-        http.connect();
+            send(client, HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:8080/name"))
+                    .PUT(HttpRequest.BodyPublishers.ofString("{\"joe\":\"sue\"}"))
+                    .build());
 
-        // Output the response body
-        try (InputStream respBody = http.getInputStream()) {
-            InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-            System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
+            send(client, HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:8080/name"))
+                    .GET()
+                    .build());
         }
+    }
+
+    private static void send(HttpClient client, HttpRequest request) throws Exception {
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if(response.statusCode() == 200) {
+            System.out.println(response.body());
+        } else {
+            System.out.println("Error: received status code " + response.statusCode());
+        }
+
     }
 }

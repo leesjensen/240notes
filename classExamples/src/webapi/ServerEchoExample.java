@@ -1,9 +1,8 @@
 package webapi;
 
 import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
+import io.javalin.Javalin;
+import io.javalin.http.Context;
 
 import java.util.Map;
 
@@ -13,26 +12,27 @@ public class ServerEchoExample {
     }
 
     private void run() {
-        Spark.port(8080);
-        Spark.post("/echo", (req, res) -> this.echoBody(req, res));
-        Spark.get("/echo", (req, res) -> req.url());
-
-        System.out.println("listening on port 8080");
+        Javalin.create()
+                .post("/echo", this::echo)
+                .start(8080);
     }
 
-    private Object echoBody(Request req, Response res) {
-        var bodyObj = getBody(req, Map.class);
+    private void echo(Context context) {
+        // Convert body json to object
+        Map bodyObject = getBodyObject(context, Map.class);
 
-        res.type("application/json");
-        return new Gson().toJson(bodyObj);
+        // Convert bodyObject back to json and send to client
+        String json = new Gson().toJson(bodyObject);
+        context.json(json);
     }
 
-    private static <T> T getBody(Request request, Class<T> clazz) {
-        var bodyText = request.body();
-        var body = new Gson().fromJson(bodyText, clazz);
-        if (body == null) {
+    private static <T> T getBodyObject(Context context, Class<T> clazz) {
+        var bodyObject = new Gson().fromJson(context.body(), clazz);
+
+        if (bodyObject == null) {
             throw new RuntimeException("missing required body");
         }
-        return body;
+
+        return bodyObject;
     }
 }

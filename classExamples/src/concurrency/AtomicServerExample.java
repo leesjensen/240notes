@@ -1,6 +1,6 @@
 package concurrency;
 
-import spark.Spark;
+import io.javalin.Javalin;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,11 +13,10 @@ public class AtomicServerExample {
     static AtomicInteger sum = new AtomicInteger(0);
 
     public static void main(String[] args) {
-        Spark.port(8080);
-        Spark.get("/add/:value", (req, res) -> {
-            var value = Integer.parseInt(req.params(":value"));
+        Javalin.create().get("/add/{value}", (ctx) -> {
+            var value = Integer.parseInt(ctx.pathParam("value"));
             value = sum.addAndGet(value);
-            return " " + value;
-        });
+            ctx.result(" " + value);
+        }).start(8080);
     }
 }

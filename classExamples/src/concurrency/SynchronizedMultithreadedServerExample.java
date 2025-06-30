@@ -1,6 +1,6 @@
 package concurrency;
 
-import spark.Spark;
+import io.javalin.Javalin;
 
 
 //    while true; do curl localhost:8080/add/1; print "\n"; done &
@@ -12,13 +12,12 @@ public class SynchronizedMultithreadedServerExample {
     static Object lock = new Object();
 
     public static void main(String[] args) {
-        Spark.port(8080);
-        Spark.get("/add/:value", (req, res) -> {
+        Javalin.create().get("/add/{value}", (ctx) -> {
+            var value = Integer.parseInt(ctx.pathParam("value"));
             synchronized (lock) {
-                var value = Integer.parseInt(req.params(":value"));
                 sum += value;
-                return " " + sum;
+                ctx.result(" " + sum);
             }
-        });
+        }).start(8080);
     }
 }
