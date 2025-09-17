@@ -30,6 +30,8 @@ public class ComparableExample implements Comparable<ComparableExample> {
         var c = (r > 0 ? ">" : (r < 0 ? "<" : "="));
         System.out.printf("%s %s %s", items[0], c, items[1]);
 
+        System.out.println();
+
         Arrays.sort(items);
         for (var i : items) {
             System.out.println(i);
