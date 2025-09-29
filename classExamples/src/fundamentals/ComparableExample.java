@@ -2,14 +2,13 @@ package fundamentals;
 
 import java.util.Arrays;
 
-public class ComparableExample implements Comparable<ComparableExample> {
+public class ComparableExample {
     final private char value;
 
     ComparableExample(char value) {
         this.value = value;
     }
 
-    @Override
     public int compareTo(ComparableExample o) {
         return value - o.value;
     }
