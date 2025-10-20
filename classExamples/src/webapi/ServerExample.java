@@ -35,17 +35,21 @@ public class ServerExample {
     }
 
     private void addName(Context ctx) {
-        names.add(ctx.pathParam("name"));
-        listNames(ctx);
+        if (authorized(ctx)) {
+            names.add(ctx.pathParam("name"));
+            listNames(ctx);
+        }
     }
 
     private void updateName(Context ctx) {
-        HashMap<String, String> updateNameMap = getBody(ctx, new HashMap<String, String>().getClass());
-        for (Map.Entry<String, String> updateEntry : updateNameMap.entrySet()) {
-            names.remove(updateEntry.getKey());
-            names.add(updateEntry.getValue());
+        if (authorized(ctx)) {
+            HashMap<String, String> updateNameMap = getBody(ctx, new HashMap<String, String>().getClass());
+            for (Map.Entry<String, String> updateEntry : updateNameMap.entrySet()) {
+                names.remove(updateEntry.getKey());
+                names.add(updateEntry.getValue());
+            }
+            listNames(ctx);
         }
-        listNames(ctx);
     }
 
     private void listNames(Context ctx) {
@@ -55,8 +59,22 @@ public class ServerExample {
 
 
     private void deleteName(Context ctx) {
-        names.remove(ctx.pathParam("name"));
-        listNames(ctx);
+        if (authorized(ctx)) {
+            names.remove(ctx.pathParam("name"));
+            listNames(ctx);
+        }
+    }
+
+    final private HashSet<String> validTokens = new HashSet<>(Set.of("secret1", "secret2"));
+    private boolean authorized(Context ctx) {
+        String authToken = ctx.header("Authorization");
+        if (!validTokens.contains(authToken)) {
+            ctx.contentType("application/json");
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("msg", "invalid authorization")));
+            return false;
+        }
+        return true;
     }
 
     private void error(Context ctx) {

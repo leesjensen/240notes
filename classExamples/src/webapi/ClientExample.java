@@ -12,11 +12,13 @@ public class ClientExample {
             send(client, HttpRequest.newBuilder()
                     .uri(new URI("http://localhost:8080/name/joe"))
                     .POST(HttpRequest.BodyPublishers.noBody())
+                    .header("Authorization", "secret1")
                     .build());
 
             send(client, HttpRequest.newBuilder()
                     .uri(new URI("http://localhost:8080/name"))
                     .PUT(HttpRequest.BodyPublishers.ofString("{\"joe\":\"sue\"}"))
+                    .header("Authorization", "secret1")
                     .build());
 
             send(client, HttpRequest.newBuilder()
