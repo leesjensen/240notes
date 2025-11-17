@@ -12,11 +12,13 @@ public class SimpleExample {
         }
 
         // Decrypt
+        var decryptedText = new char[plainText.length];
         for (var i = 0; i < cipherText.length; i++) {
-            plainText[i] = (char) (cipherText[i] - key);
+            decryptedText[i] = (char) (cipherText[i] - key);
         }
 
         System.out.println(plainText);
         System.out.println(cipherText);
+        System.out.println(decryptedText);
     }
 }
