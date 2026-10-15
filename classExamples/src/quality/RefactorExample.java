@@ -31,11 +31,13 @@ public class RefactorExample {
         var othr = 0;
         var ftr = 0;
         // for each x make sure it is less than ipt otherwise break
-        for (var x = 0; x <= ipt; x++)
-        {
+        for (var x = 0; x <= ipt; x++) {
             if (x == 1) othr = 1;
-            else { var t = a + othr;
-                a = othr; ftr = ftr++; othr = t;
+            else {
+                var t = a + othr;
+                a = othr;
+                ftr = ftr++;
+                othr = t;
             }
         }
         return a + othr;
@@ -58,7 +60,7 @@ public class RefactorExample {
         return n2Value + n1Value;
     }
 
-    // Refactored
+    // Refactor 2
     private record FibData(int n2, int n1) {
         public int value() {
             return n2 + n1;
