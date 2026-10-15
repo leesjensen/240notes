@@ -11,7 +11,7 @@ public class Quality1Example {
     var a = 0;
     var othr = 0;
     // for each x make sure it is less than ipt otherwise break
-    for (var x = 0; x < ipt; x++)
+    for (var x = 0; x <= ipt; x++)
     {
         if (x == 1) othr = 1;
         else { var t = a + othr;
