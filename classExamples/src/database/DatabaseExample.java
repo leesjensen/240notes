@@ -13,7 +13,7 @@ public class DatabaseExample {
         db.configureDatabase();
 
         try (var conn = db.getConnection()) {
-            conn.setCatalog("pet_store");
+            conn.setCatalog("pets");
 
             db.insertPet(conn, "Fluffy", "bird");
             db.insertPet(conn, "Puddles", "cat");
@@ -33,11 +33,11 @@ public class DatabaseExample {
 
     void configureDatabase() throws SQLException {
         try (var conn = getConnection()) {
-            try (var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS pet_store")) {
+            try (var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS pets")) {
                 createDbStatement.executeUpdate();
             }
 
-            conn.setCatalog("pet_store");
+            conn.setCatalog("pets");
 
             var createPetTable = """
                     CREATE TABLE  IF NOT EXISTS pet (
