@@ -15,7 +15,7 @@ public class InteractiveCalculatorExample {
                 result += Integer.parseInt(number);
             }
             var equation = String.join(" + ", numbers);
-            System.out.printf("%s = %d%n", equation, result);
+            System.out.printf("%s = \u001b[31m%d\u001b[0m%n", equation, result);
         }
     }
 }
