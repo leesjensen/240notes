@@ -10,8 +10,8 @@ class BugExampleTest {
     @Test
     void filterToCWordsAnyLengthAndAWordsGreaterThanFive() {
         var words = List.of("cattle", "dog", "appalachian", "apple", "pig", "cat");
-        var results = BugExample.filterToCWordsAnyLengthAndAWordsGreaterThanFive(words);
+        var actual = BugExample.filterToCWordsAnyLengthAndAWordsGreaterThanFive(words);
         var expected = List.of("cattle", "appalachian", "cat");
-        Assertions.assertIterableEquals(expected, results);
+        Assertions.assertIterableEquals(expected, actual);
     }
 }
