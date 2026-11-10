@@ -1,6 +1,6 @@
 package websocket;
 
-import javax.websocket.*;
+import jakarta.websocket.*;
 import java.net.URI;
 import java.util.Scanner;
 
