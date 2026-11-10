@@ -23,7 +23,7 @@ public class Quality2Example {
     private static int computeFibonacci(int sequencePosition) {
         var n2Value = 0;
         var n1Value = 0;
-        for (var curPos = 0; curPos < sequencePosition; curPos++) {
+        for (var curPos = 0; curPos <= sequencePosition; curPos++) {
             if (curPos == 1) {
                 n1Value = 1;
             } else {

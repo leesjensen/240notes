@@ -13,12 +13,12 @@ public class SimpleClientExample {
         try (HttpClient client = HttpClient.newHttpClient()) {
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080"))
+                    .uri(new URI("https://byu.edu"))
                     .GET()
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() == 200) {
+            if (response.statusCode() == 200) {
                 System.out.println(response.body());
             } else {
                 System.out.println("Error: received status code " + response.statusCode());

@@ -12,7 +12,8 @@ public class LayoutExample {
     /**
      * Fields declared first
      */
-    private String field1;
+    public String fieldPub;
+    private String fieldPri;
 
     /**
      * Then constructors
